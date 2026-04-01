@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Echo Alpha Delta — Fretboard Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+background: #000000;
+color: #f0ede8;
+font-family: 'DM Sans', sans-serif;
+height: 100%;
+}
+
+body {
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+padding: 1rem;
+}
+
+/* ── LAYOUT REGIONS ── */
+.region-top {
+background: #000;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 0.6rem;
+padding-top: 1rem;
+padding-bottom: 0;
+}
+
+.region-mid {
+background: #000;
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 1.2rem;
+width: 100%;
+}
+
+.region-bot {
+background: #000;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 0.6rem;
+padding-top: 0;
+padding-bottom: 1rem;
+}
+
+/* ── TITLE ── */
+.screen-title {
+font-family: 'Share Tech Mono', monospace;
+font-size: 1.4rem;
+letter-spacing: 0.1em;
+color: #f5a623;
+text-shadow: 0 0 20px rgba(245,166,35,0.3);
+}
+
+/* ── MODE TOGGLE ── */
+.mode-toggle {
+display: flex;
+border: 1px solid #222;
+border-radius: 3px;
+overflow: hidden;
+}
+
+.mode-btn {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.65rem;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+padding: 9px 18px;
+border: none;
+cursor: pointer;
+}
+
+/* ── FRETBOARD ── */
+.fretboard-wrap {
+width: 100%;
+max-width: 860px;
+}
+
+#fretboard { width: 100%; display: block; }
+
+/* ── TIMER BAR ── */
+.timer-bar-wrap {
+width: 100%;
+max-width: 860px;
+height: 2px;
+background: #000;
+}
+
+.timer-bar {
+height: 100%;
+background: #f5a623;
+width: 100%;
+transition: width 0.1s linear;
+box-shadow: 0 0 6px rgba(245,166,35,0.5);
+}
+
+/* ── NOTE BUTTONS ── */
+.note-buttons {
+display: grid;
+grid-template-columns: repeat(6, 1fr);
+gap: 6px;
+width: 100%;
+max-width: 600px;
+}
+
+.note-btn {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.72rem;
+padding: 14px 0;
+background: #000;
+border: 1px solid #222;
+color: #888;
+cursor: pointer;
+border-radius: 3px;
+transition: all 0.12s;
+}
+
+.note-btn:hover { border-color: #555; color: #e0e0e0; background: #000; }
+.note-btn.correct { background: #0a2a0a; border-color: #7ed856; color: #7ed856; }
+.note-btn.wrong   { background: #2a0a0a; border-color: #ff3030; color: #ff3030; }
+.note-btn:disabled { cursor: default; }
+
+/* ── TONIC DISPLAY ── */
+#tonicDisplay {
+position: relative;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+width: 80px;
+height: 80px;
+}
+
+#tonicDisplay svg {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+}
+
+#tonicLabel {
+font-family: 'Share Tech Mono', monospace;
+font-size: 2.6rem;
+letter-spacing: 0.05em;
+color: #f5a623;
+text-shadow: 0 0 24px rgba(245,166,35,0.35);
+position: relative;
+z-index: 1;
+line-height: 1;
+display: flex;
+align-items: center;
+justify-content: center;
+width: 100%;
+text-align: center;
+}
+
+/* ── STATUS BAR ── */
+.status-bar {
+display: flex;
+justify-content: space-between;
+width: 100%;
+max-width: 860px;
+}
+
+.status-item {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.65rem;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: #444;
+text-align: center;
+}
+
+.status-item span {
+color: #f5a623;
+font-size: 1rem;
+display: block;
+margin-top: 2px;
+}
+
+/* ── BEGIN BUTTON ── */
+.start-btn {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.75rem;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+padding: 12px 40px;
+background: #000;
+border: 1px solid #333;
+color: #e0e0e0;
+cursor: pointer;
+border-radius: 3px;
+transition: all 0.15s;
+}
+
+.start-btn:hover { border-color: #f5a623; color: #f5a623; }
+
+/* ── TONIC SELECTOR ── */
+.tonic-selector {
+display: none;
+flex-direction: column;
+align-items: center;
+gap: 0.5rem;
+}
+
+.tonic-label {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.8rem;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+color: #666;
+}
+
+/* ── RESULTS ── */
+.result-grid {
+display: grid;
+grid-template-columns: 1fr 1fr 1fr;
+gap: 1.5rem;
+width: 100%;
+max-width: 500px;
+}
+
+.result-label {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.6rem;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+color: #444;
+text-align: center;
+margin-bottom: 0.3rem;
+}
+
+.result-value {
+font-family: 'Share Tech Mono', monospace;
+font-size: 1.8rem;
+color: #f5a623;
+text-align: center;
+}
+
+.result-breakdown {
+width: 100%;
+max-width: 500px;
+display: flex;
+flex-direction: column;
+gap: 4px;
+}
+
+.result-row {
+display: flex;
+justify-content: space-between;
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.68rem;
+letter-spacing: 0.08em;
+padding: 4px 8px;
+border-radius: 2px;
+}
+
+.result-row.hit  { background: rgba(126,216,86,0.08); color: #7ed856; }
+.result-row.miss { background: rgba(255,48,48,0.08);  color: #ff3030; }
+
+.hidden { display: none !important; }
+</style>
+
+</head>
+<body>
+
+<!-- TOP: always visible -->
+
+<div class="region-top">
+  <div class="screen-title">FRETBOARD TRAINER</div>
+  <div class="mode-toggle">
+    <button id="toggleStandard" class="mode-btn" onclick="setMode('standard')" style="background:#888;color:#000;">Standard</button>
+    <button id="toggleHarmonic" class="mode-btn" onclick="setMode('harmonic')" style="background:#000;color:#555;">Harmonic Mode</button>
+  </div>
+  <div id="tonicDisplay" class="hidden" style="margin-top:0.6rem;">
+    <span id="tonicLabel"></span>
+  </div>
+</div>
+
+<!-- MID: fretboard + controls -->
+
+<div class="region-mid">
+
+  <!-- Harmonic instruction -->
+
+  <div id="harmonicInstruction" class="hidden" style="text-align:center;line-height:1;">
+    <div style="display:inline-flex;align-items:center;gap:0.5rem;font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:#555;">
+      <span>The Number System › Tonal Centre</span>
+      <span style="position:relative;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;">
+        <svg width="36" height="36" viewBox="0 0 36 36" style="position:absolute;top:0;left:0;">
+          <circle cx="18" cy="18" r="16" fill="none" stroke="white" stroke-width="1.2" opacity="0.7"/>
+        </svg>
+        <span id="instructionKey" style="font-family:'Share Tech Mono',monospace;font-size:1rem;color:#f5a623;text-shadow:0 0 12px rgba(245,166,35,0.4);position:relative;z-index:1;line-height:1;"></span>
+      </span>
+    </div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;color:#666;margin-top:0.5rem;">What is the number of the note highlighted below</div>
+  </div>
+
+  <!-- START screen mid content -->
+
+  <div id="startMid" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;width:100%;">
+    <div id="standardInstruction" style="text-align:center;padding:0.3rem 0;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:#555;">Pick the correct name for the highlighted note</div>
+    </div>
+    <div id="harmonicStartInstruction" class="hidden" style="text-align:center;padding:0.3rem 0;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:#555;">
+        Describe a note relative to the tonal centre
+      </div>
+    </div>
+    <div class="tonic-selector" id="tonicSelector">
+      <div class="tonic-label">Select Tonal Centre</div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;width:300px;" id="tonicGrid"></div>
+    </div>
+  </div>
+
+  <!-- Fretboard — shared -->
+
+  <div class="fretboard-wrap">
+    <svg id="fretboard" viewBox="0 0 860 180" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <!-- GAME screen mid content -->
+
+  <div id="gameMid" class="hidden" style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;width:100%;">
+    <div class="timer-bar-wrap" id="timerBarWrap">
+      <div class="timer-bar" id="timerBar"></div>
+    </div>
+    <div class="note-buttons" id="noteButtons"></div>
+  </div>
+
+<button class="start-btn" id="beginBtn" onclick="startGame()">Begin</button>
+
+  <!-- RESULTS screen mid content -->
+
+  <div id="resultsMid" class="hidden" style="display:flex;flex-direction:column;align-items:center;gap:1rem;width:100%;">
+    <div class="screen-title" style="font-size:1.2rem;">RESULT</div>
+    <div class="result-grid">
+      <div><div class="result-label">Score</div><div class="result-value" id="resScore">—</div></div>
+      <div><div class="result-label">Correct</div><div class="result-value" id="resCorrect">—</div></div>
+      <div><div class="result-label">Avg Time</div><div class="result-value" id="resAvgTime">—</div></div>
+    </div>
+    <div class="result-breakdown" id="resList"></div>
+  </div>
+
+</div>
+
+<!-- BOT: begin / status / play again -->
+
+<div class="region-bot">
+  <div id="standardSpeedTip" style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:#3a3a3a;text-align:center;">See how fast you can go &nbsp;·&nbsp; Under 3 seconds = Good</div>
+  <div class="status-bar hidden" id="statusBar">
+    <div class="status-item">Question<span id="qNum">1</span></div>
+    <div class="status-item">Correct<span id="correctCount">0</span></div>
+    <div class="status-item">Avg Time<span id="avgTime">—</span></div>
+  </div>
+  <button class="start-btn hidden" id="playAgainBtn" onclick="startGame()">Play Again</button>
+</div>
+
+<script>
+const TUNING    = [4, 9, 2, 7, 11, 4]; // low E to high e
+
+// Harmonic mode — Nashville numbers and pitch names per key
+// Intervals: 0=1, 1=b2, 2=2, 3=b3, 4=3, 5=4, 6=#4/b5, 7=5, 8=b6, 9=6, 10=b7, 11=7
+const NASHVILLE = ['1','b2','2','b3','3','4','#4','5','b6','6','b7','Maj7'];
+
+// Enharmonically correct pitch names for each key
+// Keys in our order: C, C#, D, Eb, E, F, F#, G, Ab, A, Bb, B
+const KEY_SPELLINGS = {
+  0:  ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'],   // C
+  1:  ['C#','D','D#','E','E#','F#','G','G#','A','A#','B','B#'], // C#
+  2:  ['D','Eb','E','F','F#','G','Ab','A','Bb','B','C','C#'],   // D
+  3:  ['Eb','Fb','F','Gb','G','Ab','A','Bb','Cb','C','Db','D'], // Eb
+  4:  ['E','F','F#','G','G#','A','Bb','B','C','C#','D','D#'],   // E
+  5:  ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E'],   // F
+  6:  ['F#','G','G#','A','A#','B','C','C#','D','D#','E','E#'],  // F#
+  7:  ['G','Ab','A','Bb','B','C','Db','D','Eb','E','F','F#'],   // G
+  8:  ['Ab','Bbb','Bb','Cb','C','Db','D','Eb','Fb','F','Gb','G'],// Ab
+  9:  ['A','Bb','B','C','C#','D','Eb','E','F','F#','G','G#'],   // A
+  10: ['Bb','Cb','C','Db','D','Eb','E','F','Gb','G','Ab','A'],  // Bb
+  11: ['B','C','C#','D','D#','E','F','F#','G','G#','A','A#'],   // B
+};
+
+const KEY_NAMES = ['C','C#','D','Eb','E','F','F#','G','Ab','A','Bb','B'];
+
+let harmonicMode = false;
+let tonicRoot = 0; // note index of tonal centre
+const NOTE_NAMES   = ['C','C#','D','Eb','E','F','F#','G','Ab','A','Bb','B'];
+const BUTTON_ORDER  = [9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8]; // A through Ab
+const BUTTON_LABELS = {
+  9:  'A',
+  10: 'Bb / A#',
+  11: 'B',
+  0:  'C',
+  1:  'C# / Db',
+  2:  'D',
+  3:  'Eb / D#',
+  4:  'E',
+  5:  'F',
+  6:  'F# / Gb',
+  7:  'G',
+  8:  'Ab / G#',
+};
+const TOTAL_Q   = 10;
+const MAX_TIME  = 10; // seconds per question
+
+let questions = [];
+let currentQ  = 0;
+let correctCount = 0;
+let times = [];
+let qStartTime = 0;
+let timerInterval = null;
+let answered = false;
+
+// ── Fretboard constants ──────────────────────────────────────────
+const FB_W = 860, FB_H = 180;
+const LEFT = 60, RIGHT = 20, TOP = 18, BOT = 22;
+const FRETS = 12;
+const STRINGS = 6;
+const FW = (FB_W - LEFT - RIGHT) / FRETS;
+const SH = (FB_H - TOP - BOT) / (STRINGS - 1);
+
+function sx(f) { return f === 0 ? LEFT - 12 : LEFT + (f - 0.5) * FW; }
+function sy(s) { return TOP + (STRINGS - 1 - s) * SH; }
+
+function drawFretboard(highlightString, highlightFret, rootDots) {
+  const svg = document.getElementById('fretboard');
+  let out = '';
+
+
+
+  out += `<rect x="-9999" y="-9999" width="99999" height="99999" fill="#000"/>`;
+
+  // Fret lines
+  for (let f = 0; f <= FRETS; f++) {
+    const x = LEFT + f * FW;
+    const isNut = f === 0;
+    out += `<line x1="${x}" y1="${TOP}" x2="${x}" y2="${TOP + SH*(STRINGS-1)}"
+      stroke="${isNut ? '#d4cfc8' : '#444'}" stroke-width="${isNut ? 10 : 2}"/>`;
+  }
+
+  // Position markers
+  [3,5,7,9].forEach(f => {
+    const mx = LEFT + (f-1)*FW + FW*0.5;
+    const my = TOP + SH*2.5;
+    out += `<circle cx="${mx}" cy="${my}" r="6" fill="#333"/>`;
+    out += `<circle cx="${mx}" cy="${my}" r="4" fill="#777"/>`;
+  });
+  const x12 = LEFT + 11*FW + FW*0.5;
+  [1.5, 3.5].forEach(i => {
+    const my = TOP + SH*i;
+    out += `<circle cx="${x12}" cy="${my}" r="6" fill="#333"/>`;
+    out += `<circle cx="${x12}" cy="${my}" r="4" fill="#777"/>`;
+  });
+
+  // Strings
+  const thicknesses = [5, 3.8, 2.8, 2, 1.3, 0.8];
+  for (let s = 0; s < STRINGS; s++) {
+    out += `<line x1="${LEFT}" y1="${sy(s)}" x2="${LEFT + FRETS*FW}" y2="${sy(s)}"
+      stroke="#555" stroke-width="${thicknesses[s]}" stroke-linecap="round"/>`;
+  }
+
+  // Root note silver dots (harmonic mode)
+  if (rootDots && rootDots.length) {
+    rootDots.forEach(rd => {
+      const rx = sx(rd.fret);
+      const ry = sy(rd.string);
+      const rr = 17; // larger than amber dot (14)
+      out += `<circle cx="${rx}" cy="${ry}" r="${rr}" fill="none" stroke="white" stroke-width="1.5" opacity="0.7"/>`;
+    });
+  }
+
+  // Highlight dot
+  if (highlightString !== undefined && highlightFret !== undefined) {
+    const cx = sx(highlightFret);
+    const cy = sy(highlightString);
+    const r = 14;
+    out += `<circle cx="${cx}" cy="${cy}" r="${r * 1.8}" fill="#f5a623" opacity="0.1"/>`;
+    out += `<circle cx="${cx}" cy="${cy}" r="${r + 1.5}" fill="#000"/>`;
+    out += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#f5a623"/>`;
+    out += `<circle cx="${cx}" cy="${cy}" r="${r * 0.35}" fill="rgba(255,255,255,0.5)"/>`;
+  }
+
+  svg.innerHTML = out;
+}
+
+// ── Generate a random question ───────────────────────────────────
+function randomQuestion() {
+  const s = Math.floor(Math.random() * 6);
+  const f = Math.floor(Math.random() * 13); // 0–12
+  const note = (TUNING[s] + f) % 12;
+  return { string: s, fret: f, note };
+}
+
+// ── Build note buttons ───────────────────────────────────────────
+function buildButtons() {
+  const wrap = document.getElementById('noteButtons');
+  wrap.innerHTML = '';
+  if (harmonicMode) {
+    // Order buttons 1 through Maj7 (intervals 0-11)
+    for (let interval = 0; interval < 12; interval++) {
+      const noteIndex = (tonicRoot + interval) % 12;
+      const btn = document.createElement('button');
+      btn.className = 'note-btn';
+      btn.textContent = NASHVILLE[interval];
+      btn.dataset.note = noteIndex;
+      btn.onclick = () => handleAnswer(noteIndex, btn);
+      wrap.appendChild(btn);
+    }
+  } else {
+    BUTTON_ORDER.forEach(i => {
+      const btn = document.createElement('button');
+      btn.className = 'note-btn';
+      btn.textContent = BUTTON_LABELS[i];
+      btn.dataset.note = i;
+      btn.onclick = () => handleAnswer(i, btn);
+      wrap.appendChild(btn);
+    });
+  }
+}
+
+function disableButtons() {
+  document.querySelectorAll('.note-btn').forEach(b => b.disabled = true);
+}
+
+function resetButtons() {
+  document.querySelectorAll('.note-btn').forEach(b => {
+    b.disabled = false;
+    b.className = 'note-btn';
+  });
+}
+
+// ── Timer ────────────────────────────────────────────────────────
+function startTimer() {
+  qStartTime = Date.now();
+  const bar = document.getElementById('timerBar');
+  bar.style.width = '100%';
+  bar.style.background = '#f5a623';
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    const elapsed = (Date.now() - qStartTime) / 1000;
+    const pct = Math.max(0, 100 - (elapsed / MAX_TIME) * 100);
+    bar.style.width = pct + '%';
+    if (pct < 30) bar.style.background = '#ff3030';
+    else if (pct < 60) bar.style.background = '#f5a623';
+    if (elapsed >= MAX_TIME && !answered) {
+      handleAnswer(-1, null); // timeout
+    }
+  }, 100);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+}
+
+// ── Handle answer ────────────────────────────────────────────────
+function handleAnswer(noteIndex, btn) {
+  if (answered) return;
+  answered = true;
+  stopTimer();
+
+  const elapsed = (Date.now() - qStartTime) / 1000;
+  const q = questions[currentQ];
+  const correct = noteIndex === q.note;
+
+  if (correct) {
+    correctCount++;
+    times.push(elapsed);
+    if (btn) btn.classList.add('correct');
+  } else {
+    times.push(MAX_TIME); // penalise wrong/timeout
+    if (btn) btn.classList.add('wrong');
+    // Show correct answer
+    document.querySelectorAll('.note-btn').forEach(b => {
+      if (parseInt(b.dataset.note) === q.note) b.classList.add('correct');
+    });
+  }
+
+  disableButtons();
+  updateStatus();
+
+  // Record result
+  questions[currentQ].result = { correct, elapsed, noteIndex };
+
+  setTimeout(() => {
+    currentQ++;
+    if (currentQ < TOTAL_Q) {
+      showQuestion();
+    } else {
+      showResults();
+    }
+  }, 800);
+}
+
+// ── Update status bar ────────────────────────────────────────────
+function updateStatus() {
+  document.getElementById('qNum').textContent = Math.min(currentQ + 1, TOTAL_Q);
+  document.getElementById('correctCount').textContent = correctCount;
+  if (times.length > 0) {
+    const avg = times.reduce((a,b) => a+b, 0) / times.length;
+    document.getElementById('avgTime').textContent = avg.toFixed(1) + 's';
+  }
+}
+
+// ── Show question ────────────────────────────────────────────────
+function showQuestion() {
+  answered = false;
+  resetButtons();
+  const q = questions[currentQ];
+  const rootDots = harmonicMode ? getRootDots() : [];
+  drawFretboard(q.string, q.fret, rootDots);
+  document.getElementById('qNum').textContent = currentQ + 1;
+
+  startTimer();
+}
+
+// ── Start game ───────────────────────────────────────────────────
+function getRootDots() {
+  const dots = [];
+  for (let s = 0; s < 6; s++) {
+    for (let f = 0; f <= 12; f++) {
+      const note = (TUNING[s] + f) % 12;
+      if (note === tonicRoot) {
+        dots.push({ string: s, fret: f });
+      }
+    }
+  }
+  return dots;
+}
+
+function setMode(mode) {
+  harmonicMode = mode === 'harmonic';
+  document.getElementById('toggleStandard').style.background = harmonicMode ? '#000' : '#888';
+  document.getElementById('toggleStandard').style.color = harmonicMode ? '#555' : '#000';
+  document.getElementById('toggleHarmonic').style.background = harmonicMode ? '#f5a623' : '#000';
+  document.getElementById('toggleHarmonic').style.color = harmonicMode ? '#000' : '#555';
+  document.getElementById('tonicSelector').style.display = harmonicMode ? 'flex' : 'none';
+  if (harmonicMode) buildTonicGrid();
+
+  // Reset to start screen whenever mode is switched
+  stopTimer();
+  document.getElementById('gameMid').classList.add('hidden');
+  document.getElementById('resultsMid').classList.add('hidden');
+  document.getElementById('startMid').style.display = 'flex';
+  document.getElementById('beginBtn').classList.remove('hidden');
+  document.getElementById('statusBar').classList.add('hidden');
+  document.getElementById('playAgainBtn').classList.add('hidden');
+  if (!harmonicMode) {
+    document.getElementById('tonicDisplay').classList.add('hidden');
+    document.getElementById('harmonicInstruction').classList.add('hidden');
+    document.getElementById('standardInstruction').style.display = 'block';
+    document.getElementById('standardSpeedTip').style.display = 'block';
+    document.getElementById('harmonicStartInstruction').classList.add('hidden');
+  } else {
+    document.getElementById('standardInstruction').style.display = 'none';
+    document.getElementById('standardSpeedTip').style.display = 'none';
+  }
+
+  drawFretboard();
+}
+
+function buildTonicGrid() {
+  const grid = document.getElementById('tonicGrid');
+  grid.innerHTML = '';
+  const instrEl = document.getElementById('harmonicStartInstruction');
+  if (instrEl) {
+    instrEl.classList.remove('hidden');
+
+  }
+  KEY_NAMES.forEach((name, i) => {
+    const btn = document.createElement('button');
+    btn.textContent = name;
+    btn.dataset.root = i;
+    btn.style.cssText = `font-family:'Share Tech Mono',monospace;font-size:0.85rem;padding:8px 0;
+      background:${i === tonicRoot ? '#f5a623' : '#000'};
+      border:1px solid ${i === tonicRoot ? '#f5a623' : '#222'};
+      color:${i === tonicRoot ? '#000' : '#888'};
+      cursor:pointer;border-radius:2px;`;
+    btn.onclick = () => {
+      tonicRoot = i;
+      buildTonicGrid();
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function startGame() {
+  questions = Array.from({ length: TOTAL_Q }, randomQuestion);
+  currentQ = 0;
+  correctCount = 0;
+  times = [];
+  answered = false;
+
+  // Hide start, results; show game
+  document.getElementById('startMid').style.display = 'none';
+  document.getElementById('resultsMid').classList.add('hidden');
+  document.getElementById('gameMid').classList.remove('hidden');
+  document.getElementById('gameMid').style.display = 'flex';
+  document.getElementById('beginBtn').classList.add('hidden');
+  document.getElementById('playAgainBtn').classList.add('hidden');
+  document.getElementById('statusBar').classList.remove('hidden');
+
+  const tonicEl = document.getElementById('tonicDisplay');
+  if (harmonicMode) {
+    document.getElementById('tonicLabel').textContent = KEY_NAMES[tonicRoot];
+    const tonicEl2 = document.getElementById('tonicDisplay');
+    // Add SVG ring if not already present
+    if (!tonicEl2.querySelector('svg')) {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svg.setAttribute('width','90'); svg.setAttribute('height','90');
+      svg.setAttribute('viewBox','0 0 90 90');
+      svg.style.cssText = 'position:absolute;inset:0;';
+      const circ = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      circ.setAttribute('cx','45'); circ.setAttribute('cy','45');
+      circ.setAttribute('r','42'); circ.setAttribute('fill','none');
+      circ.setAttribute('stroke','white'); circ.setAttribute('stroke-width','1.5');
+      circ.setAttribute('opacity','0.7');
+      svg.appendChild(circ);
+      tonicEl2.insertBefore(svg, tonicEl2.firstChild);
+    }
+    tonicEl.classList.add('hidden');
+    document.getElementById('instructionKey').textContent = KEY_NAMES[tonicRoot];
+    document.getElementById('harmonicInstruction').classList.remove('hidden');
+
+  } else {
+    tonicEl.classList.add('hidden');
+    document.getElementById('harmonicInstruction').classList.add('hidden');
+    document.getElementById('standardInstruction').style.display = 'block';
+    document.getElementById('standardSpeedTip').style.display = 'block';
+  }
+
+
+  buildButtons();
+  updateStatus();
+  showQuestion();
+}
+
+// ── Show results ─────────────────────────────────────────────────
+function showResults() {
+  document.getElementById('gameMid').classList.add('hidden');
+  document.getElementById('resultsMid').classList.remove('hidden');
+  document.getElementById('resultsMid').style.display = 'flex';
+  document.getElementById('statusBar').classList.add('hidden');
+  document.getElementById('playAgainBtn').classList.remove('hidden');
+
+  const avgTime = times.reduce((a,b) => a+b, 0) / times.length;
+  const score = Math.round((correctCount / TOTAL_Q) * 100 - (avgTime - 2) * 3);
+  const clampedScore = Math.max(0, Math.min(100, score));
+
+  document.getElementById('resScore').textContent = clampedScore;
+  document.getElementById('resCorrect').textContent = `${correctCount}/${TOTAL_Q}`;
+  document.getElementById('resAvgTime').textContent = avgTime.toFixed(1) + 's';
+
+  const list = document.getElementById('resList');
+  list.innerHTML = '';
+  questions.forEach((q, i) => {
+    const r = q.result;
+    const row = document.createElement('div');
+    row.className = 'result-row ' + (r.correct ? 'hit' : 'miss');
+    const stringNames = ['E','A','D','G','B','e'];
+    const noteName = NOTE_NAMES[q.note];
+    const given = r.noteIndex >= 0 ? NOTE_NAMES[r.noteIndex] : 'timeout';
+    row.innerHTML = `
+      <span>${i+1}. ${stringNames[q.string]} string, fret ${q.fret}</span>
+      <span>${noteName}</span>
+      <span>${r.correct ? r.elapsed.toFixed(1)+'s' : given}</span>
+    `;
+    list.appendChild(row);
+  });
+
+  // Clear fretboard after game
+  drawFretboard();
+}
+
+// Initial blank fretboard on game screen and start screen
+drawFretboard();
+
+</script>
+
+</body>
+</html>
