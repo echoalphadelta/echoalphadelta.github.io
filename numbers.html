@@ -480,6 +480,8 @@ function getChromaticNote(keyIdx, semitone) {
     if (sharp === flat) return sharp;
     return sharp + '/' + flat;
   }
+  // Flat-named intervals (b2, b3, b6, b7) always use flat spelling
+  if ([1, 3, 8, 10].includes(semitone)) return NOTES_FLAT[idx];
   return useFlat ? NOTES_FLAT[idx] : NOTES_SHARP[idx];
 }
 
