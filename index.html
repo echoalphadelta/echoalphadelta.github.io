@@ -693,6 +693,20 @@ function getShapeNotes(shapeName, quality, rootNote) {
     const k = `${pick.s}-${pick.fret}`;
     if (!seen.has(k)) { seen.add(k); result.push(pick); }
   });
+
+  // Restore fret-0/12 mirrors dropped by dedup:
+  // if a dot at fret 12 was kept, also show its fret-0 open equivalent, and vice versa.
+  const resultKeys = new Set(result.map(d => `${d.s}-${d.fret}`));
+  dots.forEach(d => {
+    if ((d.fret === 0 || d.fret === 12) && !resultKeys.has(`${d.s}-${d.fret}`)) {
+      const mirrorFret = d.fret === 0 ? 12 : 0;
+      if (resultKeys.has(`${d.s}-${mirrorFret}`)) {
+        result.push(d);
+        resultKeys.add(`${d.s}-${d.fret}`);
+      }
+    }
+  });
+
   return result;
 }
 
