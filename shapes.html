@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Three Shapes — Numbered</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #000 !important; }
+  * { box-sizing: border-box; }
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 8px 48px;
+  }
+  .diagram-wrap {
+    margin: 0 auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .diagram-wrap::-webkit-scrollbar { display: none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="diagram-wrap" id="diagram"></div>
+</div>
+
+<script>
+const ECHO_COLOR  = '#4a9eff';
+const ALPHA_COLOR = '#ff4a4a';
+const DELTA_COLOR = '#4aff7a';
+
+const ALL_DOTS = [
+  // ECHO (blue) — E shape at fret 2: 1 5 1 3 5 1
+  { shape: 'echo', s: 0, fret: 2,  num: '1', color: ECHO_COLOR,  glow: 'rgba(74,158,255,' },
+  { shape: 'echo', s: 1, fret: 4,  num: '5', color: ECHO_COLOR,  glow: 'rgba(74,158,255,' },
+  { shape: 'echo', s: 2, fret: 4,  num: '1', color: ECHO_COLOR,  glow: 'rgba(74,158,255,' },
+  { shape: 'echo', s: 3, fret: 3,  num: '3', color: ECHO_COLOR,  glow: 'rgba(74,158,255,' },
+  { shape: 'echo', s: 4, fret: 2,  num: '5', color: ECHO_COLOR,  glow: 'rgba(74,158,255,' },
+  { shape: 'echo', s: 5, fret: 2,  num: '1', color: ECHO_COLOR,  glow: 'rgba(74,158,255,' },
+
+  // DELTA (green) — D shape at fret 4: 1 5 1 3
+  { shape: 'delta', s: 2, fret: 4,  num: '1', color: DELTA_COLOR, glow: 'rgba(74,255,122,' },
+  { shape: 'delta', s: 3, fret: 6,  num: '5', color: DELTA_COLOR, glow: 'rgba(74,255,122,' },
+  { shape: 'delta', s: 4, fret: 7,  num: '1', color: DELTA_COLOR, glow: 'rgba(74,255,122,' },
+  { shape: 'delta', s: 5, fret: 6,  num: '3', color: DELTA_COLOR, glow: 'rgba(74,255,122,' },
+
+  // ALPHA (red) — A shape at fret 9: 1 5 1 3 5
+  { shape: 'alpha', s: 1, fret: 9,  num: '1', color: ALPHA_COLOR, glow: 'rgba(255,74,74,' },
+  { shape: 'alpha', s: 2, fret: 11, num: '5', color: ALPHA_COLOR, glow: 'rgba(255,74,74,' },
+  { shape: 'alpha', s: 3, fret: 11, num: '1', color: ALPHA_COLOR, glow: 'rgba(255,74,74,' },
+  { shape: 'alpha', s: 4, fret: 11, num: '3', color: ALPHA_COLOR, glow: 'rgba(255,74,74,' },
+  { shape: 'alpha', s: 5, fret: 9,  num: '5', color: ALPHA_COLOR, glow: 'rgba(255,74,74,' },
+];
+
+function buildDiagram() {
+  const FRETS = 12;
+  const STRINGS = 6;
+
+  const W = 920;
+  const LABEL_GAP_TOP = 56;
+  const LABEL_GAP_BOT = 56;
+  const FB_TOP = LABEL_GAP_TOP;
+  const FB_H = 260;
+  const H = LABEL_GAP_TOP + FB_H + LABEL_GAP_BOT;
+  const LEFT = 28;
+  const RIGHT = 20;
+
+  const FW = (W - LEFT - RIGHT) / FRETS;
+  const SH = FB_H / (STRINGS - 1);
+
+  function sx(fret) {
+    return LEFT + (fret - 0.5) * FW;
+  }
+  function sy(s) {
+    return FB_TOP + (STRINGS - 1 - s) * SH;
+  }
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">`;
+  svg += `<rect width="${W}" height="${H}" fill="#000"/>`;
+
+  // ── LABELS ──
+  const labelFontSize = 20;
+  const labelTopY = LABEL_GAP_TOP - 20;
+  const labelBotY = FB_TOP + FB_H + 38;
+
+  // Echo — above, over frets 2-4
+  const echoCenter = (sx(2) + sx(4)) / 2;
+  svg += `<text x="${echoCenter}" y="${labelTopY}" text-anchor="middle"
+    font-family="'Space Mono', monospace" font-size="${labelFontSize}" font-weight="700"
+    letter-spacing="0.3em" fill="${ECHO_COLOR}" text-transform="uppercase">ECHO</text>`;
+
+  // Alpha — above, over frets 9-11
+  const alphaCenter = (sx(9) + sx(11)) / 2;
+  svg += `<text x="${alphaCenter}" y="${labelTopY}" text-anchor="middle"
+    font-family="'Space Mono', monospace" font-size="${labelFontSize}" font-weight="700"
+    letter-spacing="0.3em" fill="${ALPHA_COLOR}" text-transform="uppercase">ALPHA</text>`;
+
+  // Delta — below, shifted right: center between frets 5.5 and 7
+  const deltaCenter = (sx(5) + sx(7)) / 2 + FW * 0.3;
+  svg += `<text x="${deltaCenter}" y="${labelBotY}" text-anchor="middle"
+    font-family="'Space Mono', monospace" font-size="${labelFontSize}" font-weight="700"
+    letter-spacing="0.3em" fill="${DELTA_COLOR}" text-transform="uppercase">DELTA</text>`;
+
+  // ── FRETBOARD ──
+
+  // Nut
+  svg += `<line x1="${LEFT}" y1="${FB_TOP - 6}" x2="${LEFT}" y2="${sy(0) + 6}"
+    stroke="#d4cfc8" stroke-width="10"/>`;
+
+  // Fret lines
+  for (let f = 1; f <= FRETS; f++) {
+    const x = LEFT + f * FW;
+    svg += `<line x1="${x}" y1="${FB_TOP - 6}" x2="${x}" y2="${sy(0) + 6}"
+      stroke="#3a3a3a" stroke-width="2"/>`;
+  }
+
+  // Fret markers
+  [3, 5, 7, 9].forEach(f => {
+    svg += `<circle cx="${sx(f)}" cy="${FB_TOP + FB_H / 2}" r="4"
+      fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/>`;
+  });
+  const x12 = sx(12);
+  const midY = FB_TOP + FB_H / 2;
+  const dotSpread = SH * 0.8;
+  svg += `<circle cx="${x12}" cy="${midY - dotSpread/2}" r="4" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/>`;
+  svg += `<circle cx="${x12}" cy="${midY + dotSpread/2}" r="4" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/>`;
+
+  // Strings
+  const thicknesses = [4.5, 3.5, 2.6, 1.8, 1.2, 0.8];
+  for (let s = 0; s < STRINGS; s++) {
+    svg += `<line x1="${LEFT}" y1="${sy(s)}" x2="${LEFT + FRETS * FW}" y2="${sy(s)}"
+      stroke="#555" stroke-width="${thicknesses[s]}" stroke-linecap="round"/>`;
+  }
+
+  // ── OVERLAP DETECTION ──
+  const posMap = {};
+  ALL_DOTS.forEach((dot, i) => {
+    const key = `${dot.s}-${dot.fret}`;
+    if (!posMap[key]) posMap[key] = [];
+    posMap[key].push(i);
+  });
+
+  const DOT_R = 17;
+  const DOT_R_OVERLAP = 14;
+  const OVERLAP_OFFSET = 19;
+  const GLOW_FACTOR = 1.6;
+
+  function getDotPos(dot, i) {
+    const key = `${dot.s}-${dot.fret}`;
+    const group = posMap[key];
+    let cx = sx(dot.fret);
+    const cy = sy(dot.s);
+    const isOverlap = group.length > 1;
+    if (isOverlap) {
+      const idx = group.indexOf(i);
+      cx += (idx - (group.length - 1) / 2) * OVERLAP_OFFSET;
+    }
+    return { cx, cy, r: isOverlap ? DOT_R_OVERLAP : DOT_R };
+  }
+
+  // Pass 1: glows
+  ALL_DOTS.forEach((dot, i) => {
+    const { cx, cy, r } = getDotPos(dot, i);
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r * GLOW_FACTOR}" fill="${dot.glow}0.12)"/>`;
+  });
+
+  // Pass 2: dots + numbers
+  ALL_DOTS.forEach((dot, i) => {
+    const { cx, cy, r } = getDotPos(dot, i);
+
+    // Dark ring
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r + 2.5}" fill="#080808"/>`;
+    // Colored dot
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${dot.color}"/>`;
+
+    // Number — BLACK, bold, prominent
+    const fontSize = Math.round(r * 1.3);
+    svg += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central"
+      font-family="'Space Mono', monospace" font-size="${fontSize}" font-weight="700"
+      fill="#000">${dot.num}</text>`;
+  });
+
+  svg += `</svg>`;
+  return svg;
+}
+
+document.getElementById('diagram').innerHTML = buildDiagram();
+</script>
+
+</body>
+</html>
