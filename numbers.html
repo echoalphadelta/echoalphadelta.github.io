@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Number System — Echo Alpha Delta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+html, body { margin: 0; padding: 0; background: #000000 !important; }
+* { box-sizing: border-box; }
+body {
+  color: #f5a623;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 400;
+  line-height: 1.85;
+  text-shadow: 0 0 8px rgba(245,166,35,0.25), 0 0 20px rgba(245,166,35,0.08);
+}
+
+/* ── LAYOUT ── */
+.page {
+max-width: 720px;
+margin: 0 auto;
+padding: 40px 24px 60px;
+}
+
+/* ── HEADER / NAV ── */
+.back-link {
+display: inline-block;
+font-family: 'Space Mono', monospace;
+font-size: 0.75rem;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: #f5a623;
+text-decoration: none;
+padding: 0.5rem 1.2rem;
+border: 1px solid rgba(245,166,35,0.25);
+border-radius: 2rem;
+margin-bottom: 40px;
+transition: all 0.3s ease;
+}
+.back-link:hover {
+color: #ffc85c;
+border-color: rgba(245,166,35,0.5);
+box-shadow: 0 0 12px rgba(245,166,35,0.2);
+}
+
+/* ── HEADINGS ── */
+h1 {
+font-family: 'Space Mono', monospace;
+font-size: 1.6rem;
+font-weight: 700;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: #f5a623;
+text-shadow: 0 0 16px rgba(245,166,35,0.4), 0 0 40px rgba(245,166,35,0.15);
+margin: 0 0 12px 0;
+line-height: 1.3;
+}
+h2 {
+font-family: 'Space Mono', monospace;
+font-size: 1.05rem;
+font-weight: 700;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+color: #ffc85c;
+text-shadow: 0 0 12px rgba(245,166,35,0.3);
+margin: 48px 0 16px 0;
+padding-bottom: 8px;
+border-bottom: 1px solid rgba(245,166,35,0.15);
+}
+
+/* ── BODY TEXT ── */
+p {
+font-size: 0.88rem;
+margin: 0 0 1.2em 0;
+color: #f5a623;
+}
+.subtitle {
+font-size: 0.78rem;
+color: rgba(245,166,35,0.6);
+margin-bottom: 36px;
+font-style: italic;
+}
+
+/* ── EMPHASIS ── */
+strong, .num {
+color: #ffc85c;
+text-shadow: 0 0 10px rgba(255,200,92,0.3);
+}
+.chord-num {
+font-weight: 700;
+color: #ffc85c;
+}
+.chord-name {
+color: rgba(245,166,35,0.7);
+}
+
+/* ── TABLES ── */
+.num-table {
+width: 100%;
+border-collapse: collapse;
+margin: 20px 0 28px 0;
+font-size: 0.82rem;
+}
+.num-table th {
+font-family: 'Space Mono', monospace;
+font-size: 0.72rem;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: rgba(245,166,35,0.5);
+text-align: center;
+padding: 8px 6px;
+border-bottom: 1px solid rgba(245,166,35,0.2);
+}
+.num-table td {
+text-align: center;
+padding: 10px 6px;
+border-bottom: 1px solid rgba(245,166,35,0.08);
+color: #f5a623;
+}
+.num-table tr:hover td {
+background: rgba(245,166,35,0.04);
+}
+.num-table .highlight {
+color: #ffc85c;
+font-weight: 700;
+}
+
+/* ── INTERACTIVE TOOL ── */
+.tool-box {
+background: rgba(245,166,35,0.03);
+border: 1px solid rgba(245,166,35,0.15);
+border-radius: 12px;
+padding: 24px 20px;
+margin: 24px 0;
+}
+.tool-label {
+font-family: 'Space Mono', monospace;
+font-size: 0.7rem;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: rgba(245,166,35,0.5);
+margin-bottom: 12px;
+}
+.key-selector {
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+margin-bottom: 20px;
+}
+.key-btn {
+font-family: 'Share Tech Mono', monospace;
+font-size: 0.82rem;
+color: #f5a623;
+background: transparent;
+border: 1px solid rgba(245,166,35,0.2);
+border-radius: 6px;
+padding: 8px 14px;
+cursor: pointer;
+transition: all 0.2s ease;
+min-width: 44px;
+text-align: center;
+}
+.key-btn:hover {
+color: #ffc85c;
+border-color: rgba(245,166,35,0.5);
+box-shadow: 0 0 8px rgba(245,166,35,0.15);
+}
+.key-btn.active {
+color: #000;
+background: #f5a623;
+border-color: #f5a623;
+text-shadow: none;
+box-shadow: 0 0 16px rgba(245,166,35,0.4);
+}
+
+.result-grid {
+display: grid;
+grid-template-columns: repeat(12, 1fr);
+gap: 4px;
+margin-top: 16px;
+}
+.result-cell {
+text-align: center;
+padding: 8px 2px;
+border: 1px solid rgba(245,166,35,0.1);
+border-radius: 4px;
+font-size: 0.72rem;
+line-height: 1.4;
+}
+.result-cell .cell-num {
+font-size: 0.68rem;
+color: rgba(245,166,35,0.45);
+display: block;
+margin-bottom: 4px;
+}
+.result-cell .cell-note {
+color: #ffc85c;
+font-weight: 700;
+display: block;
+font-size: 0.82rem;
+}
+
+/* ── CHORD RESULT ── */
+.chord-grid {
+display: grid;
+grid-template-columns: repeat(7, 1fr);
+gap: 6px;
+margin-top: 16px;
+}
+.chord-cell {
+text-align: center;
+padding: 10px 4px;
+border: 1px solid rgba(245,166,35,0.1);
+border-radius: 6px;
+line-height: 1.4;
+}
+.chord-cell .cell-roman {
+font-size: 0.72rem;
+color: rgba(245,166,35,0.45);
+display: block;
+margin-bottom: 4px;
+}
+.chord-cell .cell-chord {
+color: #ffc85c;
+font-weight: 700;
+display: block;
+font-size: 0.85rem;
+}
+.chord-cell .cell-quality {
+font-size: 0.62rem;
+color: rgba(245,166,35,0.4);
+display: block;
+margin-top: 2px;
+}
+
+/* ── PROGRESSION EXAMPLES ── */
+.prog-row {
+display: flex;
+gap: 12px;
+align-items: baseline;
+margin: 8px 0;
+font-size: 0.82rem;
+}
+.prog-nums {
+color: #ffc85c;
+font-weight: 700;
+min-width: 180px;
+}
+.prog-chords {
+color: rgba(245,166,35,0.6);
+}
+.prog-label {
+font-size: 0.68rem;
+color: rgba(245,166,35,0.35);
+font-style: italic;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+.page { padding: 24px 16px 40px; }
+h1 { font-size: 1.2rem; }
+.result-grid { grid-template-columns: repeat(6, 1fr); }
+.chord-grid { grid-template-columns: repeat(4, 1fr); }
+.prog-row { flex-direction: column; gap: 2px; }
+.prog-nums { min-width: auto; }
+}
+</style>
+
+</head>
+<body>
+<div class="page">
+
+<a href="index.html" class="back-link">← Back to Map</a>
+
+<h1>The Number System</h1>
+<p class="subtitle">A universal language for notes, chords, and progressions.</p>
+
+<p>Every key in music shares the same internal structure. The number system replaces note names with numbers, revealing the pattern that all keys have in common. Once you think in numbers, you can instantly transpose anything to any key. You stop memorising individual songs and start recognising shapes that repeat everywhere.</p>
+
+<p>There are two layers to the system: <strong>Nashville numbers</strong> for individual notes, and <strong>Roman numerals</strong> for chords.</p>
+
+<h2>Nashville Numbers: The Notes</h2>
+
+<p>Take any note as your root and call it <strong>1</strong>. Every other note gets a number based on its distance from the root. The twelve notes of the chromatic scale become:</p>
+
+<table class="num-table">
+<tr>
+  <th>Number</th>
+  <td class="highlight">1</td>
+  <td>b2</td>
+  <td class="highlight">2</td>
+  <td>b3</td>
+  <td class="highlight">3</td>
+  <td class="highlight">4</td>
+  <td>#4/b5</td>
+  <td class="highlight">5</td>
+  <td>b6</td>
+  <td class="highlight">6</td>
+  <td>b7</td>
+  <td>Maj7</td>
+</tr>
+<tr>
+  <th>In C</th>
+  <td class="highlight">C</td>
+  <td>Db</td>
+  <td class="highlight">D</td>
+  <td>Eb</td>
+  <td class="highlight">E</td>
+  <td class="highlight">F</td>
+  <td>F#/Gb</td>
+  <td class="highlight">G</td>
+  <td>Ab</td>
+  <td class="highlight">A</td>
+  <td>Bb</td>
+  <td>B</td>
+</tr>
+<tr>
+  <th>In G</th>
+  <td class="highlight">G</td>
+  <td>Ab</td>
+  <td class="highlight">A</td>
+  <td>Bb</td>
+  <td class="highlight">B</td>
+  <td class="highlight">C</td>
+  <td>C#/Db</td>
+  <td class="highlight">D</td>
+  <td>Eb</td>
+  <td class="highlight">E</td>
+  <td>F</td>
+  <td>F#</td>
+</tr>
+</table>
+
+<p>The highlighted numbers (<strong>1 2 3 4 5 6 Maj7</strong>) are the seven notes of the major scale. The others are chromatic passing tones, labelled with flats or sharps relative to those scale degrees.</p>
+
+<p>The power of this is immediate: a melody described as <strong>1 3 5 6 5</strong> is the same pattern whether the key is C, G, Bb, or anything else. The numbers are the permanent address; the note names are just a local translation.</p>
+
+<h2>Roman Numerals: The Chords</h2>
+
+<p>Chords built on each degree of the major scale get a Roman numeral. Uppercase means major; lowercase means minor. This is the natural chord map of any major key:</p>
+
+<table class="num-table">
+<tr>
+  <th>Numeral</th>
+  <td class="highlight">I</td>
+  <td>ii</td>
+  <td>iii</td>
+  <td class="highlight">IV</td>
+  <td class="highlight">V</td>
+  <td>vi</td>
+  <td>vii&deg;</td>
+</tr>
+<tr>
+  <th>Quality</th>
+  <td>Major</td>
+  <td>minor</td>
+  <td>minor</td>
+  <td>Major</td>
+  <td>Major</td>
+  <td>minor</td>
+  <td>dim</td>
+</tr>
+<tr>
+  <th>In C</th>
+  <td class="highlight">C</td>
+  <td>Dm</td>
+  <td>Em</td>
+  <td class="highlight">F</td>
+  <td class="highlight">G</td>
+  <td>Am</td>
+  <td>Bdim</td>
+</tr>
+<tr>
+  <th>In G</th>
+  <td class="highlight">G</td>
+  <td>Am</td>
+  <td>Bm</td>
+  <td class="highlight">C</td>
+  <td class="highlight">D</td>
+  <td>Em</td>
+  <td>F#dim</td>
+</tr>
+<tr>
+  <th>In A</th>
+  <td class="highlight">A</td>
+  <td>Bm</td>
+  <td>C#m</td>
+  <td class="highlight">D</td>
+  <td class="highlight">E</td>
+  <td>F#m</td>
+  <td>G#dim</td>
+</tr>
+</table>
+
+<p>Chords from outside the key use accidentals: <strong>bVII</strong> is a major chord built a whole step below the root. <strong>bIII</strong> is a major chord on the flattened third. Extensions attach directly: <strong>V7</strong> is a dominant seventh, <strong>IVmaj7</strong> is a major seventh on the fourth degree, <strong>Vsus4</strong> is a suspended fourth on the fifth.</p>
+
+<h2>Why This Matters</h2>
+
+<p>Most songs are built from the same small set of progressions. When you see the numbers instead of the note names, you recognise them instantly across any key:</p>
+
+<div class="tool-box" style="background: transparent; border: none; padding: 0;">
+  <div class="prog-row">
+    <span class="prog-nums">I - V - vi - IV</span>
+    <span class="prog-label">pop standard</span>
+  </div>
+  <div class="prog-row">
+    <span class="prog-nums">I - IV - V - I</span>
+    <span class="prog-label">blues / rock foundation</span>
+  </div>
+  <div class="prog-row">
+    <span class="prog-nums">ii - V - I</span>
+    <span class="prog-label">jazz essential</span>
+  </div>
+  <div class="prog-row">
+    <span class="prog-nums">I - bVII - IV - I</span>
+    <span class="prog-label">mixolydian rock</span>
+  </div>
+  <div class="prog-row">
+    <span class="prog-nums">vi - IV - I - V</span>
+    <span class="prog-label">emotional pop / anthem</span>
+  </div>
+</div>
+
+<p>A guitarist who thinks in numbers can hear "one five six four" and play it in any key without hesitation. The number system is the bridge between understanding and fluency.</p>
+
+<h2>Try It: Key Transposer</h2>
+
+<p>Select a key below to see both Nashville numbers and Roman numeral chords mapped out for that key.</p>
+
+<div class="tool-box">
+  <div class="tool-label">Select Key</div>
+  <div class="key-selector" id="keySelector"></div>
+
+  <div class="tool-label" style="margin-top:20px;">Chromatic Scale (Nashville Numbers)</div>
+  <div class="result-grid" id="noteGrid"></div>
+
+  <div class="tool-label" style="margin-top:24px;">Diatonic Chords (Roman Numerals)</div>
+  <div class="chord-grid" id="chordGrid"></div>
+
+  <div class="tool-label" style="margin-top:24px;">Common Progressions in <span id="progKeyLabel">C</span></div>
+  <div id="progGrid"></div>
+</div>
+
+</div>
+
+<script>
+// ── DATA ──
+const NOTES_SHARP = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const NOTES_FLAT  = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+
+// Keys and their preferred accidental style
+const KEYS = [
+  {name:'C',  idx:0,  use:'sharp'},
+  {name:'Db', idx:1,  use:'flat'},
+  {name:'D',  idx:2,  use:'sharp'},
+  {name:'Eb', idx:3,  use:'flat'},
+  {name:'E',  idx:4,  use:'sharp'},
+  {name:'F',  idx:5,  use:'flat'},
+  {name:'F#', idx:6,  use:'sharp'},
+  {name:'G',  idx:7,  use:'sharp'},
+  {name:'Ab', idx:8,  use:'flat'},
+  {name:'A',  idx:9,  use:'sharp'},
+  {name:'Bb', idx:10, use:'flat'},
+  {name:'B',  idx:11, use:'sharp'},
+];
+
+const NASHVILLE = ['1','b2','2','b3','3','4','#4/b5','5','b6','6','b7','Maj7'];
+const MAJOR_SCALE_INTERVALS = [0, 2, 4, 5, 7, 9, 11]; // W W H W W W H
+const ROMAN = ['I','ii','iii','IV','V','vi','vii°'];
+const QUALITIES = ['Major','minor','minor','Major','Major','minor','dim'];
+
+const PROGRESSIONS = [
+  {name: 'Pop Standard',       nums: [0, 4, 5, 3]},        // I V vi IV
+  {name: 'Blues / Rock',       nums: [0, 3, 4, 0]},        // I IV V I
+  {name: 'Jazz ii-V-I',       nums: [1, 4, 0]},            // ii V I
+  {name: 'Mixolydian Rock',   nums: [0, -1, 3, 0]},        // I bVII IV I  (-1 = bVII)
+  {name: 'Emotional Anthem',  nums: [5, 3, 0, 4]},         // vi IV I V
+];
+
+// Special roman numerals for non-diatonic chords
+const PROG_ROMAN = {
+  '-1': 'bVII'
+};
+
+let currentKey = 0; // index into KEYS
+
+function noteName(semitones, useFlat) {
+  const idx = ((semitones % 12) + 12) % 12;
+  return useFlat ? NOTES_FLAT[idx] : NOTES_SHARP[idx];
+}
+
+function getScaleNote(keyIdx, interval) {
+  const idx = (KEYS[keyIdx].idx + interval) % 12;
+  const useFlat = KEYS[keyIdx].use === 'flat';
+  return useFlat ? NOTES_FLAT[idx] : NOTES_SHARP[idx];
+}
+
+function getChromaticNote(keyIdx, semitone) {
+  const idx = (KEYS[keyIdx].idx + semitone) % 12;
+  const useFlat = KEYS[keyIdx].use === 'flat';
+  // For #4/b5, show both
+  if (semitone === 6) {
+    const sharp = NOTES_SHARP[idx];
+    const flat = NOTES_FLAT[idx];
+    if (sharp === flat) return sharp;
+    return sharp + '/' + flat;
+  }
+  return useFlat ? NOTES_FLAT[idx] : NOTES_SHARP[idx];
+}
+
+function getChordName(keyIdx, degree) {
+  const interval = MAJOR_SCALE_INTERVALS[degree];
+  const root = getScaleNote(keyIdx, interval);
+  const quality = QUALITIES[degree];
+  if (quality === 'Major') return root;
+  if (quality === 'minor') return root + 'm';
+  if (quality === 'dim') return root + 'dim';
+  return root;
+}
+
+function getProgressionChord(keyIdx, num) {
+  // Handle special cases like bVII
+  if (num === -1) {
+    // bVII = major chord on flat 7th (10 semitones)
+    const idx = (KEYS[keyIdx].idx + 10) % 12;
+    const useFlat = KEYS[keyIdx].use === 'flat';
+    return useFlat ? NOTES_FLAT[idx] : NOTES_SHARP[idx];
+  }
+  return getChordName(keyIdx, num);
+}
+
+function getProgressionRoman(num) {
+  if (PROG_ROMAN[num] !== undefined) return PROG_ROMAN[num];
+  return ROMAN[num];
+}
+
+function render() {
+  const key = KEYS[currentKey];
+
+  // Key buttons
+  const sel = document.getElementById('keySelector');
+  sel.innerHTML = KEYS.map((k, i) =>
+    `<button class="key-btn ${i === currentKey ? 'active' : ''}" onclick="selectKey(${i})">${k.name}</button>`
+  ).join('');
+
+  // Chromatic note grid
+  const noteGrid = document.getElementById('noteGrid');
+  noteGrid.innerHTML = '';
+  for (let i = 0; i < 12; i++) {
+    const isMajorScale = MAJOR_SCALE_INTERVALS.includes(i);
+    noteGrid.innerHTML += `
+      <div class="result-cell" style="${isMajorScale ? 'border-color:rgba(245,166,35,0.25);' : ''}">
+        <span class="cell-num">${NASHVILLE[i]}</span>
+        <span class="cell-note" style="${isMajorScale ? '' : 'color:rgba(245,166,35,0.45);font-weight:400;'}">${getChromaticNote(currentKey, i)}</span>
+      </div>`;
+  }
+
+  // Diatonic chord grid
+  const chordGrid = document.getElementById('chordGrid');
+  chordGrid.innerHTML = '';
+  for (let i = 0; i < 7; i++) {
+    chordGrid.innerHTML += `
+      <div class="chord-cell">
+        <span class="cell-roman">${ROMAN[i]}</span>
+        <span class="cell-chord">${getChordName(currentKey, i)}</span>
+        <span class="cell-quality">${QUALITIES[i]}</span>
+      </div>`;
+  }
+
+  // Progression examples
+  document.getElementById('progKeyLabel').textContent = key.name;
+  const progGrid = document.getElementById('progGrid');
+  progGrid.innerHTML = PROGRESSIONS.map(prog => {
+    const romans = prog.nums.map(n => getProgressionRoman(n)).join(' - ');
+    const chords = prog.nums.map(n => getProgressionChord(currentKey, n)).join(' - ');
+    return `<div class="prog-row">
+      <span class="prog-nums">${romans}</span>
+      <span class="prog-chords">${chords}</span>
+      <span class="prog-label">${prog.name}</span>
+    </div>`;
+  }).join('');
+}
+
+function selectKey(idx) {
+  currentKey = idx;
+  render();
+}
+
+render();
+</script>
+
+</body>
+</html>
