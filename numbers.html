@@ -498,10 +498,9 @@ function getChordName(keyIdx, degree) {
 function getProgressionChord(keyIdx, num) {
   // Handle special cases like bVII
   if (num === -1) {
-    // bVII = major chord on flat 7th (10 semitones)
+    // bVII = major chord on flat 7th (10 semitones) — always flat-spelled
     const idx = (KEYS[keyIdx].idx + 10) % 12;
-    const useFlat = KEYS[keyIdx].use === 'flat';
-    return useFlat ? NOTES_FLAT[idx] : NOTES_SHARP[idx];
+    return NOTES_FLAT[idx];
   }
   return getChordName(keyIdx, num);
 }
