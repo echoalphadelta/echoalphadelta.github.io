@@ -473,6 +473,7 @@ footer p { font-family: ‘Space Mono’, monospace; font-size: 0.58rem; letter-
 
 <div class="chord-display" id="chordDisplay"></div>
 <div class="diagram-grid" id="grid"></div>
+<div id="openChordDisplay" style="display:none;max-width:440px;margin:16px auto 0;padding:0 16px;"></div>
 <div style="text-align:center;margin-top:16px;padding-bottom:24px;"><button class="map-btn" id="mapBtn" onclick="toggleMap()">Merge</button></div>
 <div class="gold-legend" id="goldLegend">
   <span class="gold-dot-sample"></span>complete open chord
@@ -843,6 +844,79 @@ function buildDiagram(keyIndex, quality, shapeName, isBlank = false) {
   return svg;
 }
 
+// ── Complete open chord — first-position zoomed view ─────────────────
+function buildOpenChordSVG(keyIndex, quality) {
+  const shapeName = keyIndex === 7 ? 'alpha' : 'delta';
+  const shapeColor = SHAPES[shapeName].color;
+
+  const SHOW_FRETS = 4;
+  const W = 760, H = 200;
+  const LEFT = 54, RIGHT = 24, TOP = 20, BOT = 28;
+  const STRINGS = 6;
+  const FW = (W - LEFT - RIGHT) / SHOW_FRETS;
+  const SH = (H - TOP - BOT) / (STRINGS - 1);
+
+  function sx(fret) { return fret === 0 ? LEFT - 10 : LEFT + (fret - 0.5) * FW; }
+  function sy(s)    { return TOP + (STRINGS - 1 - s) * SH; }
+
+  // Collect shape notes at frets 0–4
+  const allNotes = getQualityNotes(shapeName, quality, keyIndex);
+  const seen = new Set();
+  const openNotes = [];
+  allNotes.forEach(n => {
+    if (n.fret > SHOW_FRETS) return;
+    const k = `${n.s}-${n.fret}`;
+    if (seen.has(k)) return;
+    seen.add(k);
+    openNotes.push(n);
+  });
+
+  const goldDots = getGoldDots(shapeName, keyIndex, quality).filter(d => d.fret <= SHOW_FRETS);
+  const goldKeys = new Set(goldDots.map(d => `${d.s}-${d.fret}`));
+  const filteredNotes = openNotes.filter(n => !goldKeys.has(`${n.s}-${n.fret}`));
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">`;
+  svg += `<rect x="0" y="0" width="${W}" height="${H}" fill="#000"/>`;
+
+  // Fret lines
+  for (let f = 0; f <= SHOW_FRETS; f++) {
+    const x = LEFT + f * FW;
+    const isNut = f === 0;
+    svg += `<line x1="${x}" y1="${TOP}" x2="${x}" y2="${TOP + SH*(STRINGS-1)}"
+      stroke="${isNut ? '#d4cfc8' : '#666'}" stroke-width="${isNut ? 12 : 3}"/>`;
+  }
+
+  // Fret 3 marker dot
+  const x3 = LEFT + 2 * FW + FW * 0.5;
+  svg += `<circle cx="${x3}" cy="${TOP + SH * 2.5}" r="3.5" fill="#ccc"/>`;
+
+  // Strings
+  const thicknesses = [5.5, 4.2, 3.2, 2.3, 1.5, 0.9];
+  for (let s = 0; s < STRINGS; s++) {
+    svg += `<line x1="${LEFT}" y1="${sy(s)}" x2="${LEFT + SHOW_FRETS * FW}" y2="${sy(s)}"
+      stroke="#999" stroke-width="${thicknesses[s]}" stroke-linecap="round"/>`;
+  }
+
+  // Shape dots (red for alpha / green for delta)
+  filteredNotes.forEach(n => {
+    const cx = sx(n.fret), cy = sy(n.s), r = 13;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r*1.6}" fill="${shapeColor}" opacity="0.08"/>`;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r+1.5}" fill="#1a1a1a"/>`;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${shapeColor}"/>`;
+  });
+
+  // Gold completion dots
+  goldDots.forEach(d => {
+    const cx = sx(d.fret), cy = sy(d.s), r = 13;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r*1.6}" fill="#f0c040" opacity="0.08"/>`;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r+1.5}" fill="#1a1a1a"/>`;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#f0c040"/>`;
+  });
+
+  svg += `</svg>`;
+  return svg;
+}
+
 // ── The Map — all three shapes on one fretboard ───────────────────────
 let mapMode = false;
 
@@ -986,6 +1060,15 @@ function renderPage() {
   const majorFamilies = ['major','Maj7','add9','sus4','6','9','11','#11'];
   const showGold = (keyIndex === 0 && majorFamilies.includes(quality)) || (keyIndex === 7 && majorFamilies.includes(quality));
   document.getElementById('goldLegend').classList.toggle('active', showGold);
+
+  // Show complete open chord diagram above Merge button
+  const openChordEl = document.getElementById('openChordDisplay');
+  if (showGold && !mapMode) {
+    openChordEl.innerHTML = buildOpenChordSVG(keyIndex, quality);
+    openChordEl.style.display = 'block';
+  } else {
+    openChordEl.style.display = 'none';
+  }
 
   if (mapMode) {
     const card = document.createElement('div');
