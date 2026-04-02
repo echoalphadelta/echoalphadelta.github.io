@@ -112,13 +112,10 @@ function neckSVG(o) {
 
 var VOICINGS = [
   {name: 'The Hendrix Chord', subname: '7\u266f9', color: '#9b5de5',
-   copy: 'One of the most recognisable voicings. The tension between the major third and the sharp ninth \u2014 a note that is simultaneously minor and major \u2014 gives it an unresolved, electric quality.',
    strings: [-1,7,6,7,8,-1], nashville: ['','1','3','7','\u266f9','']},
   {name: 'The James Brown Chord', subname: 'G9', color: '#7c3a1f',
-   copy: 'Tight, percussive, and voiced high on the neck. The stab is the point \u2014 not the sustain.',
    strings: [-1,10,9,10,10,10], nashville: ['','1','3','7','9','5']},
   {name: 'The James Bond Chord', subname: 'EmM7', color: '#b0b0c0',
-   copy: 'The minor chord with a major seventh. The descending chromatic bass line \u2014 E, D\u266f, D, C\u266f \u2014 is built into the progression that begins here.',
    strings: [0,2,1,0,0,0], nashville: ['1','5','7','b3','5','1']},
 ];
 
@@ -134,14 +131,13 @@ function render() {
     html += '<div class="voicing-section">'
           + '<h2 style="color:' + v.color + ';">' + v.name + '</h2>'
           + '<span class="subname" style="color:' + v.color + ';">' + v.subname + '</span>'
-          + '<p>' + v.copy + '</p>'
           + '<div class="neck-wrap">' + neckSVG(v) + '</div>'
           + '</div>';
   });
   html += '<div class="power-section">'
         + '<h2 style="color:#f5a623;">Power Chords \u2014 Three Positions</h2>'
         + '<span class="subname" style="color:#f5a623;">Root and fifth across the three shape positions</span>'
-        + '<p>The power chord is the foundation of rhythm playing. Each of our three shape positions has its own natural home for the power chord. These are not named after colours \u2014 they are named after where they live on the neck.</p>';
+;
   POWER_CHORDS.forEach(function(pc) {
     html += '<div class="power-card">'
           + '<div class="power-label" style="color:' + pc.color + ';">' + pc.position + '<span class="power-key">' + pc.key + '</span></div>'
