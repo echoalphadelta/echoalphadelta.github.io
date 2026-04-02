@@ -5,22 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Iconic Voicings — Echo Alpha Delta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-html, body { margin: 0; padding: 0; background: #000000 !important; }
+html, body { margin: 0; padding: 0; background: #000; }
 * { box-sizing: border-box; }
-body {
-  color: #f0ede8;
-  font-family: 'Share Tech Mono', monospace;
-  font-weight: 400;
-  line-height: 1.85;
-}
+body { color: #f0ede8; font-family: 'Share Tech Mono', monospace; font-weight: 400; line-height: 1.85; }
 
-.page {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 40px 24px 60px;
-}
+.page { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
 
 .back-link {
   display: inline-block;
@@ -36,11 +27,7 @@ body {
   margin-bottom: 40px;
   transition: all 0.3s ease;
 }
-.back-link:hover {
-  color: #ffc85c;
-  border-color: rgba(245,166,35,0.5);
-  box-shadow: 0 0 12px rgba(245,166,35,0.2);
-}
+.back-link:hover { color: #ffc85c; border-color: rgba(245,166,35,0.5); box-shadow: 0 0 12px rgba(245,166,35,0.2); }
 
 h1 {
   font-family: 'Space Mono', monospace;
@@ -51,78 +38,43 @@ h1 {
   color: #f5a623;
   text-shadow: 0 0 16px rgba(245,166,35,0.4), 0 0 40px rgba(245,166,35,0.15);
   margin: 0 0 32px 0;
-  line-height: 1.3;
 }
 
-h2 {
+h2 { font-family: 'Space Mono', monospace; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #f5a623; margin: 48px 0 10px 0; }
+
+p { font-size: 0.88rem; color: #c8c4be; margin: 0 0 14px 0; }
+
+.chord-name {
   font-family: 'Space Mono', monospace;
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #f5a623;
-  margin: 48px 0 10px 0;
-}
-
-p {
-  font-size: 0.88rem;
-  margin: 0 0 1.4em 0;
-  color: #c8c4be;
-}
-
-/* ── Voicing block ── */
-.voicing-block {
-  display: flex;
-  align-items: flex-start;
-  gap: 32px;
-  margin-top: 20px;
-}
-
-.voicing-diagram {
-  flex-shrink: 0;
-}
-
-.voicing-text {
-  padding-top: 8px;
-}
-
-.chord-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: #f0ede8;
-  margin-bottom: 8px;
+  margin: 8px 0 12px 0;
 }
 
-/* ── Power chord row ── */
-.power-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 32px;
-  margin-top: 20px;
-  align-items: flex-end;
+.diag-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 16px 0;
 }
 
-.power-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
+.diag-card { display: flex; flex-direction: column; }
 
-.power-label {
+.diag-label {
   font-family: 'Space Mono', monospace;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-align: center;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
 }
 
-@media (max-width: 560px) {
-  .voicing-block { flex-direction: column; }
+.neck-wrap { margin: 16px 0; }
+
+@media (max-width: 620px) {
+  .diag-row { grid-template-columns: 1fr; }
   h1 { font-size: 1.1rem; }
-  .page { padding: 24px 16px 40px; }
+  .page { padding: 24px 16px 60px; }
 }
 </style>
 </head>
@@ -137,192 +89,130 @@ p {
 
   <h2>The Power Chord</h2>
   <p>A dyad that lives at the bottom of each of our three grips. Here is a blue, red, and green power chord.</p>
-
-  <div class="power-row" id="powerRow"></div>
+  <div class="diag-row" id="powerRow"></div>
 
   <h2>The Hendrix Chord — 7#9</h2>
   <p>Hendrix blew our minds with this one. He famously used it on E — here it is in D at the 5th position. Pull it out to put an exclamation on things.</p>
-
-  <div class="voicing-block">
-    <div class="voicing-diagram" id="hendrixDiagram"></div>
-    <div class="voicing-text">
-      <div class="chord-label">D7#9</div>
-    </div>
-  </div>
+  <div class="chord-name" style="color:#c084fc;">D7#9</div>
+  <div class="neck-wrap" id="hendrixMap"></div>
 
   <h2>The James Brown Chord — 9</h2>
   <p>James Brown rocked the dance floor with this one — and you can too. G root at the 10th position.</p>
-
-  <div class="voicing-block">
-    <div class="voicing-diagram" id="jbDiagram"></div>
-    <div class="voicing-text">
-      <div class="chord-label">G9</div>
-    </div>
-  </div>
+  <div class="chord-name" style="color:#d4a76a;">G9</div>
+  <div class="neck-wrap" id="jbMap"></div>
 
   <h2>The James Bond Chord — minMaj9</h2>
   <p>Pull this one off to be cheeky. Dark, cinematic and unmistakeable.</p>
-
-  <div class="voicing-block">
-    <div class="voicing-diagram" id="bondDiagram"></div>
-    <div class="voicing-text">
-      <div class="chord-label">E<span style="font-size:0.8em;">minMaj9</span></div>
-    </div>
-  </div>
-
-  <div style="margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-wrap:wrap;justify-content:space-evenly;gap:16px;">
-    <a href="scales.html" class="back-link" style="margin-bottom:0;">Scales</a>
-    <a href="exercises.html" class="back-link" style="margin-bottom:0;">Exercises</a>
-    <a href="index.html" class="back-link" style="margin-bottom:0;">← Back to Map</a>
-  </div>
+  <div class="chord-name" style="color:#c0c8d8;">EminMaj9</div>
+  <div class="neck-wrap" id="bondMap"></div>
 
 </div>
 
 <script>
-// ── Chord box renderer ────────────────────────────────────────────────
-// strings: array of 6 values [lowE … highE]
-//   null = muted (X), 0 = open (O), n = fret number
-// startFret: lowest fret shown in the grid
-// barreAt: { fret, from, to } column indices (0=low E) or null
-// color: dot fill color
+const STR_THICK = [3.2, 2.4, 1.7, 1.2, 0.8, 0.5]; // low E (si=0) → high e (si=5)
 
-function drawChordBox(strings, startFret, barreAt, color) {
-  const COLS = 6;
-  const ROWS = 4;
-  const W = 116, H = 138;
-  const mL = 20, mR = 16, mT = 30, mB = 12;
-  const gW = W - mL - mR;
-  const gH = H - mT - mB;
-  const cW = gW / (COLS - 1);
-  const rH = gH / ROWS;
-  const dR = 8.5;
-  const showNut = startFret === 1;
-  const nutH = showNut ? 6 : 0;
+// Full 12-fret horizontal neck map
+// dots: [{si, fret, color}]  si=0=low E (bottom), si=5=high e (top)
+function neckSVG(dots) {
+  const W = 640, H = 90;
+  const ML = 26, MR = 10, MT = 8, MB = 8;
+  const NF = 12;
+  const FW = (W - ML - MR) / NF;
+  const SH = (H - MT - MB) / 5;
 
-  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:${W}px;height:${H}px;display:block;">`;
-  svg += `<rect width="${W}" height="${H}" fill="#000"/>`;
+  function sy(si) { return MT + (5 - si) * SH; }
 
-  // Nut or fret indicator
-  if (showNut) {
-    svg += `<rect x="${mL - 2}" y="${mT}" width="${gW + 4}" height="${nutH}" fill="#c8c4be" rx="1"/>`;
-  } else {
-    svg += `<text x="${mL - 6}" y="${mT + nutH + rH * 0.6}" text-anchor="end"
-      font-family="'Space Mono', monospace" font-size="8" fill="#666">${startFret}fr</text>`;
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg">`;
+  s += `<rect width="${W}" height="${H}" fill="#0a0a0a" rx="2"/>`;
+
+  // Strings
+  for (let si = 0; si < 6; si++) {
+    const y = sy(si).toFixed(1);
+    s += `<line x1="${ML}" y1="${y}" x2="${(ML + NF * FW).toFixed(1)}" y2="${y}"
+      stroke="#383838" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
   }
+
+  // Nut
+  s += `<line x1="${ML}" y1="${MT - 2}" x2="${ML}" y2="${H - MB + 2}" stroke="#999" stroke-width="3"/>`;
 
   // Fret lines
-  for (let r = 0; r <= ROWS; r++) {
-    const y = mT + nutH + r * rH;
-    svg += `<line x1="${mL}" y1="${y}" x2="${mL + gW}" y2="${y}" stroke="#252525" stroke-width="1"/>`;
+  for (let f = 1; f <= NF; f++) {
+    const x = (ML + f * FW).toFixed(1);
+    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}"
+      stroke="${f === 12 ? '#444' : '#1c1c1c'}" stroke-width="${f === 12 ? 2 : 1}"/>`;
   }
 
-  // String lines
-  const thick = [3.2, 2.5, 1.9, 1.3, 0.9, 0.65];
-  for (let c = 0; c < COLS; c++) {
-    const x = mL + c * cW;
-    svg += `<line x1="${x}" y1="${mT + nutH}" x2="${x}" y2="${mT + nutH + ROWS * rH}"
-      stroke="#333" stroke-width="${thick[c]}" stroke-linecap="round"/>`;
-  }
+  // Position markers
+  [3, 5, 7, 9].forEach(f => {
+    s += `<circle cx="${(ML + (f - 0.5) * FW).toFixed(1)}" cy="${(H / 2).toFixed(1)}" r="2.5" fill="#1a1a1a"/>`;
+  });
+  const x12 = ML + 11.5 * FW;
+  s += `<circle cx="${x12.toFixed(1)}" cy="${(MT + SH * 1.5).toFixed(1)}" r="2.5" fill="#1a1a1a"/>`;
+  s += `<circle cx="${x12.toFixed(1)}" cy="${(MT + SH * 3.5).toFixed(1)}" r="2.5" fill="#1a1a1a"/>`;
 
-  // Barre
-  if (barreAt) {
-    const row = barreAt.fret - startFret;
-    const bx1 = mL + barreAt.from * cW - dR * 0.5;
-    const bx2 = mL + barreAt.to   * cW + dR * 0.5;
-    const by  = mT + nutH + row * rH + rH / 2;
-    svg += `<rect x="${bx1}" y="${by - dR * 0.9}" width="${bx2 - bx1}" height="${dR * 1.8}"
-      fill="${color}" opacity="0.85" rx="${dR * 0.9}"/>`;
-  }
-
-  // Open / muted markers + dots
-  strings.forEach((val, c) => {
-    const x = mL + c * cW;
-    if (val === null) {
-      const y = mT - 10;
-      const s = 3.5;
-      svg += `<line x1="${x-s}" y1="${y-s}" x2="${x+s}" y2="${y+s}" stroke="#555" stroke-width="1.5" stroke-linecap="round"/>`;
-      svg += `<line x1="${x+s}" y1="${y-s}" x2="${x-s}" y2="${y+s}" stroke="#555" stroke-width="1.5" stroke-linecap="round"/>`;
-    } else if (val === 0) {
-      svg += `<circle cx="${x}" cy="${mT - 10}" r="4" fill="none" stroke="#777" stroke-width="1.5"/>`;
-    } else {
-      const row = val - startFret;
-      if (row >= 0 && row < ROWS) {
-        const cy = mT + nutH + row * rH + rH / 2;
-        svg += `<circle cx="${x}" cy="${cy}" r="${dR + 1.5}" fill="#050505"/>`;
-        svg += `<circle cx="${x}" cy="${cy}" r="${dR}" fill="${color}" opacity="0.9"/>`;
-      }
-    }
+  // Dots
+  dots.forEach(({ si, fret, color }) => {
+    const cx = fret === 0 ? ML - 13 : ML + (fret - 0.5) * FW;
+    const cy = sy(si);
+    s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="6" fill="${color}" opacity="0.9"/>`;
   });
 
-  svg += `</svg>`;
-  return svg;
+  s += '</svg>';
+  return s;
 }
 
 const ECHO_COLOR  = '#4a9eff';
 const ALPHA_COLOR = '#ff4a4a';
 const DELTA_COLOR = '#4aff7a';
+const HENDRIX_COLOR = '#c084fc';  // purple
+const JB_COLOR      = '#d4a76a';  // tan/brown
+const BOND_COLOR    = '#c0c8d8';  // silver
 
-// ── Power chords ──────────────────────────────────────────────────────
-// Root + 5th + octave root, open position, one per shape
-
+// ── Power chords (3-column grid) ─────────────────────────────────────────────
 const powerChords = [
-  {
-    label: 'E5',
-    sub: 'Echo · blue',
-    color: ECHO_COLOR,
-    // low E: 0(E root), A: 2(B, 5th), D: 2(E, octave), G/B/e: muted
-    strings: [0, 2, 2, null, null, null],
-    startFret: 1,
-    barre: null,
-  },
-  {
-    label: 'A5',
-    sub: 'Alpha · red',
-    color: ALPHA_COLOR,
-    // low E: muted, A: 0(A root), D: 2(E, 5th), G: 2(A, octave), B/e: muted
-    strings: [null, 0, 2, 2, null, null],
-    startFret: 1,
-    barre: null,
-  },
-  {
-    label: 'D5',
-    sub: 'Delta · green',
-    color: DELTA_COLOR,
-    // low E/A: muted, D: 0(D root), G: 2(A, 5th), B: 3(D, octave), e: muted
-    strings: [null, null, 0, 2, 3, null],
-    startFret: 1,
-    barre: null,
-  },
+  { label: 'E5', color: ECHO_COLOR,  dots: [{si:0,fret:0},{si:1,fret:2},{si:2,fret:2}] },
+  { label: 'A5', color: ALPHA_COLOR, dots: [{si:1,fret:0},{si:2,fret:2},{si:3,fret:2}] },
+  { label: 'D5', color: DELTA_COLOR, dots: [{si:2,fret:0},{si:3,fret:2},{si:4,fret:3}] },
 ];
 
 const powerRow = document.getElementById('powerRow');
 powerChords.forEach(ch => {
-  const item = document.createElement('div');
-  item.className = 'power-item';
-  item.innerHTML =
-    drawChordBox(ch.strings, ch.startFret, ch.barre, ch.color) +
-    `<div class="power-label" style="color:${ch.color};">${ch.label}</div>` +
-    `<div style="font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:rgba(255,255,255,0.25);letter-spacing:0.08em;">${ch.sub}</div>`;
-  powerRow.appendChild(item);
+  const card = document.createElement('div');
+  card.className = 'diag-card';
+  card.innerHTML =
+    `<div class="diag-label" style="color:${ch.color};">${ch.label}</div>` +
+    neckSVG(ch.dots.map(d => ({...d, color: ch.color})));
+  powerRow.appendChild(card);
 });
 
-// ── D7#9 — The Hendrix Chord ──────────────────────────────────────────
-// x 5 4 5 6 x  (startFret 4)
-// A: 5=D(root), D: 4=F#(3rd), G: 5=C(b7), B: 6=F=E#(#9)
-document.getElementById('hendrixDiagram').innerHTML =
-  drawChordBox([null, 5, 4, 5, 6, null], 4, null, '#f5a623');
+// ── Named chords ──────────────────────────────────────────────────────────────
 
-// ── G9 — The James Brown Chord ────────────────────────────────────────
-// x 10 9 10 10 x  (startFret 9)
-// A: 10=G(root), D: 9=B(3rd), G: 10=F(b7), B: 10=A(9th)
-document.getElementById('jbDiagram').innerHTML =
-  drawChordBox([null, 10, 9, 10, 10, null], 9, null, '#f5a623');
+// D7#9 — Hendrix: x 5 4 5 6 x
+// A(si=1) fret 5 = D root, D(si=2) fret 4 = F#, G(si=3) fret 5 = C, B(si=4) fret 6 = F(#9)
+document.getElementById('hendrixMap').innerHTML = neckSVG([
+  { si: 1, fret: 5, color: HENDRIX_COLOR },
+  { si: 2, fret: 4, color: HENDRIX_COLOR },
+  { si: 3, fret: 5, color: HENDRIX_COLOR },
+  { si: 4, fret: 6, color: HENDRIX_COLOR },
+]);
 
-// ── EminMaj9 — The James Bond Chord ──────────────────────────────────
-// 0 2 1 0 0 2  (open, startFret 1)
-// E: 0=E(root), A: 2=B(5th), D: 1=D#(maj7), G: 0=G(b3), B: 0=B(5th), e: 2=F#(9th)
-document.getElementById('bondDiagram').innerHTML =
-  drawChordBox([0, 2, 1, 0, 0, 2], 1, null, '#f5a623');
+// G9 — James Brown: x 10 9 10 10 x
+// A(si=1) fret 10 = G root, D(si=2) fret 9 = B, G(si=3) fret 10 = F, B(si=4) fret 10 = A(9th)
+document.getElementById('jbMap').innerHTML = neckSVG([
+  { si: 1, fret: 10, color: JB_COLOR },
+  { si: 2, fret:  9, color: JB_COLOR },
+  { si: 3, fret: 10, color: JB_COLOR },
+  { si: 4, fret: 10, color: JB_COLOR },
+]);
+
+// EminMaj9 — James Bond: open E, 10th fret A, 9th fret D, 8th fret G, 7th fret B
+document.getElementById('bondMap').innerHTML = neckSVG([
+  { si: 0, fret:  0, color: BOND_COLOR },
+  { si: 1, fret: 10, color: BOND_COLOR },
+  { si: 2, fret:  9, color: BOND_COLOR },
+  { si: 3, fret:  8, color: BOND_COLOR },
+  { si: 4, fret:  7, color: BOND_COLOR },
+]);
 </script>
 </body>
 </html>
