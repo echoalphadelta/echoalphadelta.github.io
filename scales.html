@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scales — Echo Alpha Delta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+html, body { margin: 0; padding: 0; background: #000000 !important; }
+* { box-sizing: border-box; }
+body {
+  color: #f0ede8;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 400;
+  line-height: 1.85;
+}
+
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+
+.back-link {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #f5a623;
+  text-decoration: none;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(245,166,35,0.25);
+  border-radius: 2rem;
+  margin-bottom: 40px;
+  transition: all 0.3s ease;
+}
+.back-link:hover {
+  color: #ffc85c;
+  border-color: rgba(245,166,35,0.5);
+  box-shadow: 0 0 12px rgba(245,166,35,0.2);
+}
+
+h1 {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f5a623;
+  text-shadow: 0 0 16px rgba(245,166,35,0.4), 0 0 40px rgba(245,166,35,0.15);
+  margin: 0 0 32px 0;
+  line-height: 1.3;
+}
+
+h2 {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #f5a623;
+  margin: 40px 0 10px 0;
+}
+
+p {
+  font-size: 0.88rem;
+  margin: 0 0 1.4em 0;
+  color: #c8c4be;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 28px;
+  align-items: flex-end;
+}
+
+.ctrl-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ctrl-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245,166,35,0.55);
+}
+
+select {
+  background: #0a0a0a;
+  color: #f5a623;
+  border: 1px solid rgba(245,166,35,0.3);
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23f5a623' opacity='0.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+select:hover, select:focus {
+  border-color: rgba(245,166,35,0.6);
+}
+
+.fretboard-wrap {
+  overflow-x: auto;
+  margin-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+.fretboard-wrap::-webkit-scrollbar { height: 4px; }
+.fretboard-wrap::-webkit-scrollbar-track { background: #111; }
+.fretboard-wrap::-webkit-scrollbar-thumb { background: rgba(245,166,35,0.2); border-radius: 2px; }
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  margin: 20px 0 40px 0;
+  padding: 14px 18px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.01);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.legend-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .page { padding: 24px 16px 40px; }
+  h1 { font-size: 1.1rem; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a href="index.html" class="back-link">← Back to Map</a>
+
+  <h1>Scales</h1>
+
+  <div class="controls">
+    <div class="ctrl-group">
+      <span class="ctrl-label">Key</span>
+      <select id="keySelect">
+        <option value="0">C</option>
+        <option value="2">D</option>
+        <option value="4">E</option>
+        <option value="5">F</option>
+        <option value="7" selected>G</option>
+        <option value="9">A</option>
+        <option value="11">B</option>
+        <option value="1">C# / Db</option>
+        <option value="3">D# / Eb</option>
+        <option value="6">F# / Gb</option>
+        <option value="8">Ab / G#</option>
+        <option value="10">Bb / A#</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <span class="ctrl-label">Scale</span>
+      <select id="scaleSelect">
+        <option value="major">Major</option>
+        <option value="minor">Natural Minor</option>
+        <option value="majorPent">Major Pentatonic</option>
+        <option value="minorPent" selected>Minor Pentatonic</option>
+        <option value="blues">Blues</option>
+        <option value="dorian">Dorian</option>
+        <option value="mixolydian">Mixolydian</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="fretboard-wrap" id="fretboard"></div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#4a9eff;box-shadow:0 0 5px rgba(74,158,255,0.5);"></div>
+      <span style="color:#4a9eff;">Echo zone</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#4aff7a;box-shadow:0 0 5px rgba(74,255,122,0.5);"></div>
+      <span style="color:#4aff7a;">Delta zone</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#ff4a4a;box-shadow:0 0 5px rgba(255,74,74,0.5);"></div>
+      <span style="color:#ff4a4a;">Alpha zone</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#f5a623;border:2px solid rgba(255,255,255,0.5);"></div>
+      <span style="color:#f5a623;">Root (1)</span>
+    </div>
+  </div>
+
+  <h2>The Landscape of Sound</h2>
+  <p>Every scale is a set of intervals — specific distances between notes. The major scale has seven. The pentatonic has five. The three shapes provide a way to see those notes on the fretboard without memorising individual fret-string positions one by one.</p>
+
+  <h2>Shape Zones</h2>
+  <p>Each shape occupies a stretch of the neck. Echo sits low, anchored by a root on the low E string. Delta sits in the middle, anchored on the D string. Alpha sits higher up, anchored on the A string. Together the three zones cover every note in any scale across all twelve frets. Change the key above and the zones shift together as a unit.</p>
+
+  <h2>Connecting Zones</h2>
+  <p>Scale notes at the edge of one zone sit next to the edge of the adjacent zone. This overlap is not accidental — the shapes are designed to meet. A player who can step from one zone into the next without losing their place has effectively learned the full neck. Start by finding the same root note in all three zones. Then find the 5 in each zone. Then the 3. Anchor points first, fill in the rest later.</p>
+
+  <h2>The Pentatonic First</h2>
+  <p>Start with five notes before seven. The pentatonic scale removes the 4 and the 7 from the major scale — the two notes with the most tension toward resolution. What remains works over almost any chord in almost any style. Each shape contains a natural pentatonic box. Learn the box, then add the two tension notes back to complete the full scale.</p>
+
+  <h2>Minor and Modes</h2>
+  <p>Every major key has a relative minor sharing the same notes. In the number system, the minor root sits on the 6 of the parent major. The shapes do not change — only what the ear decides is home. Modes work the same way: Dorian starts on the 2, Mixolydian starts on the 5. Shift your sense of root and the same three shapes become a different modal landscape.</p>
+
+  <div style="margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-wrap:wrap;justify-content:space-evenly;gap:16px;">
+    <a href="iconic-voicings.html" class="back-link" style="margin-bottom:0;">Iconic Voicings</a>
+    <a href="exercises.html" class="back-link" style="margin-bottom:0;">Exercises</a>
+    <a href="index.html" class="back-link" style="margin-bottom:0;">← Back to Map</a>
+  </div>
+
+</div>
+
+<script>
+const TUNING = [4, 9, 2, 7, 11, 4]; // low E to high e (semitones from C=0)
+
+const SCALE_INTERVALS = {
+  major:      [0, 2, 4, 5, 7, 9, 11],
+  minor:      [0, 2, 3, 5, 7, 8, 10],
+  majorPent:  [0, 2, 4, 7, 9],
+  minorPent:  [0, 3, 5, 7, 10],
+  blues:      [0, 3, 5, 6, 7, 10],
+  dorian:     [0, 2, 3, 5, 7, 9, 10],
+  mixolydian: [0, 2, 4, 5, 7, 9, 10],
+};
+
+const SCALE_DEGREE_LABELS = {
+  major:      {0:'1', 2:'2', 4:'3', 5:'4', 7:'5', 9:'6', 11:'7'},
+  minor:      {0:'1', 2:'2', 3:'b3', 5:'4', 7:'5', 8:'b6', 10:'b7'},
+  majorPent:  {0:'1', 2:'2', 4:'3', 7:'5', 9:'6'},
+  minorPent:  {0:'1', 3:'b3', 5:'4', 7:'5', 10:'b7'},
+  blues:      {0:'1', 3:'b3', 5:'4', 6:'b5', 7:'5', 10:'b7'},
+  dorian:     {0:'1', 2:'2', 3:'b3', 5:'4', 7:'5', 9:'6', 10:'b7'},
+  mixolydian: {0:'1', 2:'2', 4:'3', 5:'4', 7:'5', 9:'6', 10:'b7'},
+};
+
+const ECHO_COLOR  = '#4a9eff';
+const ALPHA_COLOR = '#ff4a4a';
+const DELTA_COLOR = '#4aff7a';
+
+const GLOW_MAP = {
+  [ECHO_COLOR]:  'rgba(74,158,255,',
+  [ALPHA_COLOR]: 'rgba(255,74,74,',
+  [DELTA_COLOR]: 'rgba(74,255,122,',
+  '#888':        'rgba(200,200,200,',
+};
+
+function buildFretboard(rootNote, scaleName) {
+  const root = parseInt(rootNote);
+  const intervals = SCALE_INTERVALS[scaleName];
+  const degreeLabels = SCALE_DEGREE_LABELS[scaleName];
+  const scaleSet = new Set(intervals.map(i => (root + i) % 12));
+
+  // Shape zone anchor frets (root fret on anchor string)
+  // Echo: anchor string 0 (E, open=4)
+  // Alpha: anchor string 1 (A, open=9)
+  // Delta: anchor string 2 (D, open=2)
+  const R_e = ((root - 4 + 12) % 12) || 12;
+  const R_a = ((root - 9 + 12) % 12) || 12;
+  const R_d = ((root - 2 + 12) % 12) || 12;
+
+  // Zone fret sets (clamped to 1-12)
+  function zoneSet(anchor, span) {
+    const s = new Set();
+    for (let i = 0; i <= span; i++) {
+      const f = anchor + i;
+      if (f >= 1 && f <= 12) s.add(f);
+    }
+    return s;
+  }
+  const echoZone  = zoneSet(R_e, 2);
+  const alphaZone = zoneSet(R_a, 2);
+  const deltaZone = zoneSet(R_d, 3);
+
+  // Determine zone color for a fret (Echo > Delta > Alpha > none)
+  function zoneColor(fret) {
+    if (echoZone.has(fret))  return ECHO_COLOR;
+    if (deltaZone.has(fret)) return DELTA_COLOR;
+    if (alphaZone.has(fret)) return ALPHA_COLOR;
+    return '#888';
+  }
+
+  // Build dots
+  const dots = [];
+  for (let s = 0; s < 6; s++) {
+    for (let f = 1; f <= 12; f++) {
+      const noteAtFret = (TUNING[s] + f) % 12;
+      if (!scaleSet.has(noteAtFret)) continue;
+      const interval = (noteAtFret - root + 12) % 12;
+      const label = degreeLabels[interval] || '?';
+      const isRoot = interval === 0;
+      const color = zoneColor(f);
+      dots.push({ s, f, label, isRoot, color });
+    }
+  }
+
+  // SVG layout
+  const FRETS = 12;
+  const STRINGS = 6;
+  const W = 920;
+  const TOP_PAD = 44;
+  const BOT_PAD = 44;
+  const FB_H = 220;
+  const H = TOP_PAD + FB_H + BOT_PAD;
+  const LEFT = 40;
+  const RIGHT = 20;
+  const FW = (W - LEFT - RIGHT) / FRETS;
+  const SH = FB_H / (STRINGS - 1);
+
+  function sx(fret) { return LEFT + (fret - 0.5) * FW; }
+  function sy(s)    { return TOP_PAD + (STRINGS - 1 - s) * SH; }
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;min-width:580px;">`;
+  svg += `<rect width="${W}" height="${H}" fill="#000"/>`;
+
+  // Fret number labels (top)
+  for (let f = 1; f <= FRETS; f++) {
+    svg += `<text x="${sx(f)}" y="${TOP_PAD - 18}" text-anchor="middle"
+      font-family="'Space Mono', monospace" font-size="10" fill="#3a3a3a">${f}</text>`;
+  }
+
+  // Zone background rectangles
+  function zoneBg(zoneS, fillRgba) {
+    const frets = [...zoneS].sort((a,b)=>a-b);
+    if (!frets.length) return '';
+    const fMin = frets[0], fMax = frets[frets.length-1];
+    const x1 = LEFT + (fMin - 1) * FW;
+    const x2 = LEFT + fMax * FW;
+    return `<rect x="${x1}" y="${TOP_PAD - 6}" width="${x2 - x1}" height="${FB_H + 12}" fill="${fillRgba}" rx="4"/>`;
+  }
+  svg += zoneBg(echoZone,  'rgba(74,158,255,0.05)');
+  svg += zoneBg(deltaZone, 'rgba(74,255,122,0.04)');
+  svg += zoneBg(alphaZone, 'rgba(255,74,74,0.05)');
+
+  // Nut
+  svg += `<line x1="${LEFT}" y1="${TOP_PAD - 6}" x2="${LEFT}" y2="${sy(0) + 6}"
+    stroke="#d4cfc8" stroke-width="10"/>`;
+
+  // Fret lines
+  for (let f = 1; f <= FRETS; f++) {
+    const x = LEFT + f * FW;
+    svg += `<line x1="${x}" y1="${TOP_PAD - 6}" x2="${x}" y2="${sy(0) + 6}"
+      stroke="#252525" stroke-width="1.5"/>`;
+  }
+
+  // Fret markers
+  [3, 5, 7, 9].forEach(f => {
+    svg += `<circle cx="${sx(f)}" cy="${TOP_PAD + FB_H / 2}" r="4" fill="#0e0e0e" stroke="#1e1e1e" stroke-width="1"/>`;
+  });
+  const midY = TOP_PAD + FB_H / 2, spread = SH * 0.75;
+  const x12 = sx(12);
+  svg += `<circle cx="${x12}" cy="${midY - spread/2}" r="4" fill="#0e0e0e" stroke="#1e1e1e" stroke-width="1"/>`;
+  svg += `<circle cx="${x12}" cy="${midY + spread/2}" r="4" fill="#0e0e0e" stroke="#1e1e1e" stroke-width="1"/>`;
+
+  // Strings
+  const thicknesses = [4.5, 3.5, 2.6, 1.8, 1.2, 0.8];
+  for (let s = 0; s < STRINGS; s++) {
+    svg += `<line x1="${LEFT}" y1="${sy(s)}" x2="${LEFT + FRETS * FW}" y2="${sy(s)}"
+      stroke="#3a3a3a" stroke-width="${thicknesses[s]}" stroke-linecap="round"/>`;
+  }
+
+  // String name labels
+  const strNames = ['E','A','D','G','B','e'];
+  for (let s = 0; s < STRINGS; s++) {
+    svg += `<text x="${LEFT - 16}" y="${sy(s)}" text-anchor="middle" dominant-baseline="central"
+      font-family="'Space Mono', monospace" font-size="10" fill="#444">${strNames[STRINGS-1-s]}</text>`;
+  }
+
+  // Dot radius
+  const DOT_R = 12;
+
+  // Pass 1: glows
+  dots.forEach(({ s, f, isRoot, color }) => {
+    const cx = sx(f), cy = sy(s);
+    const gc = GLOW_MAP[color] || 'rgba(200,200,200,';
+    const op = isRoot ? 0.35 : 0.12;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${DOT_R * 2}" fill="${gc}${op})"/>`;
+  });
+
+  // Pass 2: circles + labels
+  dots.forEach(({ s, f, label, isRoot, color }) => {
+    const cx = sx(f), cy = sy(s);
+    const r = isRoot ? DOT_R + 1.5 : DOT_R;
+    const op = color === '#888' ? 0.3 : 0.85;
+
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r + 2.5}" fill="#060606"/>`;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" opacity="${op}"/>`;
+
+    if (isRoot) {
+      svg += `<circle cx="${cx}" cy="${cy}" r="${r - 3.5}" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.5"/>`;
+    }
+
+    const fs = label.length > 2 ? 7 : label.length > 1 ? 8 : 10;
+    svg += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central"
+      font-family="'Space Mono', monospace" font-size="${fs}" font-weight="700"
+      fill="#000">${label}</text>`;
+  });
+
+  // Zone labels (bottom of diagram)
+  function zoneLabel(zoneS, label, col) {
+    const frets = [...zoneS].sort((a,b)=>a-b);
+    if (!frets.length) return '';
+    const center = sx((frets[0] + frets[frets.length-1]) / 2 + 0.5);
+    return `<text x="${center}" y="${TOP_PAD + FB_H + 30}" text-anchor="middle"
+      font-family="'Space Mono', monospace" font-size="10" letter-spacing="0.18em"
+      fill="${col}" opacity="0.65">${label}</text>`;
+  }
+  svg += zoneLabel(echoZone,  'ECHO',  ECHO_COLOR);
+  svg += zoneLabel(deltaZone, 'DELTA', DELTA_COLOR);
+  svg += zoneLabel(alphaZone, 'ALPHA', ALPHA_COLOR);
+
+  svg += `</svg>`;
+  return svg;
+}
+
+function update() {
+  const root  = document.getElementById('keySelect').value;
+  const scale = document.getElementById('scaleSelect').value;
+  document.getElementById('fretboard').innerHTML = buildFretboard(root, scale);
+}
+
+document.getElementById('keySelect').addEventListener('change', update);
+document.getElementById('scaleSelect').addEventListener('change', update);
+update();
+</script>
+</body>
+</html>
