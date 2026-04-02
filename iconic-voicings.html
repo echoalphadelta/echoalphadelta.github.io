@@ -9,210 +9,111 @@
 <style>
 html, body { margin: 0; padding: 0; background: #000; }
 * { box-sizing: border-box; }
-body { color: #f0ede8; font-family: 'Share Tech Mono', monospace; font-weight: 400; line-height: 1.85; }
-
-.page { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
-
-.back-link {
-  display: inline-block;
-  font-family: 'Space Mono', monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #f5a623;
-  text-decoration: none;
-  padding: 0.5rem 1.2rem;
-  border: 1px solid rgba(245,166,35,0.25);
-  border-radius: 2rem;
-  margin-bottom: 40px;
-  transition: all 0.3s ease;
-}
+body { color: #f0ede8; font-family: 'Share Tech Mono', monospace; line-height: 1.85; }
+.page { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
+.back-link { display: inline-block; font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #f5a623; text-decoration: none; padding: 0.5rem 1.2rem; border: 1px solid rgba(245,166,35,0.25); border-radius: 2rem; margin-bottom: 40px; transition: all 0.3s ease; }
 .back-link:hover { color: #ffc85c; border-color: rgba(245,166,35,0.5); box-shadow: 0 0 12px rgba(245,166,35,0.2); }
-
-h1 {
-  font-family: 'Space Mono', monospace;
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #f5a623;
-  text-shadow: 0 0 16px rgba(245,166,35,0.4), 0 0 40px rgba(245,166,35,0.15);
-  margin: 0 0 32px 0;
-}
-
-h2 { font-family: 'Space Mono', monospace; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #f5a623; margin: 48px 0 10px 0; }
-
-p { font-size: 0.88rem; color: #c8c4be; margin: 0 0 14px 0; }
-
-.chord-name {
-  font-family: 'Space Mono', monospace;
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  margin: 8px 0 12px 0;
-}
-
-.diag-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin: 16px 0;
-}
-
-.diag-card { display: flex; flex-direction: column; }
-
-.diag-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.neck-wrap { margin: 16px 0; }
-
-@media (max-width: 620px) {
-  .diag-row { grid-template-columns: 1fr; }
-  h1 { font-size: 1.1rem; }
-  .page { padding: 24px 16px 60px; }
-}
+h1 { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #f5a623; text-shadow: 0 0 16px rgba(245,166,35,0.4); margin: 0 0 8px 0; }
+h2 { font-family: 'Space Mono', monospace; font-size: 0.95rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin: 0 0 4px 0; }
+.subname { font-family: 'Space Mono', monospace; font-size: 0.72rem; letter-spacing: 0.12em; opacity: 0.55; margin-bottom: 14px; display: block; }
+p { font-size: 0.88rem; color: #c8c4be; margin: 0 0 20px 0; }
+p.intro { color: #e0ddd8; margin-bottom: 40px; }
+.voicing-section { margin-bottom: 56px; padding-bottom: 50px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.voicing-display { display: flex; justify-content: center; margin: 24px 0 8px; }
+.voicing-box { width: 210px; }
+.power-section { margin-top: 16px; }
+.power-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 24px 0; }
+.power-card { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.power-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; line-height: 1.5; }
+.power-key { font-size: 0.85rem; display: block; margin-top: 2px; }
+@media (max-width: 520px) { .power-row { grid-template-columns: 1fr; align-items: center; } .power-card { max-width: 200px; margin: 0 auto; } h1 { font-size: 1.1rem; } .page { padding: 24px 16px 60px; } }
 </style>
 </head>
 <body>
 <div class="page">
-
-  <a href="index.html" class="back-link">← Back to Map</a>
-
+  <a href="index.html" class="back-link">&#8592; Back to Map</a>
   <h1>Iconic Voicings</h1>
-
-  <p>It is helpful to have chord voicings and grips we can refer to with names — names that are not pitch related. Here are some handy chords that have memorable non-pitch names. We can even lend them colours too.</p>
-
-  <h2>The Power Chord</h2>
-  <p>A dyad that lives at the bottom of each of our three grips. Here is a blue, red, and green power chord.</p>
-  <div class="diag-row" id="powerRow"></div>
-
-  <h2>The Hendrix Chord — 7#9</h2>
-  <p>Hendrix blew our minds with this one. He famously used it on E — here it is in D at the 5th position. Pull it out to put an exclamation on things.</p>
-  <div class="chord-name" style="color:#c084fc;">D7#9</div>
-  <div class="neck-wrap" id="hendrixMap"></div>
-
-  <h2>The James Brown Chord — 9</h2>
-  <p>James Brown rocked the dance floor with this one — and you can too. G root at the 10th position.</p>
-  <div class="chord-name" style="color:#d4a76a;">G9</div>
-  <div class="neck-wrap" id="jbMap"></div>
-
-  <h2>The James Bond Chord — minMaj9</h2>
-  <p>Pull this one off to be cheeky. Dark, cinematic and unmistakeable.</p>
-  <div class="chord-name" style="color:#c0c8d8;">EminMaj9</div>
-  <div class="neck-wrap" id="bondMap"></div>
-
+  <p class="intro">Chord shapes that defined sounds. Nashville Numbers mark each note's relationship to the root.</p>
+  <div id="content"></div>
 </div>
-
 <script>
-const STR_THICK = [3.2, 2.4, 1.7, 1.2, 0.8, 0.5]; // low E (si=0) → high e (si=5)
-
-// Full 12-fret horizontal neck map
-// dots: [{si, fret, color}]  si=0=low E (bottom), si=5=high e (top)
-function neckSVG(dots) {
-  const W = 640, H = 90;
-  const ML = 26, MR = 10, MT = 8, MB = 8;
-  const NF = 12;
-  const FW = (W - ML - MR) / NF;
-  const SH = (H - MT - MB) / 5;
-
-  function sy(si) { return MT + (5 - si) * SH; }
-
-  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg">`;
-  s += `<rect width="${W}" height="${H}" fill="#0a0a0a" rx="2"/>`;
-
-  // Strings
-  for (let si = 0; si < 6; si++) {
-    const y = sy(si).toFixed(1);
-    s += `<line x1="${ML}" y1="${y}" x2="${(ML + NF * FW).toFixed(1)}" y2="${y}"
-      stroke="#383838" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
-  }
-
-  // Nut
-  s += `<line x1="${ML}" y1="${MT - 2}" x2="${ML}" y2="${H - MB + 2}" stroke="#999" stroke-width="3"/>`;
-
-  // Fret lines
-  for (let f = 1; f <= NF; f++) {
-    const x = (ML + f * FW).toFixed(1);
-    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}"
-      stroke="${f === 12 ? '#444' : '#1c1c1c'}" stroke-width="${f === 12 ? 2 : 1}"/>`;
-  }
-
-  // Position markers
-  [3, 5, 7, 9].forEach(f => {
-    s += `<circle cx="${(ML + (f - 0.5) * FW).toFixed(1)}" cy="${(H / 2).toFixed(1)}" r="2.5" fill="#1a1a1a"/>`;
+function chordBoxSVG(o) {
+  var strings=o.strings, nashville=o.nashville, startFret=o.startFret, color=o.color;
+  var numFrets=4, W=168, H=210;
+  var hasMarker=startFret>1, ML=hasMarker?32:16, MR=14, MT=40, MB=12;
+  var fretH=(H-MT-MB)/numFrets;
+  var strSpacing=(W-ML-MR)/5;
+  var strX=Array.from({length:6},function(_,i){return ML+i*strSpacing;});
+  var dotR=11;
+  var s='<svg viewBox="0 0 '+W+' '+H+'" width="100%" xmlns="http://www.w3.org/2000/svg">';
+  s+='<rect width="'+W+'" height="'+H+'" fill="#0a0a0a" rx="3"/>';
+  strX.forEach(function(x){
+    s+='<line x1="'+x.toFixed(1)+'" y1="'+MT+'" x2="'+x.toFixed(1)+'" y2="'+(MT+numFrets*fretH).toFixed(1)+'" stroke="#2e2e2e" stroke-width="1"/>';
   });
-  const x12 = ML + 11.5 * FW;
-  s += `<circle cx="${x12.toFixed(1)}" cy="${(MT + SH * 1.5).toFixed(1)}" r="2.5" fill="#1a1a1a"/>`;
-  s += `<circle cx="${x12.toFixed(1)}" cy="${(MT + SH * 3.5).toFixed(1)}" r="2.5" fill="#1a1a1a"/>`;
-
-  // Dots
-  dots.forEach(({ si, fret, color }) => {
-    const cx = fret === 0 ? ML - 13 : ML + (fret - 0.5) * FW;
-    const cy = sy(si);
-    s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="6" fill="${color}" opacity="0.9"/>`;
+  if(startFret===1){
+    s+='<line x1="'+ML+'" y1="'+MT+'" x2="'+(W-MR)+'" y2="'+MT+'" stroke="#999" stroke-width="3"/>';
+  } else {
+    s+='<line x1="'+ML+'" y1="'+MT+'" x2="'+(W-MR)+'" y2="'+MT+'" stroke="#383838" stroke-width="1"/>';
+    s+='<text x="'+(ML-5)+'" y="'+(MT+fretH*0.5).toFixed(1)+'" text-anchor="end" dominant-baseline="middle" font-size="9" font-family="Space Mono,monospace" fill="#555">'+startFret+'fr</text>';
+  }
+  for(var f=1;f<=numFrets;f++){
+    var y=(MT+f*fretH).toFixed(1);
+    s+='<line x1="'+ML+'" y1="'+y+'" x2="'+(W-MR)+'" y2="'+y+'" stroke="#222" stroke-width="1"/>';
+  }
+  strings.forEach(function(fret,i){
+    var x=strX[i].toFixed(1), cy=MT-16;
+    if(fret===-1){
+      s+='<text x="'+x+'" y="'+(cy+4)+'" text-anchor="middle" dominant-baseline="middle" font-size="13" font-family="Space Mono,monospace" fill="#444">\u00d7</text>';
+    } else if(fret===0){
+      s+='<circle cx="'+x+'" cy="'+cy+'" r="8" fill="none" stroke="'+color+'" stroke-width="1.5"/>';
+      if(nashville[i]){
+        var fs=nashville[i].length>1?6:8;
+        s+='<text x="'+x+'" y="'+cy+'" text-anchor="middle" dominant-baseline="middle" font-size="'+fs+'" font-family="Space Mono,monospace" fill="'+color+'">'+nashville[i]+'</text>';
+      }
+    }
   });
-
-  s += '</svg>';
+  strings.forEach(function(fret,i){
+    if(fret<=0) return;
+    var rel=fret-startFret+1;
+    if(rel<1||rel>numFrets) return;
+    var cx=strX[i], cy=MT+(rel-0.5)*fretH;
+    s+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="'+dotR+'" fill="'+color+'" opacity="0.92"/>';
+    if(nashville[i]){
+      var fs=nashville[i].length>2?6:nashville[i].length>1?7:9;
+      s+='<text x="'+cx.toFixed(1)+'" y="'+cy.toFixed(1)+'" text-anchor="middle" dominant-baseline="middle" font-size="'+fs+'" font-family="Space Mono,monospace" fill="#000" font-weight="bold">'+nashville[i]+'</text>';
+    }
+  });
+  s+='</svg>';
   return s;
 }
 
-const ECHO_COLOR  = '#4a9eff';
-const ALPHA_COLOR = '#ff4a4a';
-const DELTA_COLOR = '#4aff7a';
-const HENDRIX_COLOR = '#c084fc';  // purple
-const JB_COLOR      = '#d4a76a';  // tan/brown
-const BOND_COLOR    = '#c0c8d8';  // silver
-
-// ── Power chords (3-column grid) ─────────────────────────────────────────────
-const powerChords = [
-  { label: 'E5', color: ECHO_COLOR,  dots: [{si:0,fret:0},{si:1,fret:2},{si:2,fret:2}] },
-  { label: 'A5', color: ALPHA_COLOR, dots: [{si:1,fret:0},{si:2,fret:2},{si:3,fret:2}] },
-  { label: 'D5', color: DELTA_COLOR, dots: [{si:2,fret:0},{si:3,fret:2},{si:4,fret:3}] },
+var VOICINGS=[
+  {name:'The Hendrix Chord',subname:'E7\u266f9',color:'#4a9eff',
+   copy:'One of the most recognisable voicings in rock. The tension between the major third and the sharp ninth \u2014 a note that is simultaneously minor and major \u2014 gives it an unresolved, electric quality.',
+   strings:[0,7,6,7,8,0],nashville:['1','1','3','7','\u266f9','1'],startFret:6},
+  {name:'The James Brown Chord',subname:'G9',color:'#7c3a1f',
+   copy:'Tight, percussive, and voiced high on the neck. The 9th chord is the engine of funk rhythm guitar. The stab is the point \u2014 not the sustain.',
+   strings:[-1,10,9,10,10,10],nashville:['','1','3','7','9','5'],startFret:9},
 ];
 
-const powerRow = document.getElementById('powerRow');
-powerChords.forEach(ch => {
-  const card = document.createElement('div');
-  card.className = 'diag-card';
-  card.innerHTML =
-    `<div class="diag-label" style="color:${ch.color};">${ch.label}</div>` +
-    neckSVG(ch.dots.map(d => ({...d, color: ch.color})));
-  powerRow.appendChild(card);
-});
+var POWER_CHORDS=[
+  {position:'Echo Position',key:'F\u266f',color:'#4a9eff',strings:[2,4,4,-1,-1,-1],nashville:['1','5','1','','',''],startFret:2},
+  {position:'Alpha Position',key:'C\u266f',color:'#ff4a4a',strings:[-1,4,6,6,-1,-1],nashville:['','1','5','1','',''],startFret:3},
+  {position:'Delta Position',key:'E\u266d',color:'#4aff7a',strings:[-1,-1,1,3,4,-1],nashville:['','','1','5','1',''],startFret:1},
+];
 
-// ── Named chords ──────────────────────────────────────────────────────────────
-
-// D7#9 — Hendrix: x 5 4 5 6 x
-// A(si=1) fret 5 = D root, D(si=2) fret 4 = F#, G(si=3) fret 5 = C, B(si=4) fret 6 = F(#9)
-document.getElementById('hendrixMap').innerHTML = neckSVG([
-  { si: 1, fret: 5, color: HENDRIX_COLOR },
-  { si: 2, fret: 4, color: HENDRIX_COLOR },
-  { si: 3, fret: 5, color: HENDRIX_COLOR },
-  { si: 4, fret: 6, color: HENDRIX_COLOR },
-]);
-
-// G9 — James Brown: x 10 9 10 10 x
-// A(si=1) fret 10 = G root, D(si=2) fret 9 = B, G(si=3) fret 10 = F, B(si=4) fret 10 = A(9th)
-document.getElementById('jbMap').innerHTML = neckSVG([
-  { si: 1, fret: 10, color: JB_COLOR },
-  { si: 2, fret:  9, color: JB_COLOR },
-  { si: 3, fret: 10, color: JB_COLOR },
-  { si: 4, fret: 10, color: JB_COLOR },
-]);
-
-// EminMaj9 — James Bond: open E, 10th fret A, 9th fret D, 8th fret G, 7th fret B
-document.getElementById('bondMap').innerHTML = neckSVG([
-  { si: 0, fret:  0, color: BOND_COLOR },
-  { si: 1, fret: 10, color: BOND_COLOR },
-  { si: 2, fret:  9, color: BOND_COLOR },
-  { si: 3, fret:  8, color: BOND_COLOR },
-  { si: 4, fret:  7, color: BOND_COLOR },
-]);
+function render(){
+  var html='';
+  VOICINGS.forEach(function(v){
+    html+='<div class="voicing-section"><h2 style="color:'+v.color+';">'+v.name+'</h2><span class="subname" style="color:'+v.color+';">'+v.subname+'</span><p>'+v.copy+'</p><div class="voicing-display"><div class="voicing-box">'+chordBoxSVG(v)+'</div></div></div>';
+  });
+  html+='<div class="power-section"><h2 style="color:#f5a623;">Power Chords \u2014 Three Positions</h2><span class="subname" style="color:#f5a623;">Root and fifth across the three shape positions</span><p>The power chord is the foundation of rock, punk, and metal rhythm playing. Each of our three shape positions has its own natural home for the power chord. These are not named after colours \u2014 they are named after where they live on the neck.</p><div class="power-row">'+
+    POWER_CHORDS.map(function(pc){
+      return '<div class="power-card"><div class="power-label" style="color:'+pc.color+';">'+pc.position+'<span class="power-key">'+pc.key+'</span></div>'+chordBoxSVG(pc)+'</div>';
+    }).join('')+'</div></div>';
+  document.getElementById('content').innerHTML=html;
+}
+render();
 </script>
 </body>
 </html>
