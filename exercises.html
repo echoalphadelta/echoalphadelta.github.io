@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Exercise — Echo Alpha Delta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+html, body { margin: 0; padding: 0; background: #000000 !important; }
+* { box-sizing: border-box; }
+body {
+  color: #f0ede8;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 400;
+  line-height: 1.85;
+}
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+
+.back-link {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #f5a623;
+  text-decoration: none;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(245,166,35,0.25);
+  border-radius: 2rem;
+  margin-bottom: 40px;
+  transition: all 0.3s ease;
+}
+.back-link:hover {
+  color: #ffc85c;
+  border-color: rgba(245,166,35,0.5);
+  box-shadow: 0 0 12px rgba(245,166,35,0.2);
+}
+
+h1 {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f5a623;
+  text-shadow: 0 0 16px rgba(245,166,35,0.4), 0 0 40px rgba(245,166,35,0.15);
+  margin: 0 0 32px 0;
+  line-height: 1.3;
+}
+
+h2 {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #f5a623;
+  margin: 40px 0 10px 0;
+}
+
+p {
+  font-size: 0.88rem;
+  margin: 0 0 1.4em 0;
+  color: #c8c4be;
+}
+
+/* ── Key grid ── */
+.key-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 28px 0 0 0;
+  max-width: 380px;
+}
+
+.key-cell {
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding: 14px 8px;
+  border: 1px solid rgba(245,166,35,0.15);
+  border-radius: 6px;
+  color: #f5a623;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.key-cell:hover {
+  border-color: rgba(245,166,35,0.45);
+  box-shadow: 0 0 14px rgba(245,166,35,0.15);
+  color: #ffc85c;
+}
+.key-cell.picked {
+  background: rgba(245,166,35,0.1);
+  border-color: rgba(245,166,35,0.7);
+  box-shadow: 0 0 18px rgba(245,166,35,0.25);
+  color: #ffd97a;
+}
+
+.random-btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 10px 22px;
+  border-radius: 4px;
+  border: 1px solid rgba(245,166,35,0.35);
+  background: transparent;
+  color: #f5a623;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 20px;
+  display: block;
+}
+.random-btn:hover {
+  background: rgba(245,166,35,0.08);
+  border-color: rgba(245,166,35,0.6);
+}
+
+@media (max-width: 600px) {
+  .page { padding: 24px 16px 40px; }
+  h1 { font-size: 1.1rem; }
+  .key-grid { max-width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a href="index.html" class="back-link">← Back to Map</a>
+
+  <h1>The Exercise</h1>
+
+  <h2>The First</h2>
+  <p>Pick any chord — Cm7, Gsus4, Bbmaj7, anything. Find it through all three shapes.</p>
+
+  <h2>The Second</h2>
+  <p>Pick a key. Pick a shape. Work through every chord quality in that key using that shape. Major, minor, 7, Maj7, m7, sus4. Understand what you are changing with each modification. Then pick again.</p>
+
+  <p>The 12 keys are listed below. Pick one at random. The randomness is the point. Every combination is valid. Every repetition builds fluency.</p>
+
+  <p>Come back to this exercise for the rest of your playing life.</p>
+
+  <div class="key-grid" id="keyGrid">
+    <div class="key-cell" onclick="pick(this)">A</div>
+    <div class="key-cell" onclick="pick(this)">Bb</div>
+    <div class="key-cell" onclick="pick(this)">B</div>
+    <div class="key-cell" onclick="pick(this)">C</div>
+    <div class="key-cell" onclick="pick(this)">C#</div>
+    <div class="key-cell" onclick="pick(this)">D</div>
+    <div class="key-cell" onclick="pick(this)">Eb</div>
+    <div class="key-cell" onclick="pick(this)">E</div>
+    <div class="key-cell" onclick="pick(this)">F</div>
+    <div class="key-cell" onclick="pick(this)">F#</div>
+    <div class="key-cell" onclick="pick(this)">G</div>
+    <div class="key-cell" onclick="pick(this)">Ab</div>
+  </div>
+
+  <button class="random-btn" onclick="pickRandom()">Pick at Random</button>
+
+  <div style="margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-wrap:wrap;justify-content:space-evenly;gap:16px;">
+    <a href="scales.html" class="back-link" style="margin-bottom:0;">Scales</a>
+    <a href="iconic-voicings.html" class="back-link" style="margin-bottom:0;">Iconic Voicings</a>
+    <a href="index.html" class="back-link" style="margin-bottom:0;">← Back to Map</a>
+  </div>
+
+</div>
+
+<script>
+function pick(el) {
+  document.querySelectorAll('.key-cell').forEach(c => c.classList.remove('picked'));
+  el.classList.add('picked');
+}
+
+function pickRandom() {
+  const cells = document.querySelectorAll('.key-cell');
+  const idx = Math.floor(Math.random() * cells.length);
+  document.querySelectorAll('.key-cell').forEach(c => c.classList.remove('picked'));
+  cells[idx].classList.add('picked');
+  cells[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+</script>
+</body>
+</html>
