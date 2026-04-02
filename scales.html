@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scales — Echo Alpha Delta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+html, body { margin: 0; padding: 0; background: #000; }
+* { box-sizing: border-box; }
+body { color: #f0ede8; font-family: 'Share Tech Mono', monospace; font-weight: 400; line-height: 1.85; }
+
+.page { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.back-link {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #f5a623;
+  text-decoration: none;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(245,166,35,0.25);
+  border-radius: 2rem;
+  margin-bottom: 40px;
+  transition: all 0.3s ease;
+}
+.back-link:hover { color: #ffc85c; border-color: rgba(245,166,35,0.5); box-shadow: 0 0 12px rgba(245,166,35,0.2); }
+
+h1 {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f5a623;
+  text-shadow: 0 0 16px rgba(245,166,35,0.4), 0 0 40px rgba(245,166,35,0.15);
+  margin: 0 0 32px 0;
+}
+
+h2 {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #f5a623;
+  margin: 0 0 14px 0;
+}
+
+p {
+  font-size: 0.88rem;
+  color: #c8c4be;
+  margin: 0 0 20px 0;
+}
+
+p.intro { color: #e0ddd8; }
+
+.scale-section {
+  margin-bottom: 60px;
+  padding-bottom: 50px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.scale-section:last-child { border-bottom: none; }
+
+.diag-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 20px 0 14px;
+}
+
+.diag-card { display: flex; flex-direction: column; }
+
+.diag-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.diag-map { margin-top: 4px; }
+
+.diag-map .diag-label {
+  color: #f5a623;
+  margin-bottom: 6px;
+}
+
+@media (max-width: 620px) {
+  .diag-row { grid-template-columns: 1fr; }
+  h1 { font-size: 1.1rem; }
+  .page { padding: 24px 16px 60px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a href="index.html" class="back-link">← Back to Map</a>
+
+  <h1>Scales</h1>
+  <p class="intro">Each scale is mapped into all three shapes across the neck. The outer ring marks the root note.</p>
+
+  <div id="content"></div>
+
+</div>
+<script>
+// ── Constants ────────────────────────────────────────────────────────────────
+const STR_OPEN = [4, 9, 2, 7, 11, 4]; // semitones from C: E,A,D,G,B,E (str 6→1)
+
+// ── SVG builder — individual shape window ───────────────────────────────────
+function fretSVG(rootPc, intervals, color, startFret, numFrets) {
+  const W = 280, H = 108;
+  const ML = startFret === 0 ? 26 : 12;
+  const MR = 8, MT = 10, MB = 18;
+  const FW = (W - ML - MR) / numFrets;
+  const SH = (H - MT - MB) / 5;
+
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg">`;
+  s += `<rect width="${W}" height="${H}" fill="#0a0a0a" rx="2"/>`;
+
+  // Strings
+  for (let i = 0; i < 6; i++) {
+    const y = (MT + i * SH).toFixed(1);
+    s += `<line x1="${ML}" y1="${y}" x2="${W - MR}" y2="${y}" stroke="#2a2a2a" stroke-width="1"/>`;
+  }
+
+  // Nut
+  if (startFret === 0) {
+    s += `<line x1="${ML}" y1="${MT - 2}" x2="${ML}" y2="${H - MB + 2}" stroke="#888" stroke-width="2.5"/>`;
+  }
+
+  // Fret lines
+  for (let f = 0; f <= numFrets; f++) {
+    const x = (ML + f * FW).toFixed(1);
+    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="#1c1c1c" stroke-width="1"/>`;
+  }
+
+  // Fret number labels (in each space)
+  for (let i = 1; i <= numFrets; i++) {
+    const x = (ML + (i - 0.5) * FW).toFixed(1);
+    const fn = startFret + i;
+    s += `<text x="${x}" y="${H - 3}" font-size="8" font-family="Space Mono,monospace" fill="#3a3a3a" text-anchor="middle">${fn}</text>`;
+  }
+
+  // Scale dots
+  const fStart = startFret === 0 ? 0 : startFret + 1;
+  for (let f = fStart; f <= startFret + numFrets; f++) {
+    for (let si = 0; si < 6; si++) {
+      const pitch = (STR_OPEN[si] + f) % 12;
+      const intv  = (pitch - rootPc + 12) % 12;
+      if (!intervals.includes(intv)) continue;
+
+      const isRoot = intv === 0;
+      const cx = f === 0 ? ML - 12 : ML + (f - startFret - 0.5) * FW;
+      const cy = MT + si * SH;
+      const r  = isRoot ? 7 : 5;
+
+      s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r}" fill="${color}" opacity="${isRoot ? 1 : 0.8}"/>`;
+      if (isRoot) {
+        s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r + 2.5}" fill="none" stroke="${color}" stroke-width="1" opacity="0.35"/>`;
+      }
+    }
+  }
+
+  s += '</svg>';
+  return s;
+}
+
+// ── SVG builder — full neck map ──────────────────────────────────────────────
+function mapSVG(rootPc, intervals) {
+  const W = 640, H = 118;
+  const ML = 30, MR = 10, MT = 10, MB = 18;
+  const numFrets = 12;
+  const FW = (W - ML - MR) / numFrets;
+  const SH = (H - MT - MB) / 5;
+
+  // Shape root frets
+  const roots = {
+    echo:  [(rootPc - 4 + 12) % 12],
+    alpha: [(rootPc - 9 + 12) % 12],
+    delta: [(rootPc - 2 + 12) % 12],
+  };
+  // Add +12 octave positions
+  Object.keys(roots).forEach(k => roots[k].push(roots[k][0] + 12));
+
+  const shapeColors = { echo: '#4a9eff', alpha: '#ff4a4a', delta: '#4aff7a' };
+
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg">`;
+  s += `<rect width="${W}" height="${H}" fill="#0a0a0a" rx="2"/>`;
+
+  // Strings
+  for (let i = 0; i < 6; i++) {
+    const y = (MT + i * SH).toFixed(1);
+    s += `<line x1="${ML}" y1="${y}" x2="${W - MR}" y2="${y}" stroke="#2a2a2a" stroke-width="1"/>`;
+  }
+
+  // Nut
+  s += `<line x1="${ML}" y1="${MT - 2}" x2="${ML}" y2="${H - MB + 2}" stroke="#888" stroke-width="2.5"/>`;
+
+  // Fret lines
+  for (let f = 0; f <= numFrets; f++) {
+    const x = (ML + f * FW).toFixed(1);
+    const isOctave = f === 12;
+    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="${isOctave ? '#444' : '#1c1c1c'}" stroke-width="${isOctave ? 2 : 1}"/>`;
+  }
+
+  // Fret number labels at 3, 5, 7, 9, 12
+  [3, 5, 7, 9, 12].forEach(f => {
+    const x = (ML + (f - 0.5) * FW).toFixed(1);
+    s += `<text x="${x}" y="${H - 3}" font-size="8" font-family="Space Mono,monospace" fill="#3a3a3a" text-anchor="middle">${f}</text>`;
+  });
+
+  // Scale dots — colour by nearest shape root
+  for (let f = 0; f <= 12; f++) {
+    for (let si = 0; si < 6; si++) {
+      const pitch = (STR_OPEN[si] + f) % 12;
+      const intv  = (pitch - rootPc + 12) % 12;
+      if (!intervals.includes(intv)) continue;
+
+      const cx = f === 0 ? ML - 12 : ML + (f - 0.5) * FW;
+      const cy = MT + si * SH;
+
+      // Find nearest shape root
+      let dotColor = '#888';
+      let minDist  = Infinity;
+      Object.entries(roots).forEach(([shape, rs]) => {
+        rs.forEach(r => {
+          const d = Math.abs(f - r);
+          if (d < minDist) { minDist = d; dotColor = shapeColors[shape]; }
+        });
+      });
+
+      const isRoot = intv === 0;
+      const r = isRoot ? 7 : 5;
+      s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r}" fill="${dotColor}" opacity="${isRoot ? 1 : 0.8}"/>`;
+      if (isRoot) {
+        s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r + 2.5}" fill="none" stroke="${dotColor}" stroke-width="1" opacity="0.35"/>`;
+      }
+    }
+  }
+
+  s += '</svg>';
+  return s;
+}
+
+// ── Section data ─────────────────────────────────────────────────────────────
+const SECTIONS = [
+  {
+    title:     'Minor Pentatonic — F',
+    scaleName: 'minor pentatonic',
+    key:       'F',
+    rootPc:    5,
+    intervals: [0, 3, 5, 7, 10],
+    copy:      'The minor pentatonic is the most widely used scale in popular music. Five notes, moveable anywhere on the neck, and it sits naturally inside all three of our shapes. Here it is in F.',
+    windows:   { echo: 0, alpha: 7, delta: 2 },
+  },
+  {
+    title:     'Major Pentatonic — B',
+    scaleName: 'major pentatonic',
+    key:       'B',
+    rootPc:    11,
+    intervals: [0, 2, 4, 7, 9],
+    copy:      'The major pentatonic has a brighter, more open character. The same five-note framework, shifted to a major root. It sits equally well inside each shape. Here it is in B.',
+    windows:   { echo: 6, alpha: 1, delta: 8 },
+  },
+  {
+    title:     'Natural Minor — G',
+    scaleName: 'natural minor',
+    key:       'G',
+    rootPc:    7,
+    intervals: [0, 2, 3, 5, 7, 8, 10],
+    copy:      'Natural minor adds two notes to the minor pentatonic — the second and the sixth — filling in a seven-note picture that covers more of each shape\'s territory. It is the scale beneath much of rock, folk, and classical guitar. Here it is in G.',
+    windows:   { echo: 2, alpha: 9, delta: 4 },
+  },
+  {
+    title:     'Blues Scale — A',
+    scaleName: 'blues',
+    key:       'A',
+    rootPc:    9,
+    intervals: [0, 3, 5, 6, 7, 10],
+    copy:      'The blues scale takes the minor pentatonic and adds a single passing tone — the flattened fifth. That one note is responsible for the tension and release at the heart of blues and rock phrasing. Here it is in A.',
+    windows:   { echo: 4, alpha: 0, delta: 6 },
+  },
+];
+
+const SHAPE_COLORS = { echo: '#4a9eff', alpha: '#ff4a4a', delta: '#4aff7a' };
+const NUM_FRETS = 5;
+
+// ── Render ───────────────────────────────────────────────────────────────────
+function render() {
+  let html = '';
+
+  SECTIONS.forEach(sec => {
+    const shapes = ['echo', 'alpha', 'delta'];
+    const cards = shapes.map(shape => {
+      const color = SHAPE_COLORS[shape];
+      const label = shape[0].toUpperCase() + shape.slice(1);
+      const sf = sec.windows[shape];
+      return `
+        <div class="diag-card">
+          <div class="diag-label" style="color:${color};">${label} — ${sec.key} ${sec.scaleName}</div>
+          ${fretSVG(sec.rootPc, sec.intervals, color, sf, NUM_FRETS)}
+        </div>`;
+    }).join('');
+
+    html += `
+      <div class="scale-section">
+        <h2>${sec.title}</h2>
+        <p>${sec.copy}</p>
+        <div class="diag-row">${cards}</div>
+        <div class="diag-map">
+          <div class="diag-label">The Map — ${sec.key} ${sec.scaleName}</div>
+          ${mapSVG(sec.rootPc, sec.intervals)}
+        </div>
+      </div>`;
+  });
+
+  document.getElementById('content').innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>
