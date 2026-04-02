@@ -50,12 +50,7 @@ h2 {
   margin: 0 0 14px 0;
 }
 
-p {
-  font-size: 0.88rem;
-  color: #c8c4be;
-  margin: 0 0 20px 0;
-}
-
+p { font-size: 0.88rem; color: #c8c4be; margin: 0 0 20px 0; }
 p.intro { color: #e0ddd8; }
 
 .scale-section {
@@ -83,11 +78,7 @@ p.intro { color: #e0ddd8; }
 }
 
 .diag-map { margin-top: 4px; }
-
-.diag-map .diag-label {
-  color: #f5a623;
-  margin-bottom: 6px;
-}
+.diag-map .diag-label { color: #f5a623; margin-bottom: 6px; }
 
 @media (max-width: 620px) {
   .diag-row { grid-template-columns: 1fr; }
@@ -108,37 +99,42 @@ p.intro { color: #e0ddd8; }
 
 </div>
 <script>
-// ── Constants ────────────────────────────────────────────────────────────────
-const STR_OPEN = [4, 9, 2, 7, 11, 4]; // E A D G B e (low→high, semitones from C)
+const STR_OPEN  = [4, 9, 2, 7, 11, 4]; // E A D G B e (low→high)
+const STR_THICK = [3.2, 2.4, 1.7, 1.2, 0.8, 0.5]; // low E → high e
 
-// minString per shape: Echo=0 (all strings), Alpha=1 (skip low E), Delta=2 (skip low E+A)
 const SHAPE_MIN_STRING = { echo: 0, alpha: 1, delta: 2 };
 const SHAPE_COLORS     = { echo: '#4a9eff', alpha: '#ff4a4a', delta: '#4aff7a' };
-
 const NUM_FRETS = 4;
 
-// ── SVG builder — individual shape window ────────────────────────────────────
-// minStr: lowest string index (0=low E) that shows dots for this shape
-function fretSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
-  const W = 280, H = 108;
-  const ML = startFret === 0 ? 26 : 12;
-  const MR = 8, MT = 10, MB = 18;
+// si=0 (low E) → bottom, si=5 (high e) → top
+function syFn(MT, SH) {
+  return si => MT + (5 - si) * SH;
+}
+
+// ── Individual shape window ───────────────────────────────────────────────────
+function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
+  const W = 280, H = 90;
+  const ML = startFret === 0 ? 24 : 10;
+  const MR = 8, MT = 8, MB = 8;
   const FW = (W - ML - MR) / numFrets;
   const SH = (H - MT - MB) / 5;
+  const sy = syFn(MT, SH);
 
   let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg">`;
   s += `<rect width="${W}" height="${H}" fill="#0a0a0a" rx="2"/>`;
 
-  // Strings — dim excluded strings
-  for (let i = 0; i < 6; i++) {
-    const y = (MT + i * SH).toFixed(1);
-    const excluded = i < minStr;
-    s += `<line x1="${ML}" y1="${y}" x2="${W - MR}" y2="${y}" stroke="${excluded ? '#181818' : '#2a2a2a'}" stroke-width="1"/>`;
+  // Strings
+  for (let si = 0; si < 6; si++) {
+    const y   = sy(si).toFixed(1);
+    const dim = si < minStr;
+    s += `<line x1="${ML}" y1="${y}" x2="${W - MR}" y2="${y}"
+      stroke="${dim ? '#141414' : '#383838'}"
+      stroke-width="${dim ? 0.5 : STR_THICK[si]}"/>`;
   }
 
   // Nut
   if (startFret === 0) {
-    s += `<line x1="${ML}" y1="${MT - 2}" x2="${ML}" y2="${H - MB + 2}" stroke="#888" stroke-width="2.5"/>`;
+    s += `<line x1="${ML}" y1="${MT - 2}" x2="${ML}" y2="${H - MB + 2}" stroke="#999" stroke-width="3"/>`;
   }
 
   // Fret lines
@@ -147,11 +143,18 @@ function fretSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
     s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="#1c1c1c" stroke-width="1"/>`;
   }
 
-  // Fret number labels
-  for (let i = 1; i <= numFrets; i++) {
-    const x = (ML + (i - 0.5) * FW).toFixed(1);
-    s += `<text x="${x}" y="${H - 3}" font-size="8" font-family="Space Mono,monospace" fill="#3a3a3a" text-anchor="middle">${startFret + i}</text>`;
-  }
+  // Position marker dots within window
+  [3, 5, 7, 9, 12].forEach(m => {
+    if (m > startFret && m <= startFret + numFrets) {
+      const x = (ML + (m - startFret - 0.5) * FW).toFixed(1);
+      if (m === 12) {
+        s += `<circle cx="${x}" cy="${(MT + SH * 1.5).toFixed(1)}" r="2" fill="#1e1e1e"/>`;
+        s += `<circle cx="${x}" cy="${(MT + SH * 3.5).toFixed(1)}" r="2" fill="#1e1e1e"/>`;
+      } else {
+        s += `<circle cx="${x}" cy="${(H / 2).toFixed(1)}" r="2" fill="#1e1e1e"/>`;
+      }
+    }
+  });
 
   // Scale dots
   const fStart = startFret === 0 ? 0 : startFret + 1;
@@ -160,12 +163,9 @@ function fretSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
       const pitch = (STR_OPEN[si] + f) % 12;
       const intv  = (pitch - rootPc + 12) % 12;
       if (!intervals.includes(intv)) continue;
-
       const cx = f === 0 ? ML - 12 : ML + (f - startFret - 0.5) * FW;
-      const cy = MT + si * SH;
-      const r  = 5;
-
-      s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r}" fill="${color}" opacity="0.85"/>`;
+      const cy = sy(si);
+      s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5" fill="${color}" opacity="0.85"/>`;
     }
   }
 
@@ -173,15 +173,15 @@ function fretSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
   return s;
 }
 
-// ── SVG builder — full neck map ──────────────────────────────────────────────
+// ── Full neck map ─────────────────────────────────────────────────────────────
 function mapSVG(rootPc, intervals) {
-  const W = 640, H = 118;
-  const ML = 30, MR = 10, MT = 10, MB = 18;
-  const numFrets = 12;
-  const FW = (W - ML - MR) / numFrets;
+  const W = 640, H = 90;
+  const ML = 26, MR = 10, MT = 8, MB = 8;
+  const NF = 12;
+  const FW = (W - ML - MR) / NF;
   const SH = (H - MT - MB) / 5;
+  const sy = syFn(MT, SH);
 
-  // Shape root frets (base + octave positions)
   const re0 = (rootPc - 4 + 12) % 12;
   const ra0 = (rootPc - 9 + 12) % 12;
   const rd0 = (rootPc - 2 + 12) % 12;
@@ -189,22 +189,19 @@ function mapSVG(rootPc, intervals) {
   const alphaRoots = [ra0, ra0 + 12];
   const deltaRoots = [rd0, rd0 + 12];
 
-  // Determine which shapes claim a given fret+string
   function claimedBy(f, si) {
     const out = [];
-    if (echoRoots.some(r => f >= r && f <= r + 2))                  out.push('echo');
-    if (si >= 2 && deltaRoots.some(r => f >= r && f <= r + 3))      out.push('delta');
-    if (si >= 1 && alphaRoots.some(r => f >= r && f <= r + 2))      out.push('alpha');
+    if (echoRoots.some(r => f >= r && f <= r + 2))             out.push('echo');
+    if (si >= 2 && deltaRoots.some(r => f >= r && f <= r + 3)) out.push('delta');
+    if (si >= 1 && alphaRoots.some(r => f >= r && f <= r + 2)) out.push('alpha');
     return out;
   }
 
-  // Split dot: left half = color1, right half = color2
-  function splitDot(cx, cy, r, color1, color2) {
-    const cxs = cx.toFixed(1), cys = cy.toFixed(1);
-    const top = (cy - r).toFixed(1), bot = (cy + r).toFixed(1);
+  function splitDot(cx, cy, r, c1, c2) {
+    const [xs, ys, t, b] = [cx.toFixed(1), cy.toFixed(1), (cy-r).toFixed(1), (cy+r).toFixed(1)];
     return (
-      `<path d="M ${cxs} ${top} A ${r} ${r} 0 0 0 ${cxs} ${bot} L ${cxs} ${cys} Z" fill="${color1}" opacity="0.85"/>` +
-      `<path d="M ${cxs} ${top} A ${r} ${r} 0 0 1 ${cxs} ${bot} L ${cxs} ${cys} Z" fill="${color2}" opacity="0.85"/>`
+      `<path d="M ${xs} ${t} A ${r} ${r} 0 0 0 ${xs} ${b} L ${xs} ${ys} Z" fill="${c1}" opacity="0.85"/>` +
+      `<path d="M ${xs} ${t} A ${r} ${r} 0 0 1 ${xs} ${b} L ${xs} ${ys} Z" fill="${c2}" opacity="0.85"/>`
     );
   }
 
@@ -212,26 +209,29 @@ function mapSVG(rootPc, intervals) {
   s += `<rect width="${W}" height="${H}" fill="#0a0a0a" rx="2"/>`;
 
   // Strings
-  for (let i = 0; i < 6; i++) {
-    const y = (MT + i * SH).toFixed(1);
-    s += `<line x1="${ML}" y1="${y}" x2="${W - MR}" y2="${y}" stroke="#2a2a2a" stroke-width="1"/>`;
+  for (let si = 0; si < 6; si++) {
+    const y = sy(si).toFixed(1);
+    s += `<line x1="${ML}" y1="${y}" x2="${(ML + NF * FW).toFixed(1)}" y2="${y}"
+      stroke="#383838" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
   }
 
   // Nut
-  s += `<line x1="${ML}" y1="${MT - 2}" x2="${ML}" y2="${H - MB + 2}" stroke="#888" stroke-width="2.5"/>`;
+  s += `<line x1="${ML}" y1="${MT - 2}" x2="${ML}" y2="${H - MB + 2}" stroke="#999" stroke-width="3"/>`;
 
   // Fret lines
-  for (let f = 0; f <= numFrets; f++) {
+  for (let f = 1; f <= NF; f++) {
     const x = (ML + f * FW).toFixed(1);
-    const isOctave = f === 12;
-    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="${isOctave ? '#444' : '#1c1c1c'}" stroke-width="${isOctave ? 2 : 1}"/>`;
+    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}"
+      stroke="${f === 12 ? '#444' : '#1c1c1c'}" stroke-width="${f === 12 ? 2 : 1}"/>`;
   }
 
-  // Fret labels
-  [3, 5, 7, 9, 12].forEach(f => {
-    const x = (ML + (f - 0.5) * FW).toFixed(1);
-    s += `<text x="${x}" y="${H - 3}" font-size="8" font-family="Space Mono,monospace" fill="#3a3a3a" text-anchor="middle">${f}</text>`;
+  // Position marker dots
+  [3, 5, 7, 9].forEach(f => {
+    s += `<circle cx="${(ML + (f - 0.5) * FW).toFixed(1)}" cy="${(H / 2).toFixed(1)}" r="2.5" fill="#1a1a1a"/>`;
   });
+  const x12 = ML + 11.5 * FW;
+  s += `<circle cx="${x12.toFixed(1)}" cy="${(MT + SH * 1.5).toFixed(1)}" r="2.5" fill="#1a1a1a"/>`;
+  s += `<circle cx="${x12.toFixed(1)}" cy="${(MT + SH * 3.5).toFixed(1)}" r="2.5" fill="#1a1a1a"/>`;
 
   // Scale dots
   for (let f = 0; f <= 12; f++) {
@@ -240,17 +240,16 @@ function mapSVG(rootPc, intervals) {
       const intv  = (pitch - rootPc + 12) % 12;
       if (!intervals.includes(intv)) continue;
 
-      const cx = f === 0 ? ML - 12 : ML + (f - 0.5) * FW;
-      const cy = MT + si * SH;
-      const r  = 5;
+      const cx = f === 0 ? ML - 13 : ML + (f - 0.5) * FW;
+      const cy = sy(si);
       const claimed = claimedBy(f, si);
 
       if (claimed.length === 0) {
-        s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r}" fill="#555" opacity="0.5"/>`;
+        s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5" fill="#555" opacity="0.45"/>`;
       } else if (claimed.length === 1) {
-        s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r}" fill="${SHAPE_COLORS[claimed[0]]}" opacity="0.85"/>`;
+        s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5" fill="${SHAPE_COLORS[claimed[0]]}" opacity="0.85"/>`;
       } else {
-        s += splitDot(cx, cy, r, SHAPE_COLORS[claimed[0]], SHAPE_COLORS[claimed[1]]);
+        s += splitDot(cx, cy, 5, SHAPE_COLORS[claimed[0]], SHAPE_COLORS[claimed[1]]);
       }
     }
   }
@@ -259,7 +258,7 @@ function mapSVG(rootPc, intervals) {
   return s;
 }
 
-// ── Section data ─────────────────────────────────────────────────────────────
+// ── Section data ──────────────────────────────────────────────────────────────
 const SECTIONS = [
   {
     title:     'Minor Pentatonic — F',
@@ -299,40 +298,33 @@ const SECTIONS = [
   },
 ];
 
-// ── Render ───────────────────────────────────────────────────────────────────
-function render() {
-  let html = '';
-
-  SECTIONS.forEach(sec => {
-    const shapes = ['echo', 'alpha', 'delta'];
-    const cards = shapes.map(shape => {
-      const color    = SHAPE_COLORS[shape];
-      const label    = shape[0].toUpperCase() + shape.slice(1);
-      const sf       = sec.windows[shape];
-      const minStr   = SHAPE_MIN_STRING[shape];
-      return `
-        <div class="diag-card">
-          <div class="diag-label" style="color:${color};">${label} — ${sec.key} ${sec.scaleName}</div>
-          ${fretSVG(sec.rootPc, sec.intervals, color, sf, NUM_FRETS, minStr)}
-        </div>`;
-    }).join('');
-
-    html += `
-      <div class="scale-section">
-        <h2>${sec.title}</h2>
-        <p>${sec.copy}</p>
-        <div class="diag-row">${cards}</div>
-        <div class="diag-map">
-          <div class="diag-label">Full neck — ${sec.key} ${sec.scaleName}</div>
-          ${mapSVG(sec.rootPc, sec.intervals)}
-        </div>
+// ── Render ────────────────────────────────────────────────────────────────────
+let html = '';
+SECTIONS.forEach(sec => {
+  const cards = ['echo', 'alpha', 'delta'].map(shape => {
+    const color  = SHAPE_COLORS[shape];
+    const label  = shape[0].toUpperCase() + shape.slice(1);
+    const minStr = SHAPE_MIN_STRING[shape];
+    return `
+      <div class="diag-card">
+        <div class="diag-label" style="color:${color};">${label} — ${sec.key} ${sec.scaleName}</div>
+        ${shapeSVG(sec.rootPc, sec.intervals, color, sec.windows[shape], NUM_FRETS, minStr)}
       </div>`;
-  });
+  }).join('');
 
-  document.getElementById('content').innerHTML = html;
-}
+  html += `
+    <div class="scale-section">
+      <h2>${sec.title}</h2>
+      <p>${sec.copy}</p>
+      <div class="diag-row">${cards}</div>
+      <div class="diag-map">
+        <div class="diag-label">Full neck — ${sec.key} ${sec.scaleName}</div>
+        ${mapSVG(sec.rootPc, sec.intervals)}
+      </div>
+    </div>`;
+});
 
-render();
+document.getElementById('content').innerHTML = html;
 </script>
 </body>
 </html>
