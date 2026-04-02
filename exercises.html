@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercises — Echo Alpha Delta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+html, body { margin: 0; padding: 0; background: #000000 !important; }
+* { box-sizing: border-box; }
+body {
+  color: #f0ede8;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 400;
+  line-height: 1.85;
+}
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+
+.back-link {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #f5a623;
+  text-decoration: none;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(245,166,35,0.25);
+  border-radius: 2rem;
+  margin-bottom: 40px;
+  transition: all 0.3s ease;
+}
+.back-link:hover {
+  color: #ffc85c;
+  border-color: rgba(245,166,35,0.5);
+  box-shadow: 0 0 12px rgba(245,166,35,0.2);
+}
+
+h1 {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f5a623;
+  text-shadow: 0 0 16px rgba(245,166,35,0.4), 0 0 40px rgba(245,166,35,0.15);
+  margin: 0 0 32px 0;
+  line-height: 1.3;
+}
+
+h2 {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #f5a623;
+  margin: 48px 0 10px 0;
+}
+
+p {
+  font-size: 0.88rem;
+  margin: 0 0 1.2em 0;
+  color: #c8c4be;
+}
+
+/* ── Exercise Cards ── */
+.exercise-card {
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  padding: 24px 24px 20px;
+  margin-bottom: 20px;
+  background: rgba(255,255,255,0.01);
+  position: relative;
+}
+
+.exercise-number {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(245,166,35,0.35);
+  margin-bottom: 6px;
+}
+
+.exercise-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #f0ede8;
+  margin-bottom: 12px;
+}
+
+.exercise-body {
+  font-size: 0.84rem;
+  color: #a8a4a0;
+  line-height: 1.8;
+  margin-bottom: 0;
+}
+
+.exercise-body strong {
+  color: #c8c4be;
+  font-weight: 400;
+}
+
+.tag {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 2rem;
+  margin-right: 6px;
+  margin-bottom: 12px;
+}
+.tag-echo  { background: rgba(74,158,255,0.12);  color: #4a9eff;  border: 1px solid rgba(74,158,255,0.2);  }
+.tag-alpha { background: rgba(255,74,74,0.12);   color: #ff4a4a;  border: 1px solid rgba(255,74,74,0.2);   }
+.tag-delta { background: rgba(74,255,122,0.12);  color: #4aff7a;  border: 1px solid rgba(74,255,122,0.2);  }
+.tag-all   { background: rgba(245,166,35,0.1);   color: #f5a623;  border: 1px solid rgba(245,166,35,0.2);  }
+.tag-beginner     { background: rgba(255,255,255,0.04); color: #888; border: 1px solid rgba(255,255,255,0.08); }
+.tag-intermediate { background: rgba(255,255,255,0.04); color: #aaa; border: 1px solid rgba(255,255,255,0.08); }
+.tag-advanced     { background: rgba(255,255,255,0.04); color: #ccc; border: 1px solid rgba(255,255,255,0.08); }
+
+/* ── Progression Drill ── */
+.drill-area {
+  border: 1px solid rgba(245,166,35,0.15);
+  border-radius: 8px;
+  padding: 24px;
+  margin-top: 16px;
+  background: rgba(245,166,35,0.02);
+}
+
+.drill-chord-display {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.drill-chord-name {
+  font-family: 'Space Mono', monospace;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #f5a623;
+  text-shadow: 0 0 20px rgba(245,166,35,0.5);
+  min-height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drill-chord-shape {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 6px;
+  min-height: 1.2rem;
+}
+
+.drill-progress {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: rgba(245,166,35,0.4);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.drill-controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.drill-btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 4px;
+  border: 1px solid rgba(245,166,35,0.3);
+  background: transparent;
+  color: #f5a623;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.drill-btn:hover {
+  background: rgba(245,166,35,0.08);
+  border-color: rgba(245,166,35,0.5);
+}
+.drill-btn.primary {
+  background: rgba(245,166,35,0.12);
+  border-color: rgba(245,166,35,0.5);
+}
+.drill-btn.primary:hover {
+  background: rgba(245,166,35,0.2);
+}
+
+.drill-bpm-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(245,166,35,0.5);
+  letter-spacing: 0.1em;
+}
+
+.drill-bpm-val {
+  color: #f5a623;
+  min-width: 36px;
+  text-align: center;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  background: rgba(245,166,35,0.2);
+  border-radius: 1px;
+  outline: none;
+  width: 120px;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #f5a623;
+  cursor: pointer;
+}
+
+.drill-timer-bar {
+  height: 2px;
+  background: rgba(245,166,35,0.1);
+  border-radius: 1px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.drill-timer-fill {
+  height: 100%;
+  background: #f5a623;
+  border-radius: 1px;
+  transition: width linear;
+  width: 100%;
+}
+
+.drill-progression-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  justify-content: center;
+}
+
+.prog-btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  padding: 5px 12px;
+  border-radius: 2rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: transparent;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.prog-btn:hover { color: #f5a623; border-color: rgba(245,166,35,0.3); }
+.prog-btn.active { color: #f5a623; border-color: rgba(245,166,35,0.5); background: rgba(245,166,35,0.06); }
+
+@media (max-width: 600px) {
+  .page { padding: 24px 16px 40px; }
+  h1 { font-size: 1.1rem; }
+  .drill-chord-name { font-size: 1.6rem; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a href="index.html" class="back-link">← Back to Map</a>
+
+  <h1>Exercises</h1>
+
+  <p>These exercises build the muscle memory and fretboard knowledge that theory alone cannot give. Each one targets a specific weakness. Work slowly, then increase the tempo only when you can play it without thinking.</p>
+
+  <!-- EXERCISE 1: Chord Transition Drill (interactive) -->
+  <h2>01 — Chord Transition Drill</h2>
+  <p>Select a progression and set the tempo. The drill advances to the next chord automatically. The goal is to be ready before the change arrives — not to react to it.</p>
+
+  <div class="drill-area">
+    <div class="drill-progression-picker" id="progPicker"></div>
+
+    <div class="drill-bpm-row">
+      <span>Tempo</span>
+      <input type="range" id="bpmSlider" min="30" max="160" value="60">
+      <span class="drill-bpm-val" id="bpmDisplay">60 bpm</span>
+      <span>· each chord lasts <span id="beatsDisplay">4</span> beats</span>
+    </div>
+
+    <div class="drill-chord-display" style="margin-top:20px;">
+      <div class="drill-chord-name" id="drillChordName">—</div>
+      <div class="drill-chord-shape" id="drillChordShape" style="color:#888;"></div>
+    </div>
+
+    <div class="drill-progress" id="drillProgress">select a progression to begin</div>
+
+    <div class="drill-controls">
+      <button class="drill-btn primary" id="drillStartBtn" onclick="drillToggle()">Start</button>
+      <button class="drill-btn" onclick="drillReset()">Reset</button>
+    </div>
+
+    <div class="drill-timer-bar"><div class="drill-timer-fill" id="timerFill"></div></div>
+  </div>
+
+  <!-- EXERCISE 2: Shape Anchor Drill -->
+  <h2>02 — Shape Anchor Drill</h2>
+  <div class="exercise-card">
+    <div class="exercise-number">Exercise 02</div>
+    <div class="exercise-title">Find the Root in Every Shape</div>
+    <span class="tag tag-all">All Shapes</span><span class="tag tag-beginner">Beginner</span>
+    <p class="exercise-body">
+      Call out a random note — say, F#. Find the root of that note in the <strong>Echo shape</strong> first (low E string). Then find the <strong>Alpha root</strong> (A string). Then find the <strong>Delta root</strong> (D and B strings).<br><br>
+      Do not move on to a new note until you can locate all three roots without hesitating. Work through all twelve notes of the chromatic scale. Use the <a href="trainer.html" style="color:#f5a623;">Fretboard Trainer</a> to test yourself under time pressure.
+    </p>
+  </div>
+
+  <!-- EXERCISE 3: One Shape, All Keys -->
+  <h2>03 — One Shape, All Keys</h2>
+  <div class="exercise-card">
+    <div class="exercise-number">Exercise 03</div>
+    <div class="exercise-title">Travel the Neck in a Single Shape</div>
+    <span class="tag tag-echo">Echo</span><span class="tag tag-alpha">Alpha</span><span class="tag tag-delta">Delta</span><span class="tag tag-beginner">Beginner</span>
+    <p class="exercise-body">
+      Pick one shape — start with <strong>Echo</strong>. Play a major chord in that shape at every fret from 1 to 12, saying the chord name aloud as you play it. E at fret 1 becomes F. F becomes F#. Continue up the neck.<br><br>
+      Then do the same for <strong>Alpha</strong>, starting on the A string. Then <strong>Delta</strong> on the D string. After completing all three shapes, you will have played every major chord in every position on the neck.
+    </p>
+  </div>
+
+  <!-- EXERCISE 4: Three-Shape Chord -->
+  <h2>04 — Three Shapes, One Chord</h2>
+  <div class="exercise-card">
+    <div class="exercise-number">Exercise 04</div>
+    <div class="exercise-title">Play the Same Chord Three Ways</div>
+    <span class="tag tag-all">All Shapes</span><span class="tag tag-intermediate">Intermediate</span>
+    <p class="exercise-body">
+      Choose any chord — say, G major. Find it in the <strong>Echo shape</strong>. Play it. Without lifting your hand from the neck area, find it in the <strong>Delta shape</strong>. Then find it in the <strong>Alpha shape</strong>.<br><br>
+      The three voicings should all be within a 4-fret range of each other on the neck at any given key. If you have to jump more than that, you are not moving between adjacent shapes — check your anchor frets.
+    </p>
+  </div>
+
+  <!-- EXERCISE 5: Pentatonic Box to Box -->
+  <h2>05 — Box to Box</h2>
+  <div class="exercise-card">
+    <div class="exercise-number">Exercise 05</div>
+    <div class="exercise-title">Connect the Pentatonic Zones</div>
+    <span class="tag tag-all">All Shapes</span><span class="tag tag-intermediate">Intermediate</span>
+    <p class="exercise-body">
+      Play the minor pentatonic box pattern inside the <strong>Echo zone</strong>. When you reach the highest note, do not stop — find the same note in the <strong>Delta zone</strong> and continue the pentatonic run upward. From Delta, move into <strong>Alpha</strong>.<br><br>
+      The goal is a single unbroken melodic line that moves through all three zones. This teaches you to treat the fretboard as one continuous surface rather than three isolated boxes. Practise both ascending and descending.
+    </p>
+  </div>
+
+  <!-- EXERCISE 6: Interval Training -->
+  <h2>06 — Interval Targeting</h2>
+  <div class="exercise-card">
+    <div class="exercise-number">Exercise 06</div>
+    <div class="exercise-title">Find Every 3rd, 5th, and 7th</div>
+    <span class="tag tag-all">All Shapes</span><span class="tag tag-intermediate">Intermediate</span>
+    <p class="exercise-body">
+      Within a single shape, locate every instance of the <strong>3rd</strong> interval. Play only those notes — no roots, no fifths. Listen to the character of the 3rd by itself. Then do the same for the <strong>5th</strong>, then the <strong>7th</strong>.<br><br>
+      Knowing where each interval lives inside a shape means you can target chord tones while soloing. When the chord changes, you know which notes to lean on and which to pass through quickly.
+    </p>
+  </div>
+
+  <!-- EXERCISE 7: Slow Hands -->
+  <h2>07 — Slow Hands</h2>
+  <div class="exercise-card">
+    <div class="exercise-number">Exercise 07</div>
+    <div class="exercise-title">Play at Half the Speed You Think You Should</div>
+    <span class="tag tag-all">All Shapes</span><span class="tag tag-advanced">Advanced</span>
+    <p class="exercise-body">
+      Take any exercise above and set the tempo to the slowest setting you can tolerate. The target is <strong>perfect execution</strong> on every note — clean contact, full sustain, no buzz. Your brain cannot build reliable pathways from sloppy repetition at speed.<br><br>
+      Increase the tempo by 5 bpm only when you can play through the entire exercise three consecutive times without a single error. This will feel slower than necessary. That is correct.
+    </p>
+  </div>
+
+  <div style="margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-wrap:wrap;justify-content:space-evenly;gap:16px;">
+    <a href="scales.html" class="back-link" style="margin-bottom:0;">Scales</a>
+    <a href="iconic-voicings.html" class="back-link" style="margin-bottom:0;">Iconic Voicings</a>
+    <a href="trainer.html" class="back-link" style="margin-bottom:0;">Fretboard Trainer</a>
+    <a href="index.html" class="back-link" style="margin-bottom:0;">← Back to Map</a>
+  </div>
+
+</div>
+
+<script>
+// ── Chord Transition Drill ────────────────────────────────────────────
+
+const PROGRESSIONS = [
+  {
+    name: 'I — IV — V',
+    chords: [
+      { name: 'G', shape: 'Echo' },
+      { name: 'C', shape: 'Delta' },
+      { name: 'D', shape: 'Delta' },
+    ]
+  },
+  {
+    name: 'I — V — vi — IV',
+    chords: [
+      { name: 'G', shape: 'Echo' },
+      { name: 'D', shape: 'Delta' },
+      { name: 'Em', shape: 'Echo' },
+      { name: 'C', shape: 'Delta' },
+    ]
+  },
+  {
+    name: 'ii — V — I',
+    chords: [
+      { name: 'Am', shape: 'Alpha' },
+      { name: 'D7', shape: 'Delta' },
+      { name: 'G', shape: 'Echo' },
+    ]
+  },
+  {
+    name: '12-bar blues',
+    chords: [
+      { name: 'A7', shape: 'Alpha' },
+      { name: 'A7', shape: 'Alpha' },
+      { name: 'A7', shape: 'Alpha' },
+      { name: 'A7', shape: 'Alpha' },
+      { name: 'D7', shape: 'Delta' },
+      { name: 'D7', shape: 'Delta' },
+      { name: 'A7', shape: 'Alpha' },
+      { name: 'A7', shape: 'Alpha' },
+      { name: 'E7', shape: 'Echo' },
+      { name: 'D7', shape: 'Delta' },
+      { name: 'A7', shape: 'Alpha' },
+      { name: 'E7', shape: 'Echo' },
+    ]
+  },
+  {
+    name: 'I — vi — IV — V',
+    chords: [
+      { name: 'C', shape: 'Delta' },
+      { name: 'Am', shape: 'Alpha' },
+      { name: 'F', shape: 'Echo' },
+      { name: 'G', shape: 'Echo' },
+    ]
+  },
+];
+
+const SHAPE_COLORS = { Echo: '#4a9eff', Alpha: '#ff4a4a', Delta: '#4aff7a' };
+
+let currentProg = 0;
+let currentChord = 0;
+let bpm = 60;
+let beats = 4;
+let isRunning = false;
+let drillInterval = null;
+let timerRaf = null;
+let chordStartTime = null;
+let chordDuration = 0;
+
+// Build progression picker
+const picker = document.getElementById('progPicker');
+PROGRESSIONS.forEach((p, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'prog-btn' + (i === 0 ? ' active' : '');
+  btn.textContent = p.name;
+  btn.onclick = () => {
+    if (isRunning) drillStop();
+    currentProg = i;
+    currentChord = 0;
+    document.querySelectorAll('.prog-btn').forEach((b, j) => b.classList.toggle('active', j === i));
+    showChord(null);
+    document.getElementById('drillProgress').textContent = 'press start';
+  };
+  picker.appendChild(btn);
+});
+
+const bpmSlider = document.getElementById('bpmSlider');
+bpmSlider.addEventListener('input', () => {
+  bpm = parseInt(bpmSlider.value);
+  document.getElementById('bpmDisplay').textContent = bpm + ' bpm';
+  chordDuration = (60 / bpm) * beats * 1000;
+  if (isRunning) {
+    drillStop();
+    drillStart();
+  }
+});
+
+function showChord(chord) {
+  const nameEl  = document.getElementById('drillChordName');
+  const shapeEl = document.getElementById('drillChordShape');
+  if (!chord) {
+    nameEl.textContent  = '—';
+    nameEl.style.color  = '#f5a623';
+    nameEl.style.textShadow = '';
+    shapeEl.textContent = '';
+    return;
+  }
+  const col = SHAPE_COLORS[chord.shape] || '#f5a623';
+  nameEl.textContent  = chord.name;
+  nameEl.style.color  = col;
+  nameEl.style.textShadow = `0 0 24px ${col}88`;
+  shapeEl.textContent = chord.shape + ' shape';
+  shapeEl.style.color = col;
+}
+
+function updateProgress() {
+  const prog   = PROGRESSIONS[currentProg];
+  const total  = prog.chords.length;
+  const dots   = prog.chords.map((_, i) => i === currentChord ? '●' : '○').join('  ');
+  document.getElementById('drillProgress').textContent = dots;
+}
+
+function animateTimer() {
+  if (!chordStartTime) return;
+  const elapsed = Date.now() - chordStartTime;
+  const pct = Math.min(100, (elapsed / chordDuration) * 100);
+  const fill = document.getElementById('timerFill');
+  fill.style.transition = 'none';
+  fill.style.width = (100 - pct) + '%';
+  if (elapsed < chordDuration) {
+    timerRaf = requestAnimationFrame(animateTimer);
+  }
+}
+
+function nextChord() {
+  const prog = PROGRESSIONS[currentProg];
+  currentChord = (currentChord + 1) % prog.chords.length;
+  showChord(prog.chords[currentChord]);
+  updateProgress();
+  chordStartTime = Date.now();
+  if (timerRaf) cancelAnimationFrame(timerRaf);
+  timerRaf = requestAnimationFrame(animateTimer);
+}
+
+function drillStart() {
+  isRunning = true;
+  bpm = parseInt(bpmSlider.value);
+  chordDuration = (60 / bpm) * beats * 1000;
+  document.getElementById('drillStartBtn').textContent = 'Stop';
+
+  const prog = PROGRESSIONS[currentProg];
+  showChord(prog.chords[currentChord]);
+  updateProgress();
+  chordStartTime = Date.now();
+  if (timerRaf) cancelAnimationFrame(timerRaf);
+  timerRaf = requestAnimationFrame(animateTimer);
+
+  drillInterval = setInterval(nextChord, chordDuration);
+}
+
+function drillStop() {
+  isRunning = false;
+  clearInterval(drillInterval);
+  drillInterval = null;
+  if (timerRaf) cancelAnimationFrame(timerRaf);
+  document.getElementById('drillStartBtn').textContent = 'Start';
+  document.getElementById('timerFill').style.width = '100%';
+}
+
+function drillToggle() {
+  if (isRunning) drillStop();
+  else drillStart();
+}
+
+function drillReset() {
+  drillStop();
+  currentChord = 0;
+  showChord(null);
+  document.getElementById('drillProgress').textContent = 'press start';
+  document.getElementById('timerFill').style.width = '100%';
+}
+
+// Init
+showChord(null);
+document.getElementById('drillProgress').textContent = 'select a progression, then press start';
+document.getElementById('beatsDisplay').textContent = beats;
+</script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iconic Voicings — Echo Alpha Delta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+html, body { margin: 0; padding: 0; background: #000000 !important; }
+* { box-sizing: border-box; }
+body {
+  color: #f0ede8;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 400;
+  line-height: 1.85;
+}
+
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+
+.back-link {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #f5a623;
+  text-decoration: none;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(245,166,35,0.25);
+  border-radius: 2rem;
+  margin-bottom: 40px;
+  transition: all 0.3s ease;
+}
+.back-link:hover {
+  color: #ffc85c;
+  border-color: rgba(245,166,35,0.5);
+  box-shadow: 0 0 12px rgba(245,166,35,0.2);
+}
+
+h1 {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f5a623;
+  text-shadow: 0 0 16px rgba(245,166,35,0.4), 0 0 40px rgba(245,166,35,0.15);
+  margin: 0 0 12px 0;
+  line-height: 1.3;
+}
+
+.subtitle {
+  font-size: 0.82rem;
+  color: rgba(245,166,35,0.5);
+  margin-bottom: 36px;
+  font-style: italic;
+}
+
+h2 {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin: 48px 0 20px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+p {
+  font-size: 0.88rem;
+  margin: 0 0 1.4em 0;
+  color: #c8c4be;
+}
+
+.chord-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 8px;
+}
+
+.chord-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.chord-name {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+.chord-sub {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.62rem;
+  color: rgba(245,166,35,0.45);
+  text-align: center;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+}
+
+/* Echo = blue, Alpha = red, Delta = green */
+.echo-section  h2 { color: #4a9eff; text-shadow: 0 0 12px rgba(74,158,255,0.3); }
+.alpha-section h2 { color: #ff4a4a; text-shadow: 0 0 12px rgba(255,74,74,0.3); }
+.delta-section h2 { color: #4aff7a; text-shadow: 0 0 12px rgba(74,255,122,0.3); }
+.other-section h2 { color: #f5a623; text-shadow: 0 0 12px rgba(245,166,35,0.3); }
+
+@media (max-width: 600px) {
+  .page { padding: 24px 16px 40px; }
+  h1 { font-size: 1.1rem; }
+  .chord-grid { gap: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a href="index.html" class="back-link">← Back to Map</a>
+
+  <h1>Iconic Voicings</h1>
+  <p class="subtitle">Open chords, barre chords, and essential shapes — sorted by their home shape</p>
+
+  <p>Every chord you will ever play on a guitar is a variant of one of the three shapes. The voicings below are not merely useful — they are the common language of the instrument. Knowing which shape each one comes from is the first step to being able to move it anywhere on the neck.</p>
+
+  <!-- ECHO SECTION -->
+  <div class="echo-section">
+    <h2>Echo Shape — Open E Form</h2>
+    <p>The open E and Em are the foundation of the Echo shape. The root sits on the low E string at the nut. Barre across any fret and the entire shape shifts to a new key.</p>
+    <div class="chord-grid" id="echo-grid"></div>
+  </div>
+
+  <!-- ALPHA SECTION -->
+  <div class="alpha-section">
+    <h2>Alpha Shape — Open A Form</h2>
+    <p>The open A form has its root on the A string at the nut. In the Alpha barre chord, the index finger covers the nut position and the shape shifts up the neck to any key.</p>
+    <div class="chord-grid" id="alpha-grid"></div>
+  </div>
+
+  <!-- DELTA SECTION -->
+  <div class="delta-section">
+    <h2>Delta Shape — Open D Form</h2>
+    <p>The Delta shape is the smallest of the three, spanning four strings. The root lives on the D string at the nut. Compact but complete, it covers enough of the chord to be unmistakable anywhere on the neck.</p>
+    <div class="chord-grid" id="delta-grid"></div>
+  </div>
+
+  <!-- OTHER SECTION -->
+  <div class="other-section">
+    <h2>Beyond Open Position</h2>
+    <p>These voicings draw from across all three shapes. Open G and open C each contain elements of multiple shapes combined. Power chords strip a shape down to its two strongest tones. Suspended chords replace the 3rd with the 2nd or 4th, creating a sound that belongs to no single quality.</p>
+    <div class="chord-grid" id="other-grid"></div>
+  </div>
+
+  <div style="margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-wrap:wrap;justify-content:space-evenly;gap:16px;">
+    <a href="scales.html" class="back-link" style="margin-bottom:0;">Scales</a>
+    <a href="exercises.html" class="back-link" style="margin-bottom:0;">Exercises</a>
+    <a href="index.html" class="back-link" style="margin-bottom:0;">← Back to Map</a>
+  </div>
+
+</div>
+
+<script>
+// Chord box renderer
+// strings: array of 6 values [str6(low E)...str1(high e)]
+//   null = muted (X), 0 = open (O), n = fret number
+// startFret: lowest fret shown (1 = show frets 1-4)
+// barreAt: {fret, from, to} or null
+// shapeColor: dot fill color
+// name: chord name string
+// sub: subtitle/description
+function drawChordBox(name, sub, strings, startFret, barreAt, shapeColor) {
+  const COLS = 6;   // strings (left=low E, right=high e)
+  const ROWS = 4;   // frets shown
+  const W = 110, H = 130;
+  const marginLeft = 18, marginRight = 8, marginTop = 28, marginBot = 10;
+  const gridW = W - marginLeft - marginRight;
+  const gridH = H - marginTop - marginBot;
+  const colW = gridW / (COLS - 1);
+  const rowH = gridH / ROWS;
+  const dotR = 8;
+
+  const showNut = startFret === 1;
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:${W}px;height:${H}px;">`;
+  svg += `<rect width="${W}" height="${H}" fill="#000"/>`;
+
+  // Nut or start fret indicator
+  if (showNut) {
+    svg += `<rect x="${marginLeft - 3}" y="${marginTop}" width="${gridW + 6}" height="5" fill="#c8c4be" rx="1"/>`;
+  } else {
+    // Fret number indicator on the right
+    svg += `<text x="${W - 6}" y="${marginTop + rowH * 0.5 + 4}" text-anchor="end"
+      font-family="'Space Mono', monospace" font-size="9" fill="#888">${startFret}fr</text>`;
+  }
+
+  // Horizontal fret lines
+  for (let r = 0; r <= ROWS; r++) {
+    const y = marginTop + (showNut ? 5 : 0) + r * rowH;
+    svg += `<line x1="${marginLeft}" y1="${y}" x2="${marginLeft + gridW}" y2="${y}"
+      stroke="#2a2a2a" stroke-width="${r === 0 && !showNut ? 1.5 : 1}"/>`;
+  }
+
+  // Vertical string lines
+  for (let c = 0; c < COLS; c++) {
+    const x = marginLeft + c * colW;
+    const thickness = [3.2, 2.5, 1.9, 1.3, 0.9, 0.65][c];
+    const nutOffset = showNut ? 5 : 0;
+    svg += `<line x1="${x}" y1="${marginTop + nutOffset}" x2="${x}" y2="${marginTop + nutOffset + ROWS * rowH}"
+      stroke="#3a3a3a" stroke-width="${thickness}" stroke-linecap="round"/>`;
+  }
+
+  const nutOffset = showNut ? 5 : 0;
+
+  // Barre
+  if (barreAt) {
+    const bf = barreAt.fret - startFret; // 0-indexed row
+    const bx1 = marginLeft + barreAt.from * colW;
+    const bx2 = marginLeft + barreAt.to * colW;
+    const by  = marginTop + nutOffset + bf * rowH + rowH / 2;
+    svg += `<rect x="${bx1 - dotR * 0.6}" y="${by - dotR * 0.85}" width="${bx2 - bx1 + dotR * 1.2}" height="${dotR * 1.7}"
+      fill="${shapeColor}" opacity="0.85" rx="${dotR * 0.85}"/>`;
+  }
+
+  // Open / muted indicators + dots
+  strings.forEach((val, c) => {
+    const x = marginLeft + c * colW;
+
+    if (val === null) {
+      // Muted X
+      const y = marginTop - 11;
+      const sz = 4;
+      svg += `<line x1="${x - sz}" y1="${y - sz}" x2="${x + sz}" y2="${y + sz}" stroke="#555" stroke-width="1.5" stroke-linecap="round"/>`;
+      svg += `<line x1="${x + sz}" y1="${y - sz}" x2="${x - sz}" y2="${y + sz}" stroke="#555" stroke-width="1.5" stroke-linecap="round"/>`;
+    } else if (val === 0) {
+      // Open O
+      const y = marginTop - 11;
+      svg += `<circle cx="${x}" cy="${y}" r="4" fill="none" stroke="#888" stroke-width="1.5"/>`;
+    } else {
+      // Fret dot
+      const row = val - startFret; // 0-indexed
+      if (row >= 0 && row < ROWS) {
+        const cy = marginTop + nutOffset + row * rowH + rowH / 2;
+        svg += `<circle cx="${x}" cy="${cy}" r="${dotR + 1.5}" fill="#060606"/>`;
+        svg += `<circle cx="${x}" cy="${cy}" r="${dotR}" fill="${shapeColor}" opacity="0.9"/>`;
+      }
+    }
+  });
+
+  svg += `</svg>`;
+  return { svg, name, sub };
+}
+
+// Echo (E form) voicings
+// strings: [low E, A, D, G, B, high e], startFret, barre, color
+const ECHO_COLOR  = '#4a9eff';
+const ALPHA_COLOR = '#ff4a4a';
+const DELTA_COLOR = '#4aff7a';
+const GOLD        = '#f5a623';
+
+const echoChords = [
+  drawChordBox('E major', 'open · Echo root', [0, 2, 2, 1, 0, 0], 1, null, ECHO_COLOR),
+  drawChordBox('E minor', 'open · Echo root', [0, 2, 2, 0, 0, 0], 1, null, ECHO_COLOR),
+  drawChordBox('E7', 'dominant 7th', [0, 2, 0, 1, 0, 0], 1, null, ECHO_COLOR),
+  drawChordBox('E maj7', 'major 7th', [0, 2, 1, 1, 0, 0], 1, null, ECHO_COLOR),
+  drawChordBox('Em7', 'minor 7th', [0, 2, 0, 0, 0, 0], 1, null, ECHO_COLOR),
+  drawChordBox('A major', 'barre · 5th fret', [null, 7, 7, 6, 5, 5], 5, {fret:5, from:1, to:5}, ECHO_COLOR),
+  drawChordBox('B major', 'barre · 7th fret', [null, 9, 9, 8, 7, 7], 7, {fret:7, from:1, to:5}, ECHO_COLOR),
+];
+
+const alphaChords = [
+  drawChordBox('A major', 'open · Alpha root', [null, 0, 2, 2, 2, 0], 1, null, ALPHA_COLOR),
+  drawChordBox('A minor', 'open · Alpha root', [null, 0, 2, 2, 1, 0], 1, null, ALPHA_COLOR),
+  drawChordBox('A7', 'dominant 7th', [null, 0, 2, 0, 2, 0], 1, null, ALPHA_COLOR),
+  drawChordBox('A maj7', 'major 7th', [null, 0, 2, 1, 2, 0], 1, null, ALPHA_COLOR),
+  drawChordBox('Am7', 'minor 7th', [null, 0, 2, 0, 1, 0], 1, null, ALPHA_COLOR),
+  drawChordBox('D major', 'barre · 5th fret', [null, null, 7, 7, 7, 5], 5, {fret:5, from:2, to:5}, ALPHA_COLOR),
+  drawChordBox('E major', 'barre · 7th fret', [null, null, 9, 9, 9, 7], 7, {fret:7, from:2, to:5}, ALPHA_COLOR),
+];
+
+const deltaChords = [
+  drawChordBox('D major', 'open · Delta root', [null, null, 0, 2, 3, 2], 1, null, DELTA_COLOR),
+  drawChordBox('D minor', 'open · Delta root', [null, null, 0, 2, 3, 1], 1, null, DELTA_COLOR),
+  drawChordBox('D7', 'dominant 7th', [null, null, 0, 2, 1, 2], 1, null, DELTA_COLOR),
+  drawChordBox('Dsus2', 'suspended 2nd', [null, null, 0, 2, 3, 0], 1, null, DELTA_COLOR),
+  drawChordBox('Dsus4', 'suspended 4th', [null, null, 0, 2, 3, 3], 1, null, DELTA_COLOR),
+  drawChordBox('Dmaj7', 'major 7th', [null, null, 0, 2, 2, 2], 1, null, DELTA_COLOR),
+];
+
+const otherChords = [
+  drawChordBox('G major', 'Echo + Delta', [3, 2, 0, 0, 0, 3], 1, null, GOLD),
+  drawChordBox('C major', 'Alpha + Delta', [null, 3, 2, 0, 1, 0], 1, null, GOLD),
+  drawChordBox('Power 5', 'two-string · any shape', [null, null, 3, 5, null, null], 3, null, GOLD),
+  drawChordBox('G sus2', 'open suspended', [3, 2, 0, 0, 3, 3], 1, null, GOLD),
+  drawChordBox('Cadd9', 'colour chord', [null, 3, 2, 0, 3, 0], 1, null, GOLD),
+  drawChordBox('Em add9', 'open voicing', [0, 2, 4, 0, 0, 0], 1, null, ECHO_COLOR),
+];
+
+function renderGrid(chords, containerId) {
+  const container = document.getElementById(containerId);
+  chords.forEach(({ svg, name, sub }) => {
+    const card = document.createElement('div');
+    card.className = 'chord-card';
+    card.innerHTML = `
+      ${svg}
+      <div class="chord-name">${name}</div>
+      <div class="chord-sub">${sub}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+renderGrid(echoChords,  'echo-grid');
+renderGrid(alphaChords, 'alpha-grid');
+renderGrid(deltaChords, 'delta-grid');
+renderGrid(otherChords, 'other-grid');
+</script>
+</body>
+</html>
