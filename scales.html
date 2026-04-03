@@ -191,9 +191,9 @@ function mapSVG(rootPc, intervals) {
 
   function claimedBy(f, si) {
     const out = [];
-    if (echoRoots.some(r => f >= r && f <= r + 2))             out.push('echo');
+    if (echoRoots.some(r => f >= r && f <= r + 3))             out.push('echo');
     if (si >= 2 && deltaRoots.some(r => f >= r && f <= r + 3)) out.push('delta');
-    if (si >= 1 && alphaRoots.some(r => f >= r && f <= r + 2)) out.push('alpha');
+    if (si >= 1 && alphaRoots.some(r => f >= r && f <= r + 3)) out.push('alpha');
     return out;
   }
 
