@@ -158,7 +158,6 @@ function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
   const fStart = startFret === 0 ? 0 : startFret + 1;
   for (let f = fStart; f <= startFret + numFrets; f++) {
     for (let si = minStr; si < 6; si++) {
-      if (f === 0 && si !== minStr) continue; // open strings: root string only
       const pitch = (STR_OPEN[si] + f) % 12;
       const intv  = (pitch - rootPc + 12) % 12;
       if (!intervals.includes(intv)) continue;
@@ -237,9 +236,7 @@ function mapSVG(rootPc, intervals, windows) {
 
       const cx = f === 0 ? ML - 13 : ML + (f - 0.5) * FW;
       const cy = sy(si);
-      // open strings: only claim for the shape's root string
-      const claimed = claimedBy(f, si)
-        .filter(shape => f !== 0 || si === SHAPE_MIN_STRING[shape]);
+      const claimed = claimedBy(f, si);
 
       if (claimed.length === 0) {
         continue;
@@ -258,7 +255,7 @@ function mapSVG(rootPc, intervals, windows) {
 // ── Section data ──────────────────────────────────────────────────────────────
 const SECTIONS = [
   {
-    title:     'Minor Pentatonic — F',
+    title:     'Minor Pentatonic',
     scaleName: 'minor pentatonic',
     key:       'F',
     rootPc:    5,
@@ -267,16 +264,16 @@ const SECTIONS = [
     windows:   { echo: 0, alpha: 7, delta: 2 },
   },
   {
-    title:     'Major Pentatonic — B',
+    title:     'Major Pentatonic',
     scaleName: 'major pentatonic',
     key:       'B',
     rootPc:    11,
     intervals: [0, 2, 4, 7, 9],
     copy:      'The major pentatonic has a brighter, more open character. The same five-note framework, shifted to a major root. It sits equally well inside each shape. Here it is in B.',
-    windows:   { echo: 5, alpha: 0, delta: 8 },
+    windows:   { echo: 5, alpha: 1, delta: 8 },
   },
   {
-    title:     'Natural Minor — G',
+    title:     'Natural Minor',
     scaleName: 'natural minor',
     key:       'G',
     rootPc:    7,
@@ -285,16 +282,16 @@ const SECTIONS = [
     windows:   { echo: 2, alpha: 9, delta: 4 },
   },
   {
-    title:     'Major Scale — C#',
+    title:     'Major Scale',
     scaleName: 'major',
-    key:       'C#',
-    rootPc:    1,
+    key:       'F#',
+    rootPc:    6,
     intervals: [0, 2, 4, 5, 7, 9, 11],
-    copy:      'The major scale is the full seven-note picture of a key — two whole steps, a half step, three whole steps, a half step. Every chord and harmony in a key comes from this one set of notes. Each shape gives you a different window into it. Here it is in C#.',
-    windows:   { echo: 8, alpha: 3, delta: 10 },
+    copy:      'The major scale is the full seven-note picture of a key — two whole steps, a half step, three whole steps, a half step. Every chord and harmony in a key comes from this one set of notes. Each shape gives you a different window into it. Here it is in F#.',
+    windows:   { echo: 1, alpha: 8, delta: 3 },
   },
   {
-    title:     'Blues Scale — A',
+    title:     'Blues Scale',
     scaleName: 'blues',
     key:       'A',
     rootPc:    9,
