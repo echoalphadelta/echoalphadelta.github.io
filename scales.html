@@ -174,7 +174,7 @@ function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
 }
 
 // ── Full neck map ─────────────────────────────────────────────────────────────
-function mapSVG(rootPc, intervals) {
+function mapSVG(rootPc, intervals, windows) {
   const W = 640, H = 90;
   const ML = 26, MR = 10, MT = 8, MB = 8;
   const NF = 12;
@@ -182,18 +182,14 @@ function mapSVG(rootPc, intervals) {
   const SH = (H - MT - MB) / 5;
   const sy = syFn(MT, SH);
 
-  const re0 = (rootPc - 4 + 12) % 12;
-  const ra0 = (rootPc - 9 + 12) % 12;
-  const rd0 = (rootPc - 2 + 12) % 12;
-  const echoRoots  = [re0, re0 + 12];
-  const alphaRoots = [ra0, ra0 + 12];
-  const deltaRoots = [rd0, rd0 + 12];
-
   function claimedBy(f, si) {
     const out = [];
-    if (echoRoots.some(r => f >= r && f <= r + 3))             out.push('echo');
-    if (si >= 2 && deltaRoots.some(r => f >= r && f <= r + 3)) out.push('delta');
-    if (si >= 1 && alphaRoots.some(r => f >= r && f <= r + 3)) out.push('alpha');
+    for (const shape of ['echo', 'alpha', 'delta']) {
+      if (si < SHAPE_MIN_STRING[shape]) continue;
+      const sw = windows[shape];
+      const fStart = sw === 0 ? 0 : sw + 1;
+      if (f >= fStart && f <= sw + NUM_FRETS) out.push(shape);
+    }
     return out;
   }
 
@@ -245,7 +241,7 @@ function mapSVG(rootPc, intervals) {
       const claimed = claimedBy(f, si);
 
       if (claimed.length === 0) {
-        s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5" fill="#555" opacity="0.45"/>`;
+        continue;
       } else if (claimed.length === 1) {
         s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5" fill="${SHAPE_COLORS[claimed[0]]}" opacity="0.85"/>`;
       } else {
@@ -276,7 +272,7 @@ const SECTIONS = [
     rootPc:    11,
     intervals: [0, 2, 4, 7, 9],
     copy:      'The major pentatonic has a brighter, more open character. The same five-note framework, shifted to a major root. It sits equally well inside each shape. Here it is in B.',
-    windows:   { echo: 6, alpha: 1, delta: 8 },
+    windows:   { echo: 5, alpha: 0, delta: 8 },
   },
   {
     title:     'Natural Minor — G',
@@ -319,7 +315,7 @@ SECTIONS.forEach(sec => {
       <div class="diag-row">${cards}</div>
       <div class="diag-map">
         <div class="diag-label">Full neck — ${sec.key} ${sec.scaleName}</div>
-        ${mapSVG(sec.rootPc, sec.intervals)}
+        ${mapSVG(sec.rootPc, sec.intervals, sec.windows)}
       </div>
     </div>`;
 });
