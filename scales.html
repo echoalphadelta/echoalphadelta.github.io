@@ -125,11 +125,9 @@ function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
 
   // Strings
   for (let si = 0; si < 6; si++) {
-    const y   = sy(si).toFixed(1);
-    const dim = si < minStr;
+    const y = sy(si).toFixed(1);
     s += `<line x1="${ML}" y1="${y}" x2="${W - MR}" y2="${y}"
-      stroke="${dim ? '#141414' : '#383838'}"
-      stroke-width="${dim ? 0.5 : STR_THICK[si]}"/>`;
+      stroke="#383838" stroke-width="${STR_THICK[si]}"/>`;
   }
 
   // Nut
@@ -160,6 +158,7 @@ function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
   const fStart = startFret === 0 ? 0 : startFret + 1;
   for (let f = fStart; f <= startFret + numFrets; f++) {
     for (let si = minStr; si < 6; si++) {
+      if (f === 0 && si !== minStr) continue; // open strings: root string only
       const pitch = (STR_OPEN[si] + f) % 12;
       const intv  = (pitch - rootPc + 12) % 12;
       if (!intervals.includes(intv)) continue;
@@ -238,7 +237,9 @@ function mapSVG(rootPc, intervals, windows) {
 
       const cx = f === 0 ? ML - 13 : ML + (f - 0.5) * FW;
       const cy = sy(si);
-      const claimed = claimedBy(f, si);
+      // open strings: only claim for the shape's root string
+      const claimed = claimedBy(f, si)
+        .filter(shape => f !== 0 || si === SHAPE_MIN_STRING[shape]);
 
       if (claimed.length === 0) {
         continue;
@@ -282,6 +283,15 @@ const SECTIONS = [
     intervals: [0, 2, 3, 5, 7, 8, 10],
     copy:      'Natural minor adds two notes to the minor pentatonic — the second and the sixth — filling in a seven-note picture that covers more of each shape\'s territory. Here it is in G.',
     windows:   { echo: 2, alpha: 9, delta: 4 },
+  },
+  {
+    title:     'Major Scale — C#',
+    scaleName: 'major',
+    key:       'C#',
+    rootPc:    1,
+    intervals: [0, 2, 4, 5, 7, 9, 11],
+    copy:      'The major scale is the full seven-note picture of a key — two whole steps, a half step, three whole steps, a half step. Every chord and harmony in a key comes from this one set of notes. Each shape gives you a different window into it. Here it is in C#.',
+    windows:   { echo: 8, alpha: 3, delta: 10 },
   },
   {
     title:     'Blues Scale — A',
