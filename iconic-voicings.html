@@ -35,74 +35,62 @@ p.intro { color: #e0ddd8; margin-bottom: 40px; }
   <div id="content"></div>
 </div>
 <script>
-var STR_THICK = [3.2, 2.4, 1.7, 1.2, 0.8, 0.5];
-
 function neckSVG(o) {
-  var strings  = o.strings;   // per string: fret number (0=open, -1=not shown)
+  var strings   = o.strings;   // per string: fret number (0=open, -1=muted)
   var nashville = o.nashville;
-  var color    = o.color;
+  var color     = o.color;
   var NUM_FRETS = 12;
-  var W = 600, H = 96;
-  var ML = 22, MR = 8, MT = 10, MB = 18;
-  var FW = (W - ML - MR) / NUM_FRETS;  // ~47.5
-  var SH = (H - MT - MB) / 5;          // ~13.6
+  var W = 640, H = 130;
+  var ML = 38, MR = 12, MT = 12, MB = 12;
+  var FW = (W - ML - MR) / NUM_FRETS;
+  var SH = (H - MT - MB) / 5;
+  var thicknesses = [5.5, 4.2, 3.2, 2.3, 1.5, 0.9];
   function sy(si) { return MT + (5 - si) * SH; }
   var nTop = MT, nBot = MT + 5 * SH;
 
   var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" xmlns="http://www.w3.org/2000/svg">';
-  s += '<rect width="' + W + '" height="' + H + '" fill="#0a0a0a" rx="2"/>';
+
+  // Fret lines (nut + frets)
+  for (var f = 0; f <= NUM_FRETS; f++) {
+    var x = (ML + f * FW).toFixed(1);
+    var isNut = f === 0;
+    s += '<line x1="' + x + '" y1="' + nTop + '" x2="' + x + '" y2="' + nBot + '" stroke="' + (isNut ? '#d4cfc8' : '#666') + '" stroke-width="' + (isNut ? 10 : 3) + '"/>';
+  }
+
+  // Fret position markers between strings
+  [3, 5, 7, 9].forEach(function(f) {
+    var mx = (ML + (f - 1) * FW + FW * 0.5).toFixed(1);
+    var my = (MT + 2.5 * SH).toFixed(1);
+    s += '<circle cx="' + mx + '" cy="' + my + '" r="3.5" fill="#ccc"/>';
+  });
+  var x12 = ML + 11 * FW + FW * 0.5;
+  [1.5, 3.5].forEach(function(i) {
+    s += '<circle cx="' + x12.toFixed(1) + '" cy="' + (MT + i * SH).toFixed(1) + '" r="3.5" fill="#ccc"/>';
+  });
 
   // String lines
   for (var si = 0; si < 6; si++) {
     var y = sy(si).toFixed(1);
-    s += '<line x1="' + ML + '" y1="' + y + '" x2="' + (W - MR) + '" y2="' + y + '" stroke="#303030" stroke-width="' + STR_THICK[si] + '"/>';
+    s += '<line x1="' + ML + '" y1="' + y + '" x2="' + (W - MR) + '" y2="' + y + '" stroke="#999" stroke-width="' + thicknesses[si] + '" stroke-linecap="round"/>';
   }
 
-  // Nut
-  s += '<line x1="' + ML + '" y1="' + (nTop - 2) + '" x2="' + ML + '" y2="' + (nBot + 2) + '" stroke="#999" stroke-width="3"/>';
-
-  // Fret lines
-  for (var f = 1; f <= NUM_FRETS; f++) {
-    var x = (ML + f * FW).toFixed(1);
-    s += '<line x1="' + x + '" y1="' + nTop + '" x2="' + x + '" y2="' + nBot + '" stroke="#1c1c1c" stroke-width="1"/>';
-  }
-
-  // Fret position markers (3, 5, 7, 9, 12)
-  [3, 5, 7, 9, 12].forEach(function(f) {
-    var mx = ML + (f - 0.5) * FW;
-    var my = (nBot + 9).toFixed(1);
-    if (f === 12) {
-      s += '<circle cx="' + (mx - 5).toFixed(1) + '" cy="' + my + '" r="2.5" fill="#2a2a2a"/>';
-      s += '<circle cx="' + (mx + 5).toFixed(1) + '" cy="' + my + '" r="2.5" fill="#2a2a2a"/>';
-    } else {
-      s += '<circle cx="' + mx.toFixed(1) + '" cy="' + my + '" r="2.5" fill="#2a2a2a"/>';
-    }
-  });
-
-  // Open string circles (before nut)
-  for (var si = 0; si < 6; si++) {
-    if (strings[si] !== 0) continue;
-    var cy = sy(si);
-    var cx = ML - 11;
-    s += '<circle cx="' + cx + '" cy="' + cy.toFixed(1) + '" r="5.5" fill="none" stroke="' + color + '" stroke-width="1.5"/>';
-    var nn = nashville[si];
-    if (nn) {
-      var fs = nn.length > 1 ? 5 : 7;
-      s += '<text x="' + cx + '" y="' + cy.toFixed(1) + '" text-anchor="middle" dominant-baseline="middle" font-size="' + fs + '" font-family="Space Mono,monospace" fill="' + color + '">' + nn + '</text>';
-    }
-  }
-
-  // Fretted dots
+  // Dots
   for (var si = 0; si < 6; si++) {
     var fret = strings[si];
-    if (fret <= 0) continue;
-    var cx = ML + (fret - 0.5) * FW;
+    if (fret < 0) continue;
+    var cx = fret === 0 ? ML - 14 : ML + (fret - 0.5) * FW;
     var cy = sy(si);
-    s += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="7" fill="' + color + '" opacity="0.92"/>';
-    var nn = nashville[si];
-    if (nn) {
-      var fs = nn.length > 2 ? 5 : nn.length > 1 ? 6 : 8;
-      s += '<text x="' + cx.toFixed(1) + '" y="' + cy.toFixed(1) + '" text-anchor="middle" dominant-baseline="middle" font-size="' + fs + '" font-family="Space Mono,monospace" fill="#000" font-weight="bold">' + nn + '</text>';
+    var r = 10;
+    if (fret === 0) {
+      s += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="' + r + '" fill="none" stroke="' + color + '" stroke-width="2"/>';
+    } else {
+      s += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="' + (r + 1.5) + '" fill="#1a1a1a"/>';
+      s += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="' + r + '" fill="' + color + '"/>';
+      var nn = nashville[si];
+      if (nn) {
+        var fs = nn.length > 2 ? 6 : nn.length > 1 ? 7 : 9;
+        s += '<text x="' + cx.toFixed(1) + '" y="' + cy.toFixed(1) + '" text-anchor="middle" dominant-baseline="middle" font-size="' + fs + '" font-family="Space Mono,monospace" fill="#000" font-weight="bold">' + nn + '</text>';
+      }
     }
   }
 
@@ -113,9 +101,9 @@ function neckSVG(o) {
 var VOICINGS = [
   {name: 'The Hendrix Chord', subname: '7\u266f9', color: '#9b5de5',
    strings: [-1,7,6,7,8,-1], nashville: ['','1','3','7','\u266f9','']},
-  {name: 'The James Brown Chord', subname: 'G9', color: '#7c3a1f',
+  {name: 'The James Brown Chord', subname: '9', color: '#7c3a1f',
    strings: [-1,10,9,10,10,10], nashville: ['','1','3','7','9','5']},
-  {name: 'The James Bond Chord', subname: 'EmM7', color: '#b0b0c0',
+  {name: 'The James Bond Chord', subname: 'mM7', color: '#b0b0c0',
    strings: [0,10,9,8,7,-1], nashville: ['1','b3','5','7','9','']},
 ];
 
