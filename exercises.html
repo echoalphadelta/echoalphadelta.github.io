@@ -309,7 +309,6 @@ let gs = {
   shape:     null,
   rootPc:    null,
   intervals: null,
-  wStart:    0,
   checked:   false,
   sel:       new Set(),
   score:     { n: 0, tot: 0 },
@@ -317,20 +316,10 @@ let gs = {
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-function calcWindow(rootPc, shape) {
-  const fRoot = (rootPc - STR_OPEN[SHAPE_MIN[shape]] + 12) % 12;
-  // Use octave equivalent at fret 12 if root falls on open string
-  return fRoot === 0 ? 11 : fRoot - 1;
-}
-
-function getWindowFrets() {
-  return Array.from({ length: 5 }, (_, i) => gs.wStart + 1 + i);
-}
-
 function getChordToneKeys() {
   const keys = new Set();
   const minStr = SHAPE_MIN[gs.shape];
-  for (const f of getWindowFrets()) {
+  for (let f = 1; f <= 12; f++) {
     for (let si = minStr; si < 6; si++) {
       const pitch = (STR_OPEN[si] + f) % 12;
       const intv  = (pitch - gs.rootPc + 12) % 12;
@@ -351,7 +340,6 @@ function newChallenge() {
     key,  qual, shape,
     rootPc:    NOTE_PC[key],
     intervals: qual.iv,
-    wStart:    calcWindow(NOTE_PC[key], shape),
     checked:   false,
     sel:       new Set(),
     score:     gs.score,
@@ -400,40 +388,38 @@ function pickRandom() {
 
 // ── SVG renderer ──────────────────────────────────────────────────────────────
 function renderSVG() {
-  if (!gs.active) return '<svg viewBox="0 0 520 195" width="100%"></svg>';
+  if (!gs.active) return '<svg viewBox="0 0 640 160" width="100%"></svg>';
 
-  const W = 520, H = 195;
-  const ML = 40, MR = 10, MT = 15, MB = 32;
-  const FW = (W - ML - MR) / 5;          // 94
-  const SH = (H - MT - MB) / 5;          // 29.6 → ~30
+  const W = 640, H = 160;
+  const ML = 20, MR = 8, MT = 12, MB = 28;
+  const NF = 12;
+  const FW = (W - ML - MR) / NF;   // ~51
+  const SH = (H - MT - MB) / 5;    // 24
 
-  const sy   = si => MT + (5 - si) * SH;
-  const fCx  = f  => ML + (f - gs.wStart - 1) * FW + FW / 2;
+  const sy  = si => MT + (5 - si) * SH;
+  const fCx = f  => ML + (f - 0.5) * FW;
 
   const minStr    = SHAPE_MIN[gs.shape];
-  const frets     = getWindowFrets();
   const shapeClr  = SHAPE_COLORS[gs.shape];
   const chordKeys = gs.checked ? getChordToneKeys() : null;
 
   let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" style="touch-action:manipulation;display:block;">`;
 
+  // Nut
+  s += `<line x1="${ML}" y1="${MT}" x2="${ML}" y2="${H - MB}" stroke="#b0a898" stroke-width="5"/>`;
+
   // Fret lines
-  for (let i = 0; i <= 5; i++) {
+  for (let i = 1; i <= NF; i++) {
     const x = (ML + i * FW).toFixed(1);
     s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="#303030" stroke-width="1.5"/>`;
   }
 
   // Position markers
-  frets.forEach(f => {
-    const cx = fCx(f).toFixed(1);
-    if ([3,5,7,9].includes(f)) {
-      s += `<circle cx="${cx}" cy="${(MT + 2.5 * SH).toFixed(1)}" r="3" fill="#222"/>`;
-    }
-    if (f === 12) {
-      s += `<circle cx="${cx}" cy="${(MT + 1.5 * SH).toFixed(1)}" r="3" fill="#222"/>`;
-      s += `<circle cx="${cx}" cy="${(MT + 3.5 * SH).toFixed(1)}" r="3" fill="#222"/>`;
-    }
+  [3,5,7,9].forEach(f => {
+    s += `<circle cx="${fCx(f).toFixed(1)}" cy="${(MT + 2.5 * SH).toFixed(1)}" r="3.5" fill="#222"/>`;
   });
+  s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT + 1.5 * SH).toFixed(1)}" r="3.5" fill="#222"/>`;
+  s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT + 3.5 * SH).toFixed(1)}" r="3.5" fill="#222"/>`;
 
   // Strings
   for (let si = minStr; si < 6; si++) {
@@ -441,17 +427,16 @@ function renderSVG() {
     s += `<line x1="${ML}" y1="${y}" x2="${W - MR}" y2="${y}" stroke="#666" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
   }
 
-  // Fret number labels
-  frets.forEach(f => {
-    const cx = fCx(f).toFixed(1);
-    s += `<text x="${cx}" y="${(H - 8).toFixed(1)}" text-anchor="middle" fill="#3a3a3a" font-size="9" font-family="monospace">${f}</text>`;
+  // Fret number labels (sparse)
+  [3,5,7,9,12].forEach(f => {
+    s += `<text x="${fCx(f).toFixed(1)}" y="${H - 8}" text-anchor="middle" fill="#383838" font-size="9" font-family="monospace">${f}</text>`;
   });
 
   // Dots
-  for (const f of frets) {
+  for (let f = 1; f <= 12; f++) {
     for (let si = minStr; si < 6; si++) {
-      const pitch = (STR_OPEN[si] + f) % 12;
-      const intv  = (pitch - gs.rootPc + 12) % 12;
+      const pitch       = (STR_OPEN[si] + f) % 12;
+      const intv        = (pitch - gs.rootPc + 12) % 12;
       const isChordTone = gs.intervals.includes(intv);
       const key         = `${f}-${si}`;
       const isSelected  = gs.sel.has(key);
@@ -459,31 +444,26 @@ function renderSVG() {
       const cy = sy(si).toFixed(1);
 
       if (!gs.checked) {
-        // Pre-check: unselected = dark circle, selected = shape colour
-        const fill   = isSelected ? shapeClr : '#121212';
-        const stroke = isSelected ? shapeClr : '#333';
-        s += `<circle cx="${cx}" cy="${cy}" r="8" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
-        // Invisible hit area (larger target)
-        s += `<circle cx="${cx}" cy="${cy}" r="13" fill="none" pointer-events="all" style="cursor:pointer" onclick="toggleDot('${key}')"/>`;
+        const fill   = isSelected ? shapeClr : '#111';
+        const stroke = isSelected ? shapeClr : '#2e2e2e';
+        s += `<circle cx="${cx}" cy="${cy}" r="7" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+        s += `<circle cx="${cx}" cy="${cy}" r="11" fill="none" pointer-events="all" style="cursor:pointer" onclick="toggleDot('${key}')"/>`;
       } else {
-        // Post-check colouring
         let fill, stroke, textFill;
         if (isSelected && isChordTone) {
-          fill = '#2ecc71'; stroke = '#2ecc71'; textFill = '#000';         // correct
+          fill = '#2ecc71'; stroke = '#2ecc71'; textFill = '#000';
         } else if (isSelected) {
-          fill = '#e74c3c'; stroke = '#e74c3c'; textFill = '#fff';         // wrong
+          fill = '#e74c3c'; stroke = '#e74c3c'; textFill = '#fff';
         } else if (isChordTone) {
-          fill = 'none'; stroke = '#f5a623'; textFill = '#f5a623';         // missed
+          fill = 'none'; stroke = '#f5a623'; textFill = '#f5a623';
         } else {
-          // Not relevant — dim
-          s += `<circle cx="${cx}" cy="${cy}" r="7" fill="#0e0e0e" stroke="#1e1e1e" stroke-width="1" opacity="0.4"/>`;
+          s += `<circle cx="${cx}" cy="${cy}" r="6" fill="#0c0c0c" stroke="#1c1c1c" stroke-width="1" opacity="0.35"/>`;
           continue;
         }
-        s += `<circle cx="${cx}" cy="${cy}" r="8" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
-        // Interval label on chord tones (correct or missed)
+        s += `<circle cx="${cx}" cy="${cy}" r="7" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
         if (isChordTone) {
           const lbl = INTV_LABEL[intv] || '';
-          if (lbl) s += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central" fill="${textFill}" font-size="${lbl.length > 1 ? 6 : 7}" font-family="monospace" font-weight="700">${lbl}</text>`;
+          if (lbl) s += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central" fill="${textFill}" font-size="${lbl.length > 1 ? 5.5 : 6.5}" font-family="monospace" font-weight="700">${lbl}</text>`;
         }
       }
     }
