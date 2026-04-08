@@ -206,22 +206,6 @@ h1 {
 
   <div class="round-result" id="roundResult"></div>
 
-  <p class="key-pin-hint">Pin a key</p>
-  <div class="key-grid">
-    <div class="key-cell" onclick="pinKey(this,'A')">A</div>
-    <div class="key-cell" onclick="pinKey(this,'Bb')">Bb</div>
-    <div class="key-cell" onclick="pinKey(this,'B')">B</div>
-    <div class="key-cell" onclick="pinKey(this,'C')">C</div>
-    <div class="key-cell" onclick="pinKey(this,'C#')">C#</div>
-    <div class="key-cell" onclick="pinKey(this,'D')">D</div>
-    <div class="key-cell" onclick="pinKey(this,'Eb')">Eb</div>
-    <div class="key-cell" onclick="pinKey(this,'E')">E</div>
-    <div class="key-cell" onclick="pinKey(this,'F')">F</div>
-    <div class="key-cell" onclick="pinKey(this,'F#')">F#</div>
-    <div class="key-cell" onclick="pinKey(this,'G')">G</div>
-    <div class="key-cell" onclick="pinKey(this,'Ab')">Ab</div>
-  </div>
-  <button class="random-btn" onclick="pickRandom()">Pick at Random</button>
 
 </div>
 
@@ -316,13 +300,13 @@ function pickRandom() {
 }
 
 function renderSVG() {
-  if (!gs.active) return '<svg viewBox="0 0 660 248" width="100%"></svg>';
+  if (!gs.active) return '<svg viewBox="0 0 660 310" width="100%"></svg>';
 
-  const W = 660, H = 248;
-  const ML = 20, MR = 8, MT = 18, MB = 35;
+  const W = 660, H = 310;
+  const ML = 20, MR = 8, MT = 22, MB = 38;
   const NF = 12;
   const FW = (W - ML - MR) / NF;  // ~52.7
-  const SH = (H - MT - MB) / 5;   // 39
+  const SH = (H - MT - MB) / 5;   // 50
 
   const sy  = si => MT + (5 - si) * SH;
   const fCx = f  => ML + (f - 0.5) * FW;
@@ -342,10 +326,10 @@ function renderSVG() {
 
   // Position markers
   [3,5,7,9].forEach(f => {
-    s += `<circle cx="${fCx(f).toFixed(1)}" cy="${(MT + 2.5 * SH).toFixed(1)}" r="4" fill="#1e1e1e"/>`;
+    s += `<circle cx="${fCx(f).toFixed(1)}" cy="${(MT + 2.5 * SH).toFixed(1)}" r="6" fill="#3a3a3a"/>`;
   });
-  s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT + 1.5 * SH).toFixed(1)}" r="4" fill="#1e1e1e"/>`;
-  s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT + 3.5 * SH).toFixed(1)}" r="4" fill="#1e1e1e"/>`;
+  s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT + 1.5 * SH).toFixed(1)}" r="6" fill="#3a3a3a"/>`;
+  s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT + 3.5 * SH).toFixed(1)}" r="6" fill="#3a3a3a"/>`;
 
   // Strings (all 6)
   for (let si = 0; si < 6; si++) {
