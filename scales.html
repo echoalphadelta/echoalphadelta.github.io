@@ -248,7 +248,6 @@ const SECTIONS = [
     key:       'F',
     rootPc:    5,
     intervals: [0, 3, 5, 7, 10],
-    copy:      'Five notes, moveable anywhere on the neck. The minor pentatonic sits naturally inside all three shapes. Here it is in F.',
     windows:   { echo: 0, alpha: 7, delta: 2 },
   },
   {
@@ -257,7 +256,6 @@ const SECTIONS = [
     key:       'B',
     rootPc:    11,
     intervals: [0, 2, 4, 7, 9],
-    copy:      'The major pentatonic has a brighter, more open character. The same five-note framework, shifted to a major root. It sits equally well inside each shape. Here it is in B.',
     windows:   { echo: 5, alpha: 0, delta: 8 },
   },
   {
@@ -266,7 +264,6 @@ const SECTIONS = [
     key:       'G',
     rootPc:    7,
     intervals: [0, 2, 3, 5, 7, 8, 10],
-    copy:      'Natural minor adds two notes to the minor pentatonic — the second and the sixth — filling in a seven-note picture that covers more of each shape\'s territory. Here it is in G.',
     windows:   { echo: 2, alpha: 8, delta: 4 },
   },
   {
@@ -275,8 +272,7 @@ const SECTIONS = [
     key:       'F#',
     rootPc:    6,
     intervals: [0, 2, 4, 5, 7, 9, 11],
-    copy:      'The major scale is the full seven-note picture of a key — two whole steps, a half step, three whole steps, a half step. Every chord and harmony in a key comes from this one set of notes. Each shape gives you a different window into it. Here it is in F#.',
-    windows:   { echo: 0, alpha: 7, delta: 2 },
+    windows:   { echo: 0, alpha: 8, delta: 3 },
   },
   {
     title:     'Blues Scale',
@@ -284,7 +280,6 @@ const SECTIONS = [
     key:       'A',
     rootPc:    9,
     intervals: [0, 3, 5, 6, 7, 10],
-    copy:      'The blues scale takes the minor pentatonic and adds a single passing tone — the flattened fifth. That one extra note creates a characteristic tension and release. Here it is in A.',
     windows:   { echo: 4, alpha: 0, delta: 6 },
   },
 ];
@@ -306,7 +301,6 @@ SECTIONS.forEach(sec => {
   html += `
     <div class="scale-section">
       <h2>${sec.title}</h2>
-      <p>${sec.copy}</p>
       <div class="diag-row">${cards}</div>
       <div class="diag-map">
         <div class="diag-label">Full neck — ${sec.key} ${sec.scaleName}</div>
