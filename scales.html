@@ -151,6 +151,7 @@ function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
   const fStart = startFret === 0 ? 0 : startFret + 1;
   for (let f = fStart; f <= startFret + numFrets; f++) {
     for (let si = minStr; si < 6; si++) {
+      if (f === 0 && si === 4) continue; // skip open B string
       const pitch = (STR_OPEN[si] + f) % 12;
       const intv  = (pitch - rootPc + 12) % 12;
       if (!intervals.includes(intv)) continue;
@@ -179,9 +180,11 @@ function mapSVG(rootPc, intervals, windows) {
     const out = [];
     for (const shape of ['echo', 'alpha', 'delta']) {
       if (si < SHAPE_MIN_STRING[shape]) continue;
-      const sw = windows[shape];
+      const wv = windows[shape];
+      const sw = typeof wv === 'object' ? wv.start : wv;
+      const sf = typeof wv === 'object' ? wv.frets : NUM_FRETS;
       const fStart = sw === 0 ? 0 : sw + 1;
-      if (f >= fStart && f <= sw + NUM_FRETS) out.push(shape);
+      if (f >= fStart && f <= sw + sf) out.push(shape);
     }
     return out;
   }
@@ -220,6 +223,7 @@ function mapSVG(rootPc, intervals, windows) {
   // Scale dots
   for (let f = 0; f <= 12; f++) {
     for (let si = 0; si < 6; si++) {
+      if (f === 0 && si === 4) continue; // skip open B string
       const pitch = (STR_OPEN[si] + f) % 12;
       const intv  = (pitch - rootPc + 12) % 12;
       if (!intervals.includes(intv)) continue;
@@ -277,7 +281,7 @@ const SECTIONS = [
     key:       'F#',
     rootPc:    6,
     intervals: [0, 2, 4, 5, 7, 9, 11],
-    windows:   { echo: 0, alpha: 7, delta: 2 },
+    windows:   { echo: 0, alpha: 7, delta: { start: 2, frets: 5 } },
   },
   {
     title:     'Blues Scale',
@@ -296,10 +300,13 @@ SECTIONS.forEach(sec => {
     const color  = SHAPE_COLORS[shape];
     const label  = shape[0].toUpperCase() + shape.slice(1);
     const minStr = SHAPE_MIN_STRING[shape];
+    const wv     = sec.windows[shape];
+    const wStart = typeof wv === 'object' ? wv.start : wv;
+    const wFrets = typeof wv === 'object' ? wv.frets : NUM_FRETS;
     return `
       <div class="diag-card">
         <div class="diag-label" style="color:${color};">${label} — ${sec.key} ${sec.scaleName}</div>
-        ${shapeSVG(sec.rootPc, sec.intervals, color, sec.windows[shape], NUM_FRETS, minStr)}
+        ${shapeSVG(sec.rootPc, sec.intervals, color, wStart, wFrets, minStr)}
       </div>`;
   }).join('');
 
