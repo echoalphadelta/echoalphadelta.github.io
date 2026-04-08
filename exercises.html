@@ -331,10 +331,10 @@ function renderSVG() {
   s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT + 1.5 * SH).toFixed(1)}" r="6" fill="#ccc"/>`;
   s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT + 3.5 * SH).toFixed(1)}" r="6" fill="#ccc"/>`;
 
-  // Strings (all 6)
+  // Strings (all 6) — extend left to cover open-string dot area
   for (let si = 0; si < 6; si++) {
     const y = sy(si).toFixed(1);
-    s += `<line x1="${ML}" y1="${y}" x2="${W - MR}" y2="${y}" stroke="#999" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
+    s += `<line x1="8" y1="${y}" x2="${W - MR}" y2="${y}" stroke="#999" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
   }
 
   // Fret labels (sparse)
@@ -353,7 +353,7 @@ function renderSVG() {
       const cy = sy(si).toFixed(1);
 
       if (!gs.checked) {
-        s += `<circle cx="${cx}" cy="${cy}" r="10" fill="${isSel ? clr : '#141414'}" stroke="${isSel ? clr : '#2a2a2a'}" stroke-width="1.5"/>`;
+        s += `<circle cx="${cx}" cy="${cy}" r="10" fill="${isSel ? clr : '#141414'}" stroke="${isSel ? clr : '#484848'}" stroke-width="1.5"/>`;
         s += `<circle cx="${cx}" cy="${cy}" r="15" fill="none" pointer-events="all" style="cursor:pointer" onclick="toggleDot('${key}')"/>`;
       } else {
         if (isSel && isChordTone) {
