@@ -156,7 +156,9 @@ function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
       if (!intervals.includes(intv)) continue;
       const cx = f === 0 ? ML - 12 : ML + (f - startFret - 0.5) * FW;
       const cy = sy(si);
-      s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5.5" fill="${color}" opacity="0.9"/>`;
+      const r = intv === 0 ? 6 : 5.5;
+      s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r}" fill="${color}" opacity="${intv === 0 ? 1 : 0.9}"/>`;
+      if (intv === 0) s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="2.5" fill="#fff"/>`;
     }
   }
 
@@ -229,10 +231,13 @@ function mapSVG(rootPc, intervals, windows) {
       if (claimed.length === 0) {
         continue;
       } else if (claimed.length === 1) {
-        s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5.5" fill="${SHAPE_COLORS[claimed[0]]}" opacity="0.9"/>`;
+        const r = intv === 0 ? 6 : 5.5;
+        s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r}" fill="${SHAPE_COLORS[claimed[0]]}" opacity="${intv === 0 ? 1 : 0.9}"/>`;
       } else {
         s += splitDot(cx, cy, 5.5, SHAPE_COLORS[claimed[0]], SHAPE_COLORS[claimed[1]]);
       }
+      if (intv === 0) s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="2.5" fill="#fff"/>`;
+
     }
   }
 
@@ -256,7 +261,7 @@ const SECTIONS = [
     key:       'B',
     rootPc:    11,
     intervals: [0, 2, 4, 7, 9],
-    windows:   { echo: 6, alpha: 1, delta: 8 },
+    windows:   { echo: 5, alpha: 0, delta: 8 },
   },
   {
     title:     'Natural Minor',
@@ -272,7 +277,7 @@ const SECTIONS = [
     key:       'F#',
     rootPc:    6,
     intervals: [0, 2, 4, 5, 7, 9, 11],
-    windows:   { echo: 1, alpha: 8, delta: 3 },
+    windows:   { echo: 0, alpha: 7, delta: 2 },
   },
   {
     title:     'Blues Scale',
