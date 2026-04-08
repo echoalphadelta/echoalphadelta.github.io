@@ -100,13 +100,12 @@ p.intro { color: #e0ddd8; }
 </div>
 <script>
 const STR_OPEN  = [4, 9, 2, 7, 11, 4]; // E A D G B e (low→high)
-const STR_THICK = [3.2, 2.4, 1.7, 1.2, 0.8, 0.5]; // low E → high e
+const STR_THICK = [3.5, 2.7, 1.9, 1.3, 0.9, 0.5];
 
 const SHAPE_MIN_STRING = { echo: 0, alpha: 1, delta: 2 };
 const SHAPE_COLORS     = { echo: '#4a9eff', alpha: '#ff4a4a', delta: '#4aff7a' };
 const NUM_FRETS = 4;
 
-// si=0 (low E) → bottom, si=5 (high e) → top
 function syFn(MT, SH) {
   return si => MT + (5 - si) * SH;
 }
@@ -115,44 +114,38 @@ function syFn(MT, SH) {
 function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
   const W = 280, H = 90;
   const ML = startFret === 0 ? 24 : 10;
-  const MR = 8, MT = 8, MB = 8;
+  const MR = 6, MT = 8, MB = 8;
   const FW = (W - ML - MR) / numFrets;
   const SH = (H - MT - MB) / 5;
   const sy = syFn(MT, SH);
 
   let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg">`;
-  s += `<rect width="${W}" height="${H}" fill="#0a0a0a" rx="2"/>`;
 
-  // Strings
-  for (let si = 0; si < 6; si++) {
-    const y = sy(si).toFixed(1);
-    s += `<line x1="${ML}" y1="${y}" x2="${W - MR}" y2="${y}"
-      stroke="#383838" stroke-width="${STR_THICK[si]}"/>`;
-  }
-
-  // Nut
-  if (startFret === 0) {
-    s += `<line x1="${ML}" y1="${MT - 2}" x2="${ML}" y2="${H - MB + 2}" stroke="#999" stroke-width="3"/>`;
-  }
-
-  // Fret lines
+  // Fret lines (f=0 is nut when at open position)
   for (let f = 0; f <= numFrets; f++) {
     const x = (ML + f * FW).toFixed(1);
-    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="#1c1c1c" stroke-width="1"/>`;
+    const isNut = startFret === 0 && f === 0;
+    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="${isNut ? '#d4cfc8' : '#666'}" stroke-width="${isNut ? 9 : 2}"/>`;
   }
 
-  // Position marker dots within window
+  // Fret position markers between strings
   [3, 5, 7, 9, 12].forEach(m => {
     if (m > startFret && m <= startFret + numFrets) {
       const x = (ML + (m - startFret - 0.5) * FW).toFixed(1);
       if (m === 12) {
-        s += `<circle cx="${x}" cy="${(MT + SH * 1.5).toFixed(1)}" r="2" fill="#1e1e1e"/>`;
-        s += `<circle cx="${x}" cy="${(MT + SH * 3.5).toFixed(1)}" r="2" fill="#1e1e1e"/>`;
+        s += `<circle cx="${x}" cy="${(MT + SH * 1.5).toFixed(1)}" r="2.5" fill="#ccc"/>`;
+        s += `<circle cx="${x}" cy="${(MT + SH * 3.5).toFixed(1)}" r="2.5" fill="#ccc"/>`;
       } else {
-        s += `<circle cx="${x}" cy="${(H / 2).toFixed(1)}" r="2" fill="#1e1e1e"/>`;
+        s += `<circle cx="${x}" cy="${(MT + 2.5 * SH).toFixed(1)}" r="2.5" fill="#ccc"/>`;
       }
     }
   });
+
+  // Strings
+  for (let si = 0; si < 6; si++) {
+    const y = sy(si).toFixed(1);
+    s += `<line x1="${ML}" y1="${y}" x2="${W - MR}" y2="${y}" stroke="#999" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
+  }
 
   // Scale dots
   const fStart = startFret === 0 ? 0 : startFret + 1;
@@ -163,7 +156,7 @@ function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
       if (!intervals.includes(intv)) continue;
       const cx = f === 0 ? ML - 12 : ML + (f - startFret - 0.5) * FW;
       const cy = sy(si);
-      s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5" fill="${color}" opacity="0.85"/>`;
+      s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5.5" fill="${color}" opacity="0.9"/>`;
     }
   }
 
@@ -194,38 +187,33 @@ function mapSVG(rootPc, intervals, windows) {
   function splitDot(cx, cy, r, c1, c2) {
     const [xs, ys, t, b] = [cx.toFixed(1), cy.toFixed(1), (cy-r).toFixed(1), (cy+r).toFixed(1)];
     return (
-      `<path d="M ${xs} ${t} A ${r} ${r} 0 0 0 ${xs} ${b} L ${xs} ${ys} Z" fill="${c1}" opacity="0.85"/>` +
-      `<path d="M ${xs} ${t} A ${r} ${r} 0 0 1 ${xs} ${b} L ${xs} ${ys} Z" fill="${c2}" opacity="0.85"/>`
+      `<path d="M ${xs} ${t} A ${r} ${r} 0 0 0 ${xs} ${b} L ${xs} ${ys} Z" fill="${c1}" opacity="0.9"/>` +
+      `<path d="M ${xs} ${t} A ${r} ${r} 0 0 1 ${xs} ${b} L ${xs} ${ys} Z" fill="${c2}" opacity="0.9"/>`
     );
   }
 
   let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg">`;
-  s += `<rect width="${W}" height="${H}" fill="#0a0a0a" rx="2"/>`;
+
+  // Fret lines (f=0 is nut)
+  for (let f = 0; f <= NF; f++) {
+    const x = (ML + f * FW).toFixed(1);
+    const isNut = f === 0;
+    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="${isNut ? '#d4cfc8' : '#666'}" stroke-width="${isNut ? 9 : 2}"/>`;
+  }
+
+  // Fret position markers between strings
+  [3, 5, 7, 9].forEach(f => {
+    s += `<circle cx="${(ML + (f - 0.5) * FW).toFixed(1)}" cy="${(MT + 2.5 * SH).toFixed(1)}" r="3" fill="#ccc"/>`;
+  });
+  const x12 = ML + 11.5 * FW;
+  s += `<circle cx="${x12.toFixed(1)}" cy="${(MT + SH * 1.5).toFixed(1)}" r="3" fill="#ccc"/>`;
+  s += `<circle cx="${x12.toFixed(1)}" cy="${(MT + SH * 3.5).toFixed(1)}" r="3" fill="#ccc"/>`;
 
   // Strings
   for (let si = 0; si < 6; si++) {
     const y = sy(si).toFixed(1);
-    s += `<line x1="${ML}" y1="${y}" x2="${(ML + NF * FW).toFixed(1)}" y2="${y}"
-      stroke="#383838" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
+    s += `<line x1="${ML}" y1="${y}" x2="${(ML + NF * FW).toFixed(1)}" y2="${y}" stroke="#999" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
   }
-
-  // Nut
-  s += `<line x1="${ML}" y1="${MT - 2}" x2="${ML}" y2="${H - MB + 2}" stroke="#999" stroke-width="3"/>`;
-
-  // Fret lines
-  for (let f = 1; f <= NF; f++) {
-    const x = (ML + f * FW).toFixed(1);
-    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}"
-      stroke="${f === 12 ? '#444' : '#1c1c1c'}" stroke-width="${f === 12 ? 2 : 1}"/>`;
-  }
-
-  // Position marker dots
-  [3, 5, 7, 9].forEach(f => {
-    s += `<circle cx="${(ML + (f - 0.5) * FW).toFixed(1)}" cy="${(H / 2).toFixed(1)}" r="2.5" fill="#1a1a1a"/>`;
-  });
-  const x12 = ML + 11.5 * FW;
-  s += `<circle cx="${x12.toFixed(1)}" cy="${(MT + SH * 1.5).toFixed(1)}" r="2.5" fill="#1a1a1a"/>`;
-  s += `<circle cx="${x12.toFixed(1)}" cy="${(MT + SH * 3.5).toFixed(1)}" r="2.5" fill="#1a1a1a"/>`;
 
   // Scale dots
   for (let f = 0; f <= 12; f++) {
@@ -241,9 +229,9 @@ function mapSVG(rootPc, intervals, windows) {
       if (claimed.length === 0) {
         continue;
       } else if (claimed.length === 1) {
-        s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5" fill="${SHAPE_COLORS[claimed[0]]}" opacity="0.85"/>`;
+        s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5.5" fill="${SHAPE_COLORS[claimed[0]]}" opacity="0.9"/>`;
       } else {
-        s += splitDot(cx, cy, 5, SHAPE_COLORS[claimed[0]], SHAPE_COLORS[claimed[1]]);
+        s += splitDot(cx, cy, 5.5, SHAPE_COLORS[claimed[0]], SHAPE_COLORS[claimed[1]]);
       }
     }
   }
@@ -270,7 +258,7 @@ const SECTIONS = [
     rootPc:    11,
     intervals: [0, 2, 4, 7, 9],
     copy:      'The major pentatonic has a brighter, more open character. The same five-note framework, shifted to a major root. It sits equally well inside each shape. Here it is in B.',
-    windows:   { echo: 5, alpha: 1, delta: 8 },
+    windows:   { echo: 5, alpha: 0, delta: 8 },
   },
   {
     title:     'Natural Minor',
@@ -279,7 +267,7 @@ const SECTIONS = [
     rootPc:    7,
     intervals: [0, 2, 3, 5, 7, 8, 10],
     copy:      'Natural minor adds two notes to the minor pentatonic — the second and the sixth — filling in a seven-note picture that covers more of each shape\'s territory. Here it is in G.',
-    windows:   { echo: 2, alpha: 9, delta: 4 },
+    windows:   { echo: 2, alpha: 8, delta: 4 },
   },
   {
     title:     'Major Scale',
@@ -288,7 +276,7 @@ const SECTIONS = [
     rootPc:    6,
     intervals: [0, 2, 4, 5, 7, 9, 11],
     copy:      'The major scale is the full seven-note picture of a key — two whole steps, a half step, three whole steps, a half step. Every chord and harmony in a key comes from this one set of notes. Each shape gives you a different window into it. Here it is in F#.',
-    windows:   { echo: 1, alpha: 8, delta: 3 },
+    windows:   { echo: 0, alpha: 7, delta: 2 },
   },
   {
     title:     'Blues Scale',
