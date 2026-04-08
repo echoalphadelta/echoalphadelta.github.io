@@ -7,21 +7,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-html, body { margin: 0; padding: 0; background: #000000 !important; }
+html, body { margin: 0; padding: 0; background: #000 !important; }
 * { box-sizing: border-box; }
 body {
   color: #f0ede8;
   font-family: 'Share Tech Mono', monospace;
-  font-weight: 400;
   line-height: 1.85;
 }
-
 .page {
   max-width: 720px;
   margin: 0 auto;
   padding: 40px 24px 60px;
 }
-
 .back-link {
   display: inline-block;
   font-family: 'Space Mono', monospace;
@@ -41,7 +38,6 @@ body {
   border-color: rgba(245,166,35,0.5);
   box-shadow: 0 0 12px rgba(245,166,35,0.2);
 }
-
 h1 {
   font-family: 'Space Mono', monospace;
   font-size: 1.5rem;
@@ -50,65 +46,52 @@ h1 {
   text-transform: uppercase;
   color: #f5a623;
   text-shadow: 0 0 16px rgba(245,166,35,0.4), 0 0 40px rgba(245,166,35,0.15);
-  margin: 0 0 32px 0;
-  line-height: 1.3;
+  margin: 0 0 12px 0;
 }
-
-h2 {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #f5a623;
-  margin: 40px 0 10px 0;
-}
-
-p {
+.intro {
   font-size: 0.88rem;
-  margin: 0 0 1.4em 0;
-  color: #c8c4be;
+  color: #666;
+  margin: 0 0 36px 0;
 }
 
-/* ── Trainer ── */
-.chord-prompt { margin: 16px 0 20px; }
-
+/* ── Chord prompt ── */
+.chord-prompt { margin-bottom: 20px; }
 .chord-name {
   font-family: 'Space Mono', monospace;
-  font-size: 2.4rem;
+  font-size: 2.6rem;
   font-weight: 700;
-  line-height: 1.15;
+  line-height: 1.1;
   letter-spacing: 0.04em;
 }
 .prompt-key  { color: #f0ede8; }
 .prompt-qual { color: #f5a623; }
-
 .prompt-shape {
   display: block;
   font-family: 'Space Mono', monospace;
   font-size: 0.68rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #555;
-  margin-top: 8px;
+  color: #444;
+  margin-top: 10px;
 }
 
+/* ── Fretboard ── */
 .fretboard-wrap {
-  margin: 14px 0;
+  margin: 16px 0;
   background: #080808;
-  border-radius: 6px;
-  border: 1px solid #1c1c1c;
-  padding: 10px 6px 6px;
+  border-radius: 8px;
+  border: 1px solid #1a1a1a;
+  padding: 12px 8px 8px;
 }
 
-.trainer-controls { display: flex; gap: 12px; margin: 12px 0 6px; flex-wrap: wrap; }
-
+/* ── Controls ── */
+.trainer-controls { display: flex; gap: 12px; margin: 14px 0 6px; }
 .trainer-btn {
   font-family: 'Space Mono', monospace;
   font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  padding: 10px 22px;
+  padding: 11px 24px;
   border-radius: 4px;
   background: transparent;
   cursor: pointer;
@@ -122,94 +105,78 @@ p {
   background: rgba(245,166,35,0.08);
   border-color: rgba(245,166,35,0.8);
 }
-.btn-check:disabled {
-  opacity: 0.25;
-  cursor: default;
-}
+.btn-check:disabled { opacity: 0.22; cursor: default; }
 .btn-next {
-  color: #777;
-  border: 1px solid rgba(255,255,255,0.12);
+  color: #666;
+  border: 1px solid rgba(255,255,255,0.1);
 }
-.btn-next:hover {
-  color: #bbb;
-  border-color: rgba(255,255,255,0.28);
-}
+.btn-next:hover { color: #aaa; border-color: rgba(255,255,255,0.25); }
 
-.score-display {
+.round-result {
   font-family: 'Space Mono', monospace;
   font-size: 0.7rem;
-  color: #484848;
   letter-spacing: 0.14em;
-  min-height: 1.2em;
-  margin-bottom: 8px;
+  color: #484848;
+  min-height: 1.4em;
+  margin-bottom: 4px;
 }
 
 /* ── Key grid ── */
 .key-pin-hint {
   font-family: 'Space Mono', monospace;
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #444;
+  color: #383838;
   margin: 36px 0 10px;
 }
-
 .key-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  max-width: 380px;
+  gap: 8px;
+  max-width: 360px;
 }
 .key-cell {
   font-family: 'Space Mono', monospace;
   font-size: 1rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
   text-align: center;
-  padding: 14px 8px;
-  border: 1px solid rgba(245,166,35,0.15);
+  padding: 13px 8px;
+  border: 1px solid rgba(245,166,35,0.12);
   border-radius: 6px;
   color: #f5a623;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
   user-select: none;
 }
-.key-cell:hover {
-  border-color: rgba(245,166,35,0.4);
-  color: #ffc85c;
-}
+.key-cell:hover { border-color: rgba(245,166,35,0.4); color: #ffc85c; }
 .key-cell.pinned {
   background: rgba(74,158,255,0.1);
   border-color: rgba(74,158,255,0.55);
   color: #4a9eff;
-  box-shadow: 0 0 10px rgba(74,158,255,0.12);
 }
-
 .random-btn {
   font-family: 'Space Mono', monospace;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   padding: 10px 22px;
   border-radius: 4px;
-  border: 1px solid rgba(245,166,35,0.35);
+  border: 1px solid rgba(245,166,35,0.3);
   background: transparent;
   color: #f5a623;
   cursor: pointer;
-  transition: all 0.2s ease;
-  margin-top: 20px;
+  transition: all 0.2s;
+  margin-top: 18px;
   display: block;
 }
-.random-btn:hover {
-  background: rgba(245,166,35,0.08);
-  border-color: rgba(245,166,35,0.6);
-}
+.random-btn:hover { background: rgba(245,166,35,0.07); border-color: rgba(245,166,35,0.6); }
 
 @media (max-width: 600px) {
   .page { padding: 24px 16px 40px; }
   h1 { font-size: 1.1rem; }
+  .chord-name { font-size: 1.9rem; }
   .key-grid { max-width: 100%; }
-  .chord-name { font-size: 1.7rem; }
 }
 </style>
 </head>
@@ -219,19 +186,7 @@ p {
   <a href="index.html" class="back-link">← Back to Map</a>
 
   <h1>The Exercise</h1>
-
-  <h2>The First</h2>
-  <p>Pick any chord — Cm7, Gsus4, Bbmaj7, anything. Find it through all three shapes.</p>
-
-  <h2>The Second</h2>
-  <p>Pick a key. Pick a shape. Work through every chord quality in that key using that shape. Major, minor, 7, Maj7, m7, sus4. Understand what you are changing with each modification. Then pick again.</p>
-
-  <p>The 12 keys are listed below. Pin one to lock the trainer to that key. The randomness is the point. Every combination is valid. Every repetition builds fluency.</p>
-
-  <p>Come back to this exercise for the rest of your playing life.</p>
-
-  <!-- ── Trainer ── -->
-  <h2>The Trainer</h2>
+  <p class="intro">Pick the chord tones for the shape and position shown. Select, then check.</p>
 
   <div class="chord-prompt">
     <div class="chord-name">
@@ -249,11 +204,10 @@ p {
     <button class="trainer-btn btn-next" onclick="newChallenge()">New Challenge</button>
   </div>
 
-  <div class="score-display" id="scoreDisplay"></div>
+  <div class="round-result" id="roundResult"></div>
 
-  <!-- ── Key grid ── -->
   <p class="key-pin-hint">Pin a key</p>
-  <div class="key-grid" id="keyGrid">
+  <div class="key-grid">
     <div class="key-cell" onclick="pinKey(this,'A')">A</div>
     <div class="key-cell" onclick="pinKey(this,'Bb')">Bb</div>
     <div class="key-cell" onclick="pinKey(this,'B')">B</div>
@@ -267,102 +221,83 @@ p {
     <div class="key-cell" onclick="pinKey(this,'G')">G</div>
     <div class="key-cell" onclick="pinKey(this,'Ab')">Ab</div>
   </div>
-
   <button class="random-btn" onclick="pickRandom()">Pick at Random</button>
-
-  <div style="margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-wrap:wrap;justify-content:space-evenly;gap:16px;">
-    <a href="scales.html" class="back-link" style="margin-bottom:0;">Scales</a>
-    <a href="iconic-voicings.html" class="back-link" style="margin-bottom:0;">Iconic Voicings</a>
-    <a href="index.html" class="back-link" style="margin-bottom:0;">← Back to Map</a>
-  </div>
 
 </div>
 
 <script>
-// ── Constants ─────────────────────────────────────────────────────────────────
-const STR_OPEN  = [4, 9, 2, 7, 11, 4]; // E A D G B e (low→high)
+const STR_OPEN  = [4, 9, 2, 7, 11, 4]; // E A D G B e
 const STR_THICK = [3.5, 2.7, 1.9, 1.3, 0.9, 0.5];
 
-const SHAPE_MIN    = { echo: 0, alpha: 1, delta: 2 };
-const SHAPE_COLORS = { echo: '#4a9eff', alpha: '#ff4a4a', delta: '#4aff7a' };
-const SHAPE_LABELS = { echo: 'Echo', alpha: 'Alpha', delta: 'Delta' };
+const SHAPE_ROOT_STR = { echo: 0, alpha: 1, delta: 2 };
+const SHAPE_COLORS   = { echo: '#4a9eff', alpha: '#ff4a4a', delta: '#4aff7a' };
+const SHAPE_LABELS   = { echo: 'Echo', alpha: 'Alpha', delta: 'Delta' };
 
 const NOTES   = ['A','Bb','B','C','C#','D','Eb','E','F','F#','G','Ab'];
 const NOTE_PC = { A:9, Bb:10, B:11, C:0, 'C#':1, D:2, Eb:3, E:4, F:5, 'F#':6, G:7, Ab:8 };
 
 const QUALITIES = [
-  { s: '',     l: 'major',   iv: [0,4,7]     },
-  { s: 'm',    l: 'minor',   iv: [0,3,7]     },
-  { s: '7',    l: 'dom 7',   iv: [0,4,7,10]  },
-  { s: 'maj7', l: 'maj 7',   iv: [0,4,7,11]  },
-  { s: 'm7',   l: 'min 7',   iv: [0,3,7,10]  },
-  { s: 'sus4', l: 'sus 4',   iv: [0,5,7]     },
+  { s: '',     iv: [0,4,7]    },
+  { s: 'm',    iv: [0,3,7]    },
+  { s: '7',    iv: [0,4,7,10] },
+  { s: 'maj7', iv: [0,4,7,11] },
+  { s: 'm7',   iv: [0,3,7,10] },
+  { s: 'sus4', iv: [0,5,7]    },
 ];
 
-const INTV_LABEL = { 0:'R', 3:'b3', 4:'3', 5:'4', 7:'5', 10:'b7', 11:'7' };
-
-// ── State ─────────────────────────────────────────────────────────────────────
 let gs = {
-  active:    false,
-  key:       null,
-  qual:      null,
-  shape:     null,
-  rootPc:    null,
-  intervals: null,
-  checked:   false,
-  sel:       new Set(),
-  score:     { n: 0, tot: 0 },
-  pinKey:    null,
+  active: false, key: null, qual: null, shape: null,
+  rootPc: null, intervals: null, wStart: 0,
+  checked: false, sel: new Set(), pinKey: null,
 };
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-function getChordToneKeys() {
+function calcWindow(rootPc, shape) {
+  const fRoot = (rootPc - STR_OPEN[SHAPE_ROOT_STR[shape]] + 12) % 12;
+  return fRoot === 0 ? 11 : fRoot - 1;
+}
+
+function chordToneKeysInWindow() {
   const keys = new Set();
-  const minStr = SHAPE_MIN[gs.shape];
-  for (let f = 1; f <= 12; f++) {
-    for (let si = minStr; si < 6; si++) {
-      const pitch = (STR_OPEN[si] + f) % 12;
-      const intv  = (pitch - gs.rootPc + 12) % 12;
+  for (let f = gs.wStart + 1; f <= gs.wStart + 5; f++) {
+    for (let si = 0; si < 6; si++) {
+      const intv = ((STR_OPEN[si] + f) % 12 - gs.rootPc + 12) % 12;
       if (gs.intervals.includes(intv)) keys.add(`${f}-${si}`);
     }
   }
   return keys;
 }
 
-// ── Game actions ──────────────────────────────────────────────────────────────
 function newChallenge() {
   const key   = gs.pinKey || NOTES[Math.floor(Math.random() * 12)];
   const qual  = QUALITIES[Math.floor(Math.random() * QUALITIES.length)];
   const shape = ['echo','alpha','delta'][Math.floor(Math.random() * 3)];
-
   gs = {
-    active:    true,
-    key,  qual, shape,
-    rootPc:    NOTE_PC[key],
-    intervals: qual.iv,
-    checked:   false,
-    sel:       new Set(),
-    score:     gs.score,
-    pinKey:    gs.pinKey,
+    active: true, key, qual, shape,
+    rootPc: NOTE_PC[key], intervals: qual.iv,
+    wStart: calcWindow(NOTE_PC[key], shape),
+    checked: false, sel: new Set(), pinKey: gs.pinKey,
   };
+  document.getElementById('roundResult').textContent = '';
   render();
 }
 
 function toggleDot(key) {
   if (!gs.active || gs.checked) return;
-  if (gs.sel.has(key)) gs.sel.delete(key);
-  else gs.sel.add(key);
+  gs.sel.has(key) ? gs.sel.delete(key) : gs.sel.add(key);
   renderFb();
 }
 
 function checkAnswer() {
   if (!gs.active || gs.checked) return;
   gs.checked = true;
-  const chordKeys = getChordToneKeys();
-  let correct = 0;
-  gs.sel.forEach(k => { if (chordKeys.has(k)) correct++; });
-  gs.score.n   += correct;
-  gs.score.tot += chordKeys.size;
+  const chordKeys = chordToneKeysInWindow();
+  let correct = 0, wrong = 0;
+  gs.sel.forEach(k => chordKeys.has(k) ? correct++ : wrong++);
+  const parts = [];
+  if (correct) parts.push(`${correct} correct`);
+  if (wrong)   parts.push(`${wrong} wrong`);
+  if (!correct && !wrong) parts.push('nothing selected');
+  document.getElementById('roundResult').textContent = parts.join(' · ');
   render();
 }
 
@@ -386,84 +321,70 @@ function pickRandom() {
   newChallenge();
 }
 
-// ── SVG renderer ──────────────────────────────────────────────────────────────
 function renderSVG() {
-  if (!gs.active) return '<svg viewBox="0 0 640 160" width="100%"></svg>';
+  if (!gs.active) return '<svg viewBox="0 0 560 248" width="100%"></svg>';
 
-  const W = 640, H = 160;
-  const ML = 20, MR = 8, MT = 12, MB = 28;
-  const NF = 12;
-  const FW = (W - ML - MR) / NF;   // ~51
-  const SH = (H - MT - MB) / 5;    // 24
+  const W = 560, H = 248;
+  const ML = 50, MR = 10, MT = 18, MB = 35;
+  const FW = (W - ML - MR) / 5;   // 100
+  const SH = (H - MT - MB) / 5;   // 39
 
   const sy  = si => MT + (5 - si) * SH;
-  const fCx = f  => ML + (f - 0.5) * FW;
+  const fCx = f  => ML + (f - gs.wStart - 1) * FW + FW / 2;
 
-  const minStr    = SHAPE_MIN[gs.shape];
-  const shapeClr  = SHAPE_COLORS[gs.shape];
-  const chordKeys = gs.checked ? getChordToneKeys() : null;
+  const clr = SHAPE_COLORS[gs.shape];
 
   let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" style="touch-action:manipulation;display:block;">`;
 
-  // Nut
-  s += `<line x1="${ML}" y1="${MT}" x2="${ML}" y2="${H - MB}" stroke="#b0a898" stroke-width="5"/>`;
-
   // Fret lines
-  for (let i = 1; i <= NF; i++) {
+  for (let i = 0; i <= 5; i++) {
     const x = (ML + i * FW).toFixed(1);
-    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="#303030" stroke-width="1.5"/>`;
+    const isNut = i === 0 && gs.wStart === 0;
+    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="${isNut ? '#b0a898' : '#2e2e2e'}" stroke-width="${isNut ? 6 : 1.5}"/>`;
   }
 
   // Position markers
-  [3,5,7,9].forEach(f => {
-    s += `<circle cx="${fCx(f).toFixed(1)}" cy="${(MT + 2.5 * SH).toFixed(1)}" r="3.5" fill="#222"/>`;
-  });
-  s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT + 1.5 * SH).toFixed(1)}" r="3.5" fill="#222"/>`;
-  s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT + 3.5 * SH).toFixed(1)}" r="3.5" fill="#222"/>`;
-
-  // Strings
-  for (let si = minStr; si < 6; si++) {
-    const y = sy(si).toFixed(1);
-    s += `<line x1="${ML}" y1="${y}" x2="${W - MR}" y2="${y}" stroke="#666" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
+  for (let f = gs.wStart + 1; f <= gs.wStart + 5; f++) {
+    if ([3,5,7,9].includes(f)) {
+      s += `<circle cx="${fCx(f).toFixed(1)}" cy="${(MT + 2.5 * SH).toFixed(1)}" r="4.5" fill="#1e1e1e"/>`;
+    }
+    if (f === 12) {
+      s += `<circle cx="${fCx(f).toFixed(1)}" cy="${(MT + 1.5 * SH).toFixed(1)}" r="4.5" fill="#1e1e1e"/>`;
+      s += `<circle cx="${fCx(f).toFixed(1)}" cy="${(MT + 3.5 * SH).toFixed(1)}" r="4.5" fill="#1e1e1e"/>`;
+    }
   }
 
-  // Fret number labels (sparse)
-  [3,5,7,9,12].forEach(f => {
-    s += `<text x="${fCx(f).toFixed(1)}" y="${H - 8}" text-anchor="middle" fill="#383838" font-size="9" font-family="monospace">${f}</text>`;
-  });
+  // Strings (all 6)
+  for (let si = 0; si < 6; si++) {
+    const y = sy(si).toFixed(1);
+    s += `<line x1="${ML}" y1="${y}" x2="${W - MR}" y2="${y}" stroke="#5a5a5a" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
+  }
+
+  // Fret number labels
+  for (let f = gs.wStart + 1; f <= gs.wStart + 5; f++) {
+    s += `<text x="${fCx(f).toFixed(1)}" y="${H - 10}" text-anchor="middle" fill="#333" font-size="10" font-family="monospace">${f}</text>`;
+  }
 
   // Dots
-  for (let f = 1; f <= 12; f++) {
-    for (let si = minStr; si < 6; si++) {
-      const pitch       = (STR_OPEN[si] + f) % 12;
-      const intv        = (pitch - gs.rootPc + 12) % 12;
+  for (let f = gs.wStart + 1; f <= gs.wStart + 5; f++) {
+    for (let si = 0; si < 6; si++) {
+      const intv       = ((STR_OPEN[si] + f) % 12 - gs.rootPc + 12) % 12;
       const isChordTone = gs.intervals.includes(intv);
-      const key         = `${f}-${si}`;
-      const isSelected  = gs.sel.has(key);
+      const key        = `${f}-${si}`;
+      const isSel      = gs.sel.has(key);
       const cx = fCx(f).toFixed(1);
       const cy = sy(si).toFixed(1);
 
       if (!gs.checked) {
-        const fill   = isSelected ? shapeClr : '#111';
-        const stroke = isSelected ? shapeClr : '#2e2e2e';
-        s += `<circle cx="${cx}" cy="${cy}" r="7" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
-        s += `<circle cx="${cx}" cy="${cy}" r="11" fill="none" pointer-events="all" style="cursor:pointer" onclick="toggleDot('${key}')"/>`;
+        s += `<circle cx="${cx}" cy="${cy}" r="12" fill="${isSel ? clr : '#141414'}" stroke="${isSel ? clr : '#2a2a2a'}" stroke-width="1.5"/>`;
+        s += `<circle cx="${cx}" cy="${cy}" r="17" fill="none" pointer-events="all" style="cursor:pointer" onclick="toggleDot('${key}')"/>`;
       } else {
-        let fill, stroke, textFill;
-        if (isSelected && isChordTone) {
-          fill = '#2ecc71'; stroke = '#2ecc71'; textFill = '#000';
-        } else if (isSelected) {
-          fill = '#e74c3c'; stroke = '#e74c3c'; textFill = '#fff';
-        } else if (isChordTone) {
-          fill = 'none'; stroke = '#f5a623'; textFill = '#f5a623';
+        if (isSel && isChordTone) {
+          s += `<circle cx="${cx}" cy="${cy}" r="12" fill="#2ecc71" stroke="#2ecc71" stroke-width="1.5"/>`;
+        } else if (isSel) {
+          s += `<circle cx="${cx}" cy="${cy}" r="12" fill="#e74c3c" stroke="#e74c3c" stroke-width="1.5"/>`;
         } else {
-          s += `<circle cx="${cx}" cy="${cy}" r="6" fill="#0c0c0c" stroke="#1c1c1c" stroke-width="1" opacity="0.35"/>`;
-          continue;
-        }
-        s += `<circle cx="${cx}" cy="${cy}" r="7" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
-        if (isChordTone) {
-          const lbl = INTV_LABEL[intv] || '';
-          if (lbl) s += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central" fill="${textFill}" font-size="${lbl.length > 1 ? 5.5 : 6.5}" font-family="monospace" font-weight="700">${lbl}</text>`;
+          s += `<circle cx="${cx}" cy="${cy}" r="11" fill="#0f0f0f" stroke="#1e1e1e" stroke-width="1" opacity="0.5"/>`;
         }
       }
     }
@@ -473,36 +394,22 @@ function renderSVG() {
   return s;
 }
 
-// ── Render ────────────────────────────────────────────────────────────────────
 function renderFb() {
   document.getElementById('trainerFb').innerHTML = renderSVG();
 }
 
 function render() {
-  // Chord prompt
   if (gs.active) {
-    document.getElementById('pKey').textContent   = gs.key;
-    document.getElementById('pQual').textContent  = gs.qual.s;
-    const sc = SHAPE_COLORS[gs.shape];
-    document.getElementById('pShape').innerHTML   =
-      `<span style="color:${sc}">${SHAPE_LABELS[gs.shape]}</span> shape`;
+    document.getElementById('pKey').textContent  = gs.key;
+    document.getElementById('pQual').textContent = gs.qual.s;
+    const c = SHAPE_COLORS[gs.shape];
+    document.getElementById('pShape').innerHTML  =
+      `<span style="color:${c}">${SHAPE_LABELS[gs.shape]}</span> shape · frets ${gs.wStart + 1}–${gs.wStart + 5}`;
   }
-
-  // Fretboard
   renderFb();
-
-  // Buttons
   document.getElementById('checkBtn').disabled = !gs.active || gs.checked;
-
-  // Score
-  const el = document.getElementById('scoreDisplay');
-  if (gs.score.tot > 0) {
-    const pct = Math.round(100 * gs.score.n / gs.score.tot);
-    el.textContent = `${gs.score.n} / ${gs.score.tot} · ${pct}%`;
-  }
 }
 
-// Auto-start
 newChallenge();
 </script>
 </body>
