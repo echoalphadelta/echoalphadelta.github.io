@@ -111,27 +111,69 @@ function syFn(MT, SH) {
 }
 
 // ── Individual shape window ───────────────────────────────────────────────────
-function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
-  const W = 280, H = 90;
-  const ML = startFret === 0 ? 24 : 10;
+function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr, wrap) {
+  const H = 90;
   const MR = 6, MT = 8, MB = 8;
-  const FW = (W - ML - MR) / numFrets;
   const SH = (H - MT - MB) / 5;
   const sy = syFn(MT, SH);
 
+  // Layout: [ML][EX_W ext section][SEP gap][main section][MR]
+  const EX_W   = wrap ? 55 : 0;
+  const SEP    = wrap ? 8  : 0;
+  const W      = 280 + EX_W + SEP;
+  const ML     = wrap ? 8 : (startFret === 0 ? 24 : 10);
+  const mainML = ML + EX_W + SEP;
+  const FW     = (W - mainML - MR) / numFrets;
+
   let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg">`;
 
-  // Fret lines (f=0 is nut when at open position)
+  if (wrap) {
+    // Extension: nut + fret-1 slot
+    const nutX  = ML + 14;
+    const exFW  = EX_W - 14;
+    const exEdge = ML + EX_W;
+    // Nut line
+    s += `<line x1="${nutX}" y1="${MT}" x2="${nutX}" y2="${H - MB}" stroke="#d4cfc8" stroke-width="9"/>`;
+    // Right edge of ext (fret 1 → fret 2 boundary)
+    s += `<line x1="${exEdge}" y1="${MT}" x2="${exEdge}" y2="${H - MB}" stroke="#666" stroke-width="2"/>`;
+    // Strings in ext section
+    for (let si = 0; si < 6; si++) {
+      const y = sy(si).toFixed(1);
+      s += `<line x1="${ML}" y1="${y}" x2="${exEdge}" y2="${y}" stroke="#999" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
+    }
+    // Dots for frets 0 and 1
+    for (let f = 0; f <= 1; f++) {
+      for (let si = minStr; si < 6; si++) {
+        if (f === 0 && si === 4) continue;
+        const pitch = (STR_OPEN[si] + f) % 12;
+        const intv  = (pitch - rootPc + 12) % 12;
+        if (!intervals.includes(intv)) continue;
+        const cx = f === 0 ? nutX - 12 : nutX + exFW * 0.5;
+        const cy = sy(si);
+        const r  = intv === 0 ? 6 : 5.5;
+        s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r}" fill="${color}" opacity="${intv === 0 ? 1 : 0.9}"/>`;
+        if (intv === 0) s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="2.5" fill="#fff"/>`;
+      }
+    }
+    // Separator dots
+    const sepX = exEdge + SEP / 2;
+    const sepY = (MT + 2.5 * SH).toFixed(1);
+    [-3, 0, 3].forEach(dx => {
+      s += `<circle cx="${(sepX + dx).toFixed(1)}" cy="${sepY}" r="1.5" fill="#555"/>`;
+    });
+  }
+
+  // Main section fret lines
   for (let f = 0; f <= numFrets; f++) {
-    const x = (ML + f * FW).toFixed(1);
-    const isNut = startFret === 0 && f === 0;
+    const x = (mainML + f * FW).toFixed(1);
+    const isNut = !wrap && startFret === 0 && f === 0;
     s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="${isNut ? '#d4cfc8' : '#666'}" stroke-width="${isNut ? 9 : 2}"/>`;
   }
 
-  // Fret position markers between strings
+  // Main section fret position markers
   [3, 5, 7, 9, 12].forEach(m => {
     if (m > startFret && m <= startFret + numFrets) {
-      const x = (ML + (m - startFret - 0.5) * FW).toFixed(1);
+      const x = (mainML + (m - startFret - 0.5) * FW).toFixed(1);
       if (m === 12) {
         s += `<circle cx="${x}" cy="${(MT + SH * 1.5).toFixed(1)}" r="2.5" fill="#ccc"/>`;
         s += `<circle cx="${x}" cy="${(MT + SH * 3.5).toFixed(1)}" r="2.5" fill="#ccc"/>`;
@@ -141,23 +183,23 @@ function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
     }
   });
 
-  // Strings
+  // Main section strings
   for (let si = 0; si < 6; si++) {
     const y = sy(si).toFixed(1);
-    s += `<line x1="${ML}" y1="${y}" x2="${W - MR}" y2="${y}" stroke="#999" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
+    s += `<line x1="${mainML}" y1="${y}" x2="${(W - MR).toFixed(1)}" y2="${y}" stroke="#999" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
   }
 
-  // Scale dots
+  // Main section scale dots
   const fStart = startFret === 0 ? 0 : startFret + 1;
   for (let f = fStart; f <= startFret + numFrets; f++) {
     for (let si = minStr; si < 6; si++) {
-      if (f === 0 && si === 4) continue; // skip open B string
+      if (f === 0 && si === 4) continue;
       const pitch = (STR_OPEN[si] + f) % 12;
       const intv  = (pitch - rootPc + 12) % 12;
       if (!intervals.includes(intv)) continue;
-      const cx = f === 0 ? ML - 12 : ML + (f - startFret - 0.5) * FW;
+      const cx = f === 0 ? mainML - 12 : mainML + (f - startFret - 0.5) * FW;
       const cy = sy(si);
-      const r = intv === 0 ? 6 : 5.5;
+      const r  = intv === 0 ? 6 : 5.5;
       s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r}" fill="${color}" opacity="${intv === 0 ? 1 : 0.9}"/>`;
       if (intv === 0) s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="2.5" fill="#fff"/>`;
     }
@@ -273,7 +315,7 @@ const SECTIONS = [
     key:       'G',
     rootPc:    7,
     intervals: [0, 2, 3, 5, 7, 8, 10],
-    windows:   { echo: 2, alpha: 9, delta: 4 },
+    windows:   { echo: 2, alpha: { start: 9, frets: 4, wrap: true }, delta: 4 },
   },
   {
     title:     'Major Scale',
@@ -303,10 +345,11 @@ SECTIONS.forEach(sec => {
     const wv     = sec.windows[shape];
     const wStart = typeof wv === 'object' ? wv.start : wv;
     const wFrets = typeof wv === 'object' ? wv.frets : NUM_FRETS;
+    const wWrap  = typeof wv === 'object' ? !!wv.wrap : false;
     return `
       <div class="diag-card">
         <div class="diag-label" style="color:${color};">${label} — ${sec.key} ${sec.scaleName}</div>
-        ${shapeSVG(sec.rootPc, sec.intervals, color, wStart, wFrets, minStr)}
+        ${shapeSVG(sec.rootPc, sec.intervals, color, wStart, wFrets, minStr, wWrap)}
       </div>`;
   }).join('');
 
