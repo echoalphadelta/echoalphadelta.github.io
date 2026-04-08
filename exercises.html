@@ -237,7 +237,7 @@ let gs = {
 
 function chordToneKeysInWindow() {
   const keys = new Set();
-  for (let f = 1; f <= 12; f++) {
+  for (let f = 0; f <= 12; f++) {
     for (let si = 0; si < 6; si++) {
       const intv = ((STR_OPEN[si] + f) % 12 - gs.rootPc + 12) % 12;
       if (gs.intervals.includes(intv)) keys.add(`${f}-${si}`);
@@ -300,16 +300,16 @@ function pickRandom() {
 }
 
 function renderSVG() {
-  if (!gs.active) return '<svg viewBox="0 0 660 310" width="100%"></svg>';
+  if (!gs.active) return '';
 
   const W = 660, H = 310;
-  const ML = 20, MR = 8, MT = 22, MB = 38;
+  const ML = 36, MR = 8, MT = 22, MB = 38;
   const NF = 12;
-  const FW = (W - ML - MR) / NF;  // ~52.7
+  const FW = (W - ML - MR) / NF;  // ~51.3
   const SH = (H - MT - MB) / 5;   // 50
 
   const sy  = si => MT + (5 - si) * SH;
-  const fCx = f  => ML + (f - 0.5) * FW;   // centre of cell — left of fret wire
+  const fCx = f  => f === 0 ? ML - 16 : ML + (f - 0.5) * FW;
 
   const clr = SHAPE_COLORS[gs.shape];
 
@@ -343,7 +343,7 @@ function renderSVG() {
   });
 
   // Dots
-  for (let f = 1; f <= 12; f++) {
+  for (let f = 0; f <= 12; f++) {
     for (let si = 0; si < 6; si++) {
       const intv        = ((STR_OPEN[si] + f) % 12 - gs.rootPc + 12) % 12;
       const isChordTone = gs.intervals.includes(intv);
