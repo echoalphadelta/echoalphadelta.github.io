@@ -247,18 +247,13 @@ const QUALITIES = [
 
 let gs = {
   active: false, key: null, qual: null, shape: null,
-  rootPc: null, intervals: null, wStart: 0,
+  rootPc: null, intervals: null,
   checked: false, sel: new Set(), pinKey: null,
 };
 
-function calcWindow(rootPc, shape) {
-  const fRoot = (rootPc - STR_OPEN[SHAPE_ROOT_STR[shape]] + 12) % 12;
-  return fRoot === 0 ? 11 : fRoot - 1;
-}
-
 function chordToneKeysInWindow() {
   const keys = new Set();
-  for (let f = gs.wStart + 1; f <= gs.wStart + 5; f++) {
+  for (let f = 1; f <= 12; f++) {
     for (let si = 0; si < 6; si++) {
       const intv = ((STR_OPEN[si] + f) % 12 - gs.rootPc + 12) % 12;
       if (gs.intervals.includes(intv)) keys.add(`${f}-${si}`);
@@ -274,7 +269,6 @@ function newChallenge() {
   gs = {
     active: true, key, qual, shape,
     rootPc: NOTE_PC[key], intervals: qual.iv,
-    wStart: calcWindow(NOTE_PC[key], shape),
     checked: false, sel: new Set(), pinKey: gs.pinKey,
   };
   document.getElementById('roundResult').textContent = '';
@@ -322,37 +316,36 @@ function pickRandom() {
 }
 
 function renderSVG() {
-  if (!gs.active) return '<svg viewBox="0 0 560 248" width="100%"></svg>';
+  if (!gs.active) return '<svg viewBox="0 0 660 248" width="100%"></svg>';
 
-  const W = 560, H = 248;
-  const ML = 50, MR = 10, MT = 18, MB = 35;
-  const FW = (W - ML - MR) / 5;   // 100
+  const W = 660, H = 248;
+  const ML = 20, MR = 8, MT = 18, MB = 35;
+  const NF = 12;
+  const FW = (W - ML - MR) / NF;  // ~52.7
   const SH = (H - MT - MB) / 5;   // 39
 
   const sy  = si => MT + (5 - si) * SH;
-  const fCx = f  => ML + (f - gs.wStart - 1) * FW + FW / 2;
+  const fCx = f  => ML + (f - 0.5) * FW;
 
   const clr = SHAPE_COLORS[gs.shape];
 
   let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" style="touch-action:manipulation;display:block;">`;
 
+  // Nut
+  s += `<line x1="${ML}" y1="${MT}" x2="${ML}" y2="${H - MB}" stroke="#b0a898" stroke-width="6"/>`;
+
   // Fret lines
-  for (let i = 0; i <= 5; i++) {
+  for (let i = 1; i <= NF; i++) {
     const x = (ML + i * FW).toFixed(1);
-    const isNut = i === 0 && gs.wStart === 0;
-    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="${isNut ? '#b0a898' : '#2e2e2e'}" stroke-width="${isNut ? 6 : 1.5}"/>`;
+    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="#2e2e2e" stroke-width="1.5"/>`;
   }
 
   // Position markers
-  for (let f = gs.wStart + 1; f <= gs.wStart + 5; f++) {
-    if ([3,5,7,9].includes(f)) {
-      s += `<circle cx="${fCx(f).toFixed(1)}" cy="${(MT + 2.5 * SH).toFixed(1)}" r="4.5" fill="#1e1e1e"/>`;
-    }
-    if (f === 12) {
-      s += `<circle cx="${fCx(f).toFixed(1)}" cy="${(MT + 1.5 * SH).toFixed(1)}" r="4.5" fill="#1e1e1e"/>`;
-      s += `<circle cx="${fCx(f).toFixed(1)}" cy="${(MT + 3.5 * SH).toFixed(1)}" r="4.5" fill="#1e1e1e"/>`;
-    }
-  }
+  [3,5,7,9].forEach(f => {
+    s += `<circle cx="${fCx(f).toFixed(1)}" cy="${(MT + 2.5 * SH).toFixed(1)}" r="4" fill="#1e1e1e"/>`;
+  });
+  s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT + 1.5 * SH).toFixed(1)}" r="4" fill="#1e1e1e"/>`;
+  s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT + 3.5 * SH).toFixed(1)}" r="4" fill="#1e1e1e"/>`;
 
   // Strings (all 6)
   for (let si = 0; si < 6; si++) {
@@ -360,31 +353,31 @@ function renderSVG() {
     s += `<line x1="${ML}" y1="${y}" x2="${W - MR}" y2="${y}" stroke="#5a5a5a" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
   }
 
-  // Fret number labels
-  for (let f = gs.wStart + 1; f <= gs.wStart + 5; f++) {
+  // Fret labels (sparse)
+  [3,5,7,9,12].forEach(f => {
     s += `<text x="${fCx(f).toFixed(1)}" y="${H - 10}" text-anchor="middle" fill="#333" font-size="10" font-family="monospace">${f}</text>`;
-  }
+  });
 
   // Dots
-  for (let f = gs.wStart + 1; f <= gs.wStart + 5; f++) {
+  for (let f = 1; f <= 12; f++) {
     for (let si = 0; si < 6; si++) {
-      const intv       = ((STR_OPEN[si] + f) % 12 - gs.rootPc + 12) % 12;
+      const intv        = ((STR_OPEN[si] + f) % 12 - gs.rootPc + 12) % 12;
       const isChordTone = gs.intervals.includes(intv);
-      const key        = `${f}-${si}`;
-      const isSel      = gs.sel.has(key);
+      const key         = `${f}-${si}`;
+      const isSel       = gs.sel.has(key);
       const cx = fCx(f).toFixed(1);
       const cy = sy(si).toFixed(1);
 
       if (!gs.checked) {
-        s += `<circle cx="${cx}" cy="${cy}" r="12" fill="${isSel ? clr : '#141414'}" stroke="${isSel ? clr : '#2a2a2a'}" stroke-width="1.5"/>`;
-        s += `<circle cx="${cx}" cy="${cy}" r="17" fill="none" pointer-events="all" style="cursor:pointer" onclick="toggleDot('${key}')"/>`;
+        s += `<circle cx="${cx}" cy="${cy}" r="10" fill="${isSel ? clr : '#141414'}" stroke="${isSel ? clr : '#2a2a2a'}" stroke-width="1.5"/>`;
+        s += `<circle cx="${cx}" cy="${cy}" r="15" fill="none" pointer-events="all" style="cursor:pointer" onclick="toggleDot('${key}')"/>`;
       } else {
         if (isSel && isChordTone) {
-          s += `<circle cx="${cx}" cy="${cy}" r="12" fill="#2ecc71" stroke="#2ecc71" stroke-width="1.5"/>`;
+          s += `<circle cx="${cx}" cy="${cy}" r="10" fill="#2ecc71" stroke="#2ecc71" stroke-width="1.5"/>`;
         } else if (isSel) {
-          s += `<circle cx="${cx}" cy="${cy}" r="12" fill="#e74c3c" stroke="#e74c3c" stroke-width="1.5"/>`;
+          s += `<circle cx="${cx}" cy="${cy}" r="10" fill="#e74c3c" stroke="#e74c3c" stroke-width="1.5"/>`;
         } else {
-          s += `<circle cx="${cx}" cy="${cy}" r="11" fill="#0f0f0f" stroke="#1e1e1e" stroke-width="1" opacity="0.5"/>`;
+          s += `<circle cx="${cx}" cy="${cy}" r="9" fill="#0f0f0f" stroke="#1e1e1e" stroke-width="1" opacity="0.5"/>`;
         }
       }
     }
@@ -404,7 +397,7 @@ function render() {
     document.getElementById('pQual').textContent = gs.qual.s;
     const c = SHAPE_COLORS[gs.shape];
     document.getElementById('pShape').innerHTML  =
-      `<span style="color:${c}">${SHAPE_LABELS[gs.shape]}</span> shape · frets ${gs.wStart + 1}–${gs.wStart + 5}`;
+      `<span style="color:${c}">${SHAPE_LABELS[gs.shape]}</span> shape`;
   }
   renderFb();
   document.getElementById('checkBtn').disabled = !gs.active || gs.checked;
