@@ -315,8 +315,8 @@ function renderSVG() {
 
   let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" style="touch-action:manipulation;display:block;">`;
 
-  // Nut
-  s += `<line x1="${ML}" y1="${MT}" x2="${ML}" y2="${H - MB}" stroke="#d4cfc8" stroke-width="8"/>`;
+  // Nut (extends beyond strings so they appear to cross over it)
+  s += `<line x1="${ML}" y1="${MT - 8}" x2="${ML}" y2="${H - MB + 8}" stroke="#d4cfc8" stroke-width="8"/>`;
 
   // Fret lines
   for (let i = 1; i <= NF; i++) {
