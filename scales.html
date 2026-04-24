@@ -68,6 +68,16 @@ p.intro { color: #e0ddd8; }
 }
 
 .diag-card { display: flex; flex-direction: column; }
+.diag-fb-wrap { display: flex; align-items: center; gap: 4px; }
+.pos-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: #777;
+  min-width: 16px;
+  text-align: right;
+  flex-shrink: 0;
+  line-height: 1;
+}
 
 .diag-label {
   font-family: 'Space Mono', monospace;
@@ -125,7 +135,9 @@ function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
   for (let f = 0; f <= numFrets; f++) {
     const x = (ML + f * FW).toFixed(1);
     const isNut = startFret === 0 && f === 0;
-    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="${isNut ? '#d4cfc8' : '#666'}" stroke-width="${isNut ? 9 : 2}"/>`;
+    const y1 = isNut ? MT - 6 : MT;
+    const y2 = isNut ? H - MB + 6 : H - MB;
+    s += `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${isNut ? '#d4cfc8' : '#666'}" stroke-width="${isNut ? 9 : 2}"/>`;
   }
 
   // Fret position markers between strings
@@ -205,7 +217,9 @@ function mapSVG(rootPc, intervals, windows) {
   for (let f = 0; f <= NF; f++) {
     const x = (ML + f * FW).toFixed(1);
     const isNut = f === 0;
-    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="${isNut ? '#d4cfc8' : '#666'}" stroke-width="${isNut ? 9 : 2}"/>`;
+    const y1n = isNut ? MT - 6 : MT;
+    const y2n = isNut ? H - MB + 6 : H - MB;
+    s += `<line x1="${x}" y1="${y1n}" x2="${x}" y2="${y2n}" stroke="${isNut ? '#d4cfc8' : '#666'}" stroke-width="${isNut ? 9 : 2}"/>`;
   }
 
   // Fret position markers between strings
@@ -305,10 +319,14 @@ SECTIONS.forEach(sec => {
     const wv     = sec.windows[shape];
     const wStart = typeof wv === 'object' ? wv.start : wv;
     const wFrets = typeof wv === 'object' ? wv.frets : NUM_FRETS;
+    const posLabel = wStart > 0 ? String(wStart + 1) : '';
     return `
       <div class="diag-card">
         <div class="diag-label" style="color:${color};">${label} — ${sec.key} ${sec.scaleName}</div>
-        ${shapeSVG(sec.rootPc, sec.intervals, color, wStart, wFrets, minStr)}
+        <div class="diag-fb-wrap">
+          <span class="pos-num">${posLabel}</span>
+          ${shapeSVG(sec.rootPc, sec.intervals, color, wStart, wFrets, minStr)}
+        </div>
       </div>`;
   }).join('');
 
