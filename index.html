@@ -878,17 +878,6 @@ function buildDiagram(keyIndex, quality, shapeName, isBlank = false) {
       });
     });
 
-    // Gold completion dots for open C (on Delta) and open G (on Alpha)
-    const goldDots = getGoldDots(shapeName, keyIndex, quality);
-    goldDots.forEach(d => {
-      const cx = sx(d.fret);
-      const cy = sy(d.s);
-      const r = 13;
-      svg += `<circle cx="${cx}" cy="${cy}" r="${r * 1.6}" fill="${'#f0c040'}" opacity="0.08"/>`;
-        svg += `<circle cx="${cx}" cy="${cy}" r="${r * 1.6}" fill="${color}" opacity="0.08"/>`;
-      svg += `<circle cx="${cx}" cy="${cy}" r="${r + 1.5}" fill="#1a1a1a"/>`;
-      svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#f0c040" stroke="none"/>`;
-    });
   }
 
   svg += `</svg>`;
@@ -978,11 +967,17 @@ function buildMapDiagram(keyIndex, quality) {
       seen.add(key);
       allDots.push({ s: n.s, fret: n.fret, color });
     });
+  });
 
-    // Gold completion dots in map mode too
-    const goldDots = getGoldDots(shapeName, keyIndex, quality);
-    goldDots.forEach(d => {
-      allDots.push({ s: d.s, fret: d.fret, color: '#f0c040' });
+  // Gold completion dots — only at positions not already occupied by a colored dot
+  const occupiedPositions = new Set(allDots.map(d => `${d.s}-${d.fret}`));
+  ['echo','alpha','delta'].forEach(shapeName => {
+    getGoldDots(shapeName, keyIndex, quality).forEach(d => {
+      const key = `${d.s}-${d.fret}`;
+      if (!occupiedPositions.has(key)) {
+        allDots.push({ s: d.s, fret: d.fret, color: '#f0c040' });
+        occupiedPositions.add(key);
+      }
     });
   });
 
