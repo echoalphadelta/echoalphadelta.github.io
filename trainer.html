@@ -429,10 +429,11 @@ const FB_W = 860, FB_H = 180;
 const LEFT = 60, RIGHT = 20, TOP = 18, BOT = 22;
 const FRETS = 12;
 const STRINGS = 6;
-const FW = (FB_W - LEFT - RIGHT) / FRETS;
+const NECK_W = FB_W - LEFT - RIGHT;
 const SH = (FB_H - TOP - BOT) / (STRINGS - 1);
 
-function sx(f) { return f === 0 ? LEFT - 12 : LEFT + (f - 0.5) * FW; }
+function fretPos(f) { return LEFT + NECK_W * 2 * (1 - Math.pow(2, -f / 12)); }
+function sx(f) { return f === 0 ? LEFT - 12 : (fretPos(f - 1) + fretPos(f)) / 2; }
 function sy(s) { return TOP + (STRINGS - 1 - s) * SH; }
 
 function drawFretboard(highlightString, highlightFret, rootDots) {
@@ -445,7 +446,7 @@ function drawFretboard(highlightString, highlightFret, rootDots) {
 
   // Fret lines
   for (let f = 0; f <= FRETS; f++) {
-    const x = LEFT + f * FW;
+    const x = fretPos(f);
     const isNut = f === 0;
     out += `<line x1="${x}" y1="${TOP}" x2="${x}" y2="${TOP + SH*(STRINGS-1)}"
       stroke="${isNut ? '#d4cfc8' : '#444'}" stroke-width="${isNut ? 10 : 2}"/>`;
@@ -453,12 +454,12 @@ function drawFretboard(highlightString, highlightFret, rootDots) {
 
   // Position markers
   [3,5,7,9].forEach(f => {
-    const mx = LEFT + (f-1)*FW + FW*0.5;
+    const mx = (fretPos(f - 1) + fretPos(f)) / 2;
     const my = TOP + SH*2.5;
     out += `<circle cx="${mx}" cy="${my}" r="6" fill="#333"/>`;
     out += `<circle cx="${mx}" cy="${my}" r="4" fill="#777"/>`;
   });
-  const x12 = LEFT + 11*FW + FW*0.5;
+  const x12 = (fretPos(11) + fretPos(12)) / 2;
   [1.5, 3.5].forEach(i => {
     const my = TOP + SH*i;
     out += `<circle cx="${x12}" cy="${my}" r="6" fill="#333"/>`;
@@ -468,7 +469,7 @@ function drawFretboard(highlightString, highlightFret, rootDots) {
   // Strings
   const thicknesses = [5, 3.8, 2.8, 2, 1.3, 0.8];
   for (let s = 0; s < STRINGS; s++) {
-    out += `<line x1="${LEFT}" y1="${sy(s)}" x2="${LEFT + FRETS*FW}" y2="${sy(s)}"
+    out += `<line x1="${LEFT}" y1="${sy(s)}" x2="${fretPos(FRETS)}" y2="${sy(s)}"
       stroke="#555" stroke-width="${thicknesses[s]}" stroke-linecap="round"/>`;
   }
 

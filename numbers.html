@@ -602,10 +602,11 @@ render();
   const LABEL_TOP = 32, LABEL_BOT = 36;
   const FB_H = 260;
   const H = LABEL_TOP + FB_H + LABEL_BOT;
-  const FW = (W - LEFT - RIGHT) / FRETS;
+  const NECK_W = W - LEFT - RIGHT;
   const SH = FB_H / (STRINGS - 1);
 
-  function sx(f) { return LEFT + (f - 0.5) * FW; }
+  function fretPos(n) { return LEFT + NECK_W * 2 * (1 - Math.pow(2, -n / 12)); }
+  function sx(f) { return (fretPos(f - 1) + fretPos(f)) / 2; }
   function sy(s) { return LABEL_TOP + (STRINGS - 1 - s) * SH; }
 
   const posMap = {};
@@ -633,13 +634,13 @@ render();
   const ly = LABEL_TOP - 10;
   svg += `<text x="${(sx(2)+sx(4))/2}" y="${ly}" text-anchor="middle" font-family="'Space Mono',monospace" font-size="18" font-weight="700" letter-spacing="0.3em" fill="${ECHO_COLOR}">ECHO</text>`;
   svg += `<text x="${(sx(9)+sx(11))/2}" y="${ly}" text-anchor="middle" font-family="'Space Mono',monospace" font-size="18" font-weight="700" letter-spacing="0.3em" fill="${ALPHA_COLOR}">ALPHA</text>`;
-  svg += `<text x="${(sx(5)+sx(7))/2 + FW*0.3}" y="${LABEL_TOP+FB_H+28}" text-anchor="middle" font-family="'Space Mono',monospace" font-size="18" font-weight="700" letter-spacing="0.3em" fill="${DELTA_COLOR}">DELTA</text>`;
+  svg += `<text x="${(sx(5)+sx(7))/2 + (fretPos(6)-fretPos(5))*0.3}" y="${LABEL_TOP+FB_H+28}" text-anchor="middle" font-family="'Space Mono',monospace" font-size="18" font-weight="700" letter-spacing="0.3em" fill="${DELTA_COLOR}">DELTA</text>`;
 
   // Nut
   svg += `<line x1="${LEFT}" y1="${LABEL_TOP-6}" x2="${LEFT}" y2="${sy(0)+6}" stroke="#d4cfc8" stroke-width="10"/>`;
   // Frets
   for (let f = 1; f <= FRETS; f++) {
-    svg += `<line x1="${LEFT+f*FW}" y1="${LABEL_TOP-6}" x2="${LEFT+f*FW}" y2="${sy(0)+6}" stroke="#3a3a3a" stroke-width="2"/>`;
+    svg += `<line x1="${fretPos(f)}" y1="${LABEL_TOP-6}" x2="${fretPos(f)}" y2="${sy(0)+6}" stroke="#3a3a3a" stroke-width="2"/>`;
   }
   // Markers
   [3,5,7,9].forEach(f => svg += `<circle cx="${sx(f)}" cy="${LABEL_TOP+FB_H/2}" r="4" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/>`);
@@ -647,7 +648,7 @@ render();
   svg += `<circle cx="${sx(12)}" cy="${midY-ds/2}" r="4" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/>`;
   svg += `<circle cx="${sx(12)}" cy="${midY+ds/2}" r="4" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/>`;
   // Strings
-  [4.5,3.5,2.6,1.8,1.2,0.8].forEach((t,s) => svg += `<line x1="${LEFT}" y1="${sy(s)}" x2="${LEFT+FRETS*FW}" y2="${sy(s)}" stroke="#555" stroke-width="${t}" stroke-linecap="round"/>`);
+  [4.5,3.5,2.6,1.8,1.2,0.8].forEach((t,s) => svg += `<line x1="${LEFT}" y1="${sy(s)}" x2="${fretPos(FRETS)}" y2="${sy(s)}" stroke="#555" stroke-width="${t}" stroke-linecap="round"/>`);
 
   // Glows
   ALL_DOTS.forEach((dot, i) => {

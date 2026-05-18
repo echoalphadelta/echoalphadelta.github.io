@@ -125,15 +125,24 @@ function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
   const W = 280, H = 90;
   const ML = startFret === 0 ? 24 : 10;
   const MR = 6, MT = 8, MB = 8;
-  const FW = (W - ML - MR) / numFrets;
+  const NECK_W = W - ML - MR;
   const SH = (H - MT - MB) / 5;
   const sy = syFn(MT, SH);
+
+  // Map the visible fret window onto the display using equal-temperament spacing.
+  // fretFrac(n) = 1 - 2^(-n/12) is the fractional position of fret n on the full neck.
+  const f0 = 1 - Math.pow(2, -startFret / 12);
+  const f1 = 1 - Math.pow(2, -(startFret + numFrets) / 12);
+  const span = f1 - f0;
+  function fretWindowPos(n) {
+    return ML + ((1 - Math.pow(2, -n / 12)) - f0) / span * NECK_W;
+  }
 
   let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg">`;
 
   // Fret lines (f=0 is nut when at open position)
   for (let f = 0; f <= numFrets; f++) {
-    const x = (ML + f * FW).toFixed(1);
+    const x = fretWindowPos(startFret + f).toFixed(1);
     const isNut = startFret === 0 && f === 0;
     const y1 = isNut ? MT - 6 : MT;
     const y2 = isNut ? H - MB + 6 : H - MB;
@@ -143,7 +152,7 @@ function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
   // Fret position markers between strings
   [3, 5, 7, 9, 12].forEach(m => {
     if (m > startFret && m <= startFret + numFrets) {
-      const x = (ML + (m - startFret - 0.5) * FW).toFixed(1);
+      const x = ((fretWindowPos(m - 1) + fretWindowPos(m)) / 2).toFixed(1);
       if (m === 12) {
         s += `<circle cx="${x}" cy="${(MT + SH * 1.5).toFixed(1)}" r="2.5" fill="#ccc"/>`;
         s += `<circle cx="${x}" cy="${(MT + SH * 3.5).toFixed(1)}" r="2.5" fill="#ccc"/>`;
@@ -167,7 +176,7 @@ function shapeSVG(rootPc, intervals, color, startFret, numFrets, minStr) {
       const pitch = (STR_OPEN[si] + f) % 12;
       const intv  = (pitch - rootPc + 12) % 12;
       if (!intervals.includes(intv)) continue;
-      const cx = f === 0 ? ML - 12 : ML + (f - startFret - 0.5) * FW;
+      const cx = f === 0 ? ML - 12 : (fretWindowPos(f - 1) + fretWindowPos(f)) / 2;
       const cy = sy(si);
       const r  = intv === 0 ? 6 : 5.5;
       s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r}" fill="${color}" opacity="${intv === 0 ? 1 : 0.9}"/>`;
@@ -184,9 +193,11 @@ function mapSVG(rootPc, intervals, windows) {
   const W = 640, H = 90;
   const ML = 26, MR = 10, MT = 8, MB = 8;
   const NF = 12;
-  const FW = (W - ML - MR) / NF;
+  const NECK_W = W - ML - MR;
   const SH = (H - MT - MB) / 5;
   const sy = syFn(MT, SH);
+
+  function fretPos(n) { return ML + NECK_W * 2 * (1 - Math.pow(2, -n / 12)); }
 
   function claimedBy(f, si) {
     const out = [];
@@ -215,7 +226,7 @@ function mapSVG(rootPc, intervals, windows) {
 
   // Fret lines (f=0 is nut)
   for (let f = 0; f <= NF; f++) {
-    const x = (ML + f * FW).toFixed(1);
+    const x = fretPos(f).toFixed(1);
     const isNut = f === 0;
     const y1n = isNut ? MT - 6 : MT;
     const y2n = isNut ? H - MB + 6 : H - MB;
@@ -224,16 +235,16 @@ function mapSVG(rootPc, intervals, windows) {
 
   // Fret position markers between strings
   [3, 5, 7, 9].forEach(f => {
-    s += `<circle cx="${(ML + (f - 0.5) * FW).toFixed(1)}" cy="${(MT + 2.5 * SH).toFixed(1)}" r="3" fill="#ccc"/>`;
+    s += `<circle cx="${((fretPos(f - 1) + fretPos(f)) / 2).toFixed(1)}" cy="${(MT + 2.5 * SH).toFixed(1)}" r="3" fill="#ccc"/>`;
   });
-  const x12 = ML + 11.5 * FW;
+  const x12 = (fretPos(11) + fretPos(12)) / 2;
   s += `<circle cx="${x12.toFixed(1)}" cy="${(MT + SH * 1.5).toFixed(1)}" r="3" fill="#ccc"/>`;
   s += `<circle cx="${x12.toFixed(1)}" cy="${(MT + SH * 3.5).toFixed(1)}" r="3" fill="#ccc"/>`;
 
   // Strings
   for (let si = 0; si < 6; si++) {
     const y = sy(si).toFixed(1);
-    s += `<line x1="${ML}" y1="${y}" x2="${(ML + NF * FW).toFixed(1)}" y2="${y}" stroke="#999" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
+    s += `<line x1="${ML}" y1="${y}" x2="${fretPos(NF).toFixed(1)}" y2="${y}" stroke="#999" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
   }
 
   // Scale dots
@@ -244,7 +255,7 @@ function mapSVG(rootPc, intervals, windows) {
       const intv  = (pitch - rootPc + 12) % 12;
       if (!intervals.includes(intv)) continue;
 
-      const cx = f === 0 ? ML - 13 : ML + (f - 0.5) * FW;
+      const cx = f === 0 ? ML - 13 : (fretPos(f - 1) + fretPos(f)) / 2;
       const cy = sy(si);
       const claimed = claimedBy(f, si);
 

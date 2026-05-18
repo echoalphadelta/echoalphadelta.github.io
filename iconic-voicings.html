@@ -42,9 +42,10 @@ function neckSVG(o) {
   var NUM_FRETS = 12;
   var W = 640, H = 130;
   var ML = 38, MR = 12, MT = 12, MB = 12;
-  var FW = (W - ML - MR) / NUM_FRETS;
+  var NECK_W = W - ML - MR;
   var SH = (H - MT - MB) / 5;
   var thicknesses = [5.5, 4.2, 3.2, 2.3, 1.5, 0.9];
+  function fretPos(n) { return ML + NECK_W * 2 * (1 - Math.pow(2, -n / 12)); }
   function sy(si) { return MT + (5 - si) * SH; }
   var nTop = MT, nBot = MT + 5 * SH;
 
@@ -52,18 +53,18 @@ function neckSVG(o) {
 
   // Fret lines (nut + frets)
   for (var f = 0; f <= NUM_FRETS; f++) {
-    var x = (ML + f * FW).toFixed(1);
+    var x = fretPos(f).toFixed(1);
     var isNut = f === 0;
     s += '<line x1="' + x + '" y1="' + nTop + '" x2="' + x + '" y2="' + nBot + '" stroke="' + (isNut ? '#d4cfc8' : '#666') + '" stroke-width="' + (isNut ? 10 : 3) + '"/>';
   }
 
   // Fret position markers between strings
   [3, 5, 7, 9].forEach(function(f) {
-    var mx = (ML + (f - 1) * FW + FW * 0.5).toFixed(1);
+    var mx = ((fretPos(f - 1) + fretPos(f)) / 2).toFixed(1);
     var my = (MT + 2.5 * SH).toFixed(1);
     s += '<circle cx="' + mx + '" cy="' + my + '" r="3.5" fill="#ccc"/>';
   });
-  var x12 = ML + 11 * FW + FW * 0.5;
+  var x12 = (fretPos(11) + fretPos(12)) / 2;
   [1.5, 3.5].forEach(function(i) {
     s += '<circle cx="' + x12.toFixed(1) + '" cy="' + (MT + i * SH).toFixed(1) + '" r="3.5" fill="#ccc"/>';
   });
@@ -71,14 +72,14 @@ function neckSVG(o) {
   // String lines
   for (var si = 0; si < 6; si++) {
     var y = sy(si).toFixed(1);
-    s += '<line x1="' + ML + '" y1="' + y + '" x2="' + (W - MR) + '" y2="' + y + '" stroke="#999" stroke-width="' + thicknesses[si] + '" stroke-linecap="round"/>';
+    s += '<line x1="' + ML + '" y1="' + y + '" x2="' + fretPos(NUM_FRETS).toFixed(1) + '" y2="' + y + '" stroke="#999" stroke-width="' + thicknesses[si] + '" stroke-linecap="round"/>';
   }
 
   // Dots
   for (var si = 0; si < 6; si++) {
     var fret = strings[si];
     if (fret < 0) continue;
-    var cx = fret === 0 ? ML - 14 : ML + (fret - 0.5) * FW;
+    var cx = fret === 0 ? ML - 14 : (fretPos(fret - 1) + fretPos(fret)) / 2;
     var cy = sy(si);
     var r = 10;
     if (fret === 0) {

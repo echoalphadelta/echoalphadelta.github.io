@@ -69,12 +69,11 @@ function buildDiagram() {
   const LEFT = 28;
   const RIGHT = 20;
 
-  const FW = (W - LEFT - RIGHT) / FRETS;
+  const NECK_W = W - LEFT - RIGHT;
   const SH = FB_H / (STRINGS - 1);
 
-  function sx(fret) {
-    return LEFT + (fret - 0.5) * FW;
-  }
+  function fretPos(n) { return LEFT + NECK_W * 2 * (1 - Math.pow(2, -n / 12)); }
+  function sx(fret) { return (fretPos(fret - 1) + fretPos(fret)) / 2; }
   function sy(s) {
     return FB_TOP + (STRINGS - 1 - s) * SH;
   }
@@ -100,7 +99,7 @@ function buildDiagram() {
     letter-spacing="0.3em" fill="${ALPHA_COLOR}" text-transform="uppercase">ALPHA</text>`;
 
   // Delta — below, shifted right: center between frets 5.5 and 7
-  const deltaCenter = (sx(5) + sx(7)) / 2 + FW * 0.3;
+  const deltaCenter = (sx(5) + sx(7)) / 2 + (fretPos(6) - fretPos(5)) * 0.3;
   svg += `<text x="${deltaCenter}" y="${labelBotY}" text-anchor="middle"
     font-family="'Space Mono', monospace" font-size="${labelFontSize}" font-weight="700"
     letter-spacing="0.3em" fill="${DELTA_COLOR}" text-transform="uppercase">DELTA</text>`;
@@ -113,7 +112,7 @@ function buildDiagram() {
 
   // Fret lines
   for (let f = 1; f <= FRETS; f++) {
-    const x = LEFT + f * FW;
+    const x = fretPos(f);
     svg += `<line x1="${x}" y1="${FB_TOP - 6}" x2="${x}" y2="${sy(0) + 6}"
       stroke="#3a3a3a" stroke-width="2"/>`;
   }
@@ -132,7 +131,7 @@ function buildDiagram() {
   // Strings
   const thicknesses = [4.5, 3.5, 2.6, 1.8, 1.2, 0.8];
   for (let s = 0; s < STRINGS; s++) {
-    svg += `<line x1="${LEFT}" y1="${sy(s)}" x2="${LEFT + FRETS * FW}" y2="${sy(s)}"
+    svg += `<line x1="${LEFT}" y1="${sy(s)}" x2="${fretPos(FRETS)}" y2="${sy(s)}"
       stroke="#555" stroke-width="${thicknesses[s]}" stroke-linecap="round"/>`;
   }
 
