@@ -16,43 +16,20 @@ body { color: #f0ede8; font-family: 'Share Tech Mono', monospace; line-height: 1
 h1 { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #f5a623; text-shadow: 0 0 16px rgba(245,166,35,0.4); margin: 0 0 8px 0; }
 .subtitle { font-size: 0.78rem; color: rgba(240,237,232,0.42); margin: 0 0 44px; letter-spacing: 0.04em; }
 .ref-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,166,35,0.5); margin-bottom: 16px; }
-
-.strings-row {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: clamp(4px, 2vw, 14px);
-  justify-content: center;
-}
+.strings-row { display: flex; flex-wrap: nowrap; gap: clamp(4px, 2vw, 14px); justify-content: center; }
 .str-btn {
-  width: clamp(42px, 12vw, 72px);
-  height: clamp(42px, 12vw, 72px);
-  border-radius: 50%;
-  background: rgba(245,166,35,0.06);
+  width: clamp(42px, 12vw, 72px); height: clamp(42px, 12vw, 72px);
+  border-radius: 50%; background: rgba(245,166,35,0.06);
   border: 1.5px solid rgba(245,166,35,0.26);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  line-height: 1;
-  padding: 0;
-  font-family: 'Space Mono', monospace;
-  font-weight: 700;
+  cursor: pointer; transition: all 0.2s ease;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; line-height: 1; padding: 0;
+  font-family: 'Space Mono', monospace; font-weight: 700;
 }
 .str-btn .sn { font-size: clamp(0.72rem, 3.5vw, 1.1rem); color: #4aff7a; }
-.str-btn .sf { font-size: clamp(0.38rem, 1.2vw, 0.48rem); color: rgba(245,166,35,0.5); letter-spacing: 0.02em; }
-.str-btn:hover {
-  background: rgba(245,166,35,0.13);
-  border-color: rgba(245,166,35,0.52);
-  box-shadow: 0 0 14px rgba(245,166,35,0.22);
-}
-.str-btn.playing {
-  background: rgba(245,166,35,0.16);
-  border-color: rgba(245,166,35,0.9);
-  box-shadow: 0 0 24px rgba(245,166,35,0.45);
-}
+.str-btn .sf { font-size: clamp(0.36rem, 1.1vw, 0.46rem); color: rgba(245,166,35,0.5); }
+.str-btn:hover { background: rgba(245,166,35,0.13); border-color: rgba(245,166,35,0.52); box-shadow: 0 0 14px rgba(245,166,35,0.22); }
+.str-btn.playing { background: rgba(245,166,35,0.16); border-color: rgba(245,166,35,0.9); box-shadow: 0 0 24px rgba(245,166,35,0.45); }
 </style>
 </head>
 <body>
@@ -71,46 +48,38 @@ h1 { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; 
   </div>
 </div>
 <script>
-var AC = null;
+var ac = null;
 var curOsc = null;
 var curBtn = null;
 
 document.querySelectorAll('.str-btn').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    // Stop any current tone
-    if (curOsc) { try { curOsc.stop(0); } catch(e) {} curOsc = null; }
-    if (curBtn) { curBtn.classList.remove('playing'); curBtn = null; }
+  btn.onclick = function() {
+    if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
 
-    // Reuse a single AudioContext — created on first interaction
-    if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+    // Always resume — no-op if already running, wakes it if suspended
+    ac.resume().then(function() {
+      if (curOsc) { try { curOsc.stop(0); } catch(e) {} }
+      if (curBtn) { curBtn.classList.remove('playing'); }
 
-    var freq = parseFloat(btn.dataset.hz);
-
-    function play() {
-      var osc  = AC.createOscillator();
-      var gain = AC.createGain();
+      var osc  = ac.createOscillator();
+      var gain = ac.createGain();
       osc.type = 'triangle';
-      osc.frequency.value = freq;
+      osc.frequency.value = parseFloat(btn.dataset.hz);
       osc.connect(gain);
-      gain.connect(AC.destination);
-      gain.gain.setValueAtTime(0.5, AC.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, AC.currentTime + 3.0);
-      osc.start(AC.currentTime);
-      osc.stop(AC.currentTime + 3.1);
+      gain.connect(ac.destination);
+      gain.gain.setValueAtTime(0.45, ac.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 3.0);
+      osc.start();
+      osc.stop(ac.currentTime + 3.1);
+
       curOsc = osc;
       curBtn = btn;
       btn.classList.add('playing');
       osc.onended = function() {
         if (curBtn === btn) { btn.classList.remove('playing'); curBtn = null; }
       };
-    }
-
-    if (AC.state === 'running') {
-      play();
-    } else {
-      AC.resume().then(play);
-    }
-  });
+    });
+  };
 });
 </script>
 </body>
