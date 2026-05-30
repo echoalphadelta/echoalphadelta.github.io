@@ -1093,7 +1093,7 @@ function renderPage() {
   // Show gold legend if C Delta or G Alpha gold dots will appear
   const majorFamilies = ['major','Maj7','add9','sus4','6','9','11','#11'];
   const showGold = (keyIndex === 0 && majorFamilies.includes(quality)) || (keyIndex === 7 && majorFamilies.includes(quality));
-  document.getElementById('goldLegend').classList.toggle('active', showGold);
+  document.getElementById('goldLegend').classList.toggle('active', showGold && mapMode);
 
   if (mapMode) {
     const card = document.createElement('div');
