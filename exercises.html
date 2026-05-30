@@ -205,6 +205,10 @@ h1 {
   </div>
 
   <div class="round-result" id="roundResult"></div>
+  <div id="gripLegend" style="display:none;margin-top:10px;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.13em;color:#888;padding:8px 12px;border:1px solid rgba(192,192,192,0.15);border-radius:4px;max-width:480px;">
+    <span style="display:inline-block;width:10px;height:10px;border-radius:50%;border:1.5px solid #c0c0c0;box-shadow:0 0 5px rgba(192,192,192,0.4);vertical-align:middle;margin-right:7px;"></span>
+    Not part of this basic shape, but part of this chord
+  </div>
 
 
 </div>
@@ -232,30 +236,40 @@ const QUALITIES = [
 let gs = {
   active: false, key: null, qual: null, shape: null,
   rootPc: null, intervals: null,
-  checked: false, sel: new Set(), pinKey: null,
+  gripStart: 0, gripEnd: 4,
+  checked: false, hasOffGrip: false, sel: new Set(), pinKey: null,
 };
 
-function chordToneKeysInWindow() {
-  const keys = new Set();
-  for (let f = 0; f <= 12; f++) {
-    for (let si = 0; si < 6; si++) {
-      const intv = ((STR_OPEN[si] + f) % 12 - gs.rootPc + 12) % 12;
-      if (gs.intervals.includes(intv)) keys.add(`${f}-${si}`);
-    }
-  }
-  return keys;
+function computeGripWindow(shape, rootPc) {
+  const rootStr  = SHAPE_ROOT_STR[shape];
+  const openPc   = STR_OPEN[rootStr];
+  let rootFret   = (rootPc - openPc + 12) % 12;
+  if (rootFret === 0) rootFret = 12; // prefer 12th-fret position over open
+  const gripStart = Math.max(0, rootFret - 1);
+  const gripEnd   = Math.min(12, gripStart + 4);
+  return { gripStart, gripEnd };
+}
+
+function isGripTone(f, si) {
+  if (f < gs.gripStart || f > gs.gripEnd) return false;
+  const intv = ((STR_OPEN[si] + f) % 12 - gs.rootPc + 12) % 12;
+  return gs.intervals.includes(intv);
 }
 
 function newChallenge() {
   const key   = gs.pinKey || NOTES[Math.floor(Math.random() * 12)];
   const qual  = QUALITIES[Math.floor(Math.random() * QUALITIES.length)];
   const shape = ['echo','alpha','delta'][Math.floor(Math.random() * 3)];
+  const rootPc = NOTE_PC[key];
+  const { gripStart, gripEnd } = computeGripWindow(shape, rootPc);
   gs = {
     active: true, key, qual, shape,
-    rootPc: NOTE_PC[key], intervals: qual.iv,
-    checked: false, sel: new Set(), pinKey: gs.pinKey,
+    rootPc, intervals: qual.iv,
+    gripStart, gripEnd,
+    checked: false, hasOffGrip: false, sel: new Set(), pinKey: gs.pinKey,
   };
   document.getElementById('roundResult').textContent = '';
+  document.getElementById('gripLegend').style.display = 'none';
   render();
 }
 
@@ -268,13 +282,22 @@ function toggleDot(key) {
 function checkAnswer() {
   if (!gs.active || gs.checked) return;
   gs.checked = true;
-  const chordKeys = chordToneKeysInWindow();
-  let correct = 0, wrong = 0;
-  gs.sel.forEach(k => chordKeys.has(k) ? correct++ : wrong++);
+  let correct = 0, wrong = 0, offGrip = 0;
+  gs.sel.forEach(k => {
+    const [f, si] = k.split('-').map(Number);
+    if (isGripTone(f, si)) {
+      correct++;
+    } else {
+      const intv = ((STR_OPEN[si] + f) % 12 - gs.rootPc + 12) % 12;
+      gs.intervals.includes(intv) ? offGrip++ : wrong++;
+    }
+  });
+  gs.hasOffGrip = offGrip > 0;
   const parts = [];
-  if (correct) parts.push(`${correct} correct`);
-  if (wrong)   parts.push(`${wrong} wrong`);
-  if (!correct && !wrong) parts.push('nothing selected');
+  if (correct)  parts.push(`${correct} correct`);
+  if (wrong)    parts.push(`${wrong} wrong`);
+  if (offGrip)  parts.push(`${offGrip} outside grip`);
+  if (!correct && !wrong && !offGrip) parts.push('nothing selected');
   document.getElementById('roundResult').textContent = parts.join(' · ');
   render();
 }
@@ -356,12 +379,31 @@ function renderSVG() {
         s += `<circle cx="${cx}" cy="${cy}" r="10" fill="${isSel ? clr : '#141414'}" stroke="${isSel ? clr : '#484848'}" stroke-width="1.5"/>`;
         s += `<circle cx="${cx}" cy="${cy}" r="15" fill="none" pointer-events="all" style="cursor:pointer" onclick="toggleDot('${key}')"/>`;
       } else {
-        if (isSel && isChordTone) {
+        const isGrip  = isGripTone(f, si);
+
+        // Amber halo behind all grip-tone dots (correct answer reveal)
+        if (isGrip) {
+          s += `<circle cx="${cx}" cy="${cy}" r="18" fill="none" stroke="rgba(245,166,35,0.12)" stroke-width="6"/>`;
+          s += `<circle cx="${cx}" cy="${cy}" r="13.5" fill="none" stroke="rgba(245,166,35,0.6)" stroke-width="2"/>`;
+        }
+
+        if (isSel && isGrip) {
+          // Correctly selected grip tone — green fill inside amber halo
           s += `<circle cx="${cx}" cy="${cy}" r="10" fill="#2ecc71" stroke="#2ecc71" stroke-width="1.5"/>`;
+        } else if (isSel && isChordTone) {
+          // Valid chord tone but outside this grip — silver halo
+          s += `<circle cx="${cx}" cy="${cy}" r="18" fill="none" stroke="rgba(192,192,192,0.12)" stroke-width="6"/>`;
+          s += `<circle cx="${cx}" cy="${cy}" r="13.5" fill="none" stroke="rgba(192,192,192,0.6)" stroke-width="2"/>`;
+          s += `<circle cx="${cx}" cy="${cy}" r="10" fill="#141414" stroke="#c0c0c0" stroke-width="1.5"/>`;
         } else if (isSel) {
+          // Wrong — red
           s += `<circle cx="${cx}" cy="${cy}" r="10" fill="#e74c3c" stroke="#e74c3c" stroke-width="1.5"/>`;
+        } else if (isGrip) {
+          // Missed grip tone — amber halo already drawn, dim fill
+          s += `<circle cx="${cx}" cy="${cy}" r="10" fill="#141414" stroke="#484848" stroke-width="1"/>`;
         } else {
-          s += `<circle cx="${cx}" cy="${cy}" r="9" fill="#0f0f0f" stroke="#1e1e1e" stroke-width="1" opacity="0.5"/>`;
+          // Irrelevant
+          s += `<circle cx="${cx}" cy="${cy}" r="9" fill="#0f0f0f" stroke="#1e1e1e" stroke-width="1" opacity="0.3"/>`;
         }
       }
     }
@@ -385,6 +427,8 @@ function render() {
   }
   renderFb();
   document.getElementById('checkBtn').disabled = !gs.active || gs.checked;
+  document.getElementById('gripLegend').style.display =
+    (gs.checked && gs.hasOffGrip) ? 'block' : 'none';
 }
 
 newChallenge();
