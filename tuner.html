@@ -89,9 +89,9 @@ function guitarBuffer(freq) {
   for (var i = 0; i < Math.min(N * 10, len); i++) { var a = Math.abs(ch[i]); if (a > peak) peak = a; }
   if (peak > 0.001) { var sc = 0.7 / peak; for (var i = 0; i < len; i++) ch[i] *= sc; }
 
-  // 3ms fade-in (DC offset from zero-centered triangle causes abrupt start)
-  var fi = Math.floor(sr * 0.003);
-  for (var i = 0; i < fi; i++) ch[i] *= i / fi;
+  // 15ms cosine fade-in — zero slope at both ends, no click
+  var fi = Math.floor(sr * 0.015);
+  for (var i = 0; i < fi; i++) ch[i] *= 0.5 * (1 - Math.cos(Math.PI * i / fi));
 
   // 60ms fade-out
   var fo = Math.floor(sr * 0.06);
