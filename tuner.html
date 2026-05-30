@@ -26,7 +26,7 @@ h1 { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; 
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 2px; line-height: 1; padding: 0;
 }
-.str-btn .sn { font-size: 1.05rem; }
+.str-btn .sn { font-size: 1.05rem; color: #4aff7a; }
 .str-btn .sf { font-size: 0.46rem; opacity: 0.48; letter-spacing: 0.03em; }
 .str-btn:hover { background: rgba(245,166,35,0.13); border-color: rgba(245,166,35,0.52); box-shadow: 0 0 14px rgba(245,166,35,0.22); }
 .str-btn.playing { background: rgba(245,166,35,0.19); border-color: rgba(245,166,35,0.85); box-shadow: 0 0 22px rgba(245,166,35,0.36); }
@@ -123,25 +123,29 @@ function getCtx() {
 }
 
 function playRef(btn) {
-  var c = getCtx();
   if (activeOsc) { try { activeOsc.stop(0); } catch(e) {} }
   if (activeBtn) activeBtn.classList.remove('playing');
-  var osc = c.createOscillator();
-  var g = c.createGain();
-  osc.type = 'triangle';
-  osc.frequency.value = parseFloat(btn.dataset.hz);
-  osc.connect(g);
-  g.connect(c.destination);
-  g.gain.setValueAtTime(0.42, c.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 3.2);
-  osc.start();
-  osc.stop(c.currentTime + 3.3);
-  activeOsc = osc;
-  activeBtn = btn;
-  btn.classList.add('playing');
-  osc.onended = function() {
-    if (activeBtn === btn) { btn.classList.remove('playing'); activeBtn = null; }
-  };
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  var ready = audioCtx.state === 'running' ? Promise.resolve() : audioCtx.resume();
+  ready.then(function() {
+    var c = audioCtx;
+    var osc = c.createOscillator();
+    var g = c.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = parseFloat(btn.dataset.hz);
+    osc.connect(g);
+    g.connect(c.destination);
+    g.gain.setValueAtTime(0.42, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 3.2);
+    osc.start();
+    osc.stop(c.currentTime + 3.3);
+    activeOsc = osc;
+    activeBtn = btn;
+    btn.classList.add('playing');
+    osc.onended = function() {
+      if (activeBtn === btn) { btn.classList.remove('playing'); activeBtn = null; }
+    };
+  });
 }
 
 var micActive = false, micStream = null, analyser = null, micSrc = null, rafId = null;
