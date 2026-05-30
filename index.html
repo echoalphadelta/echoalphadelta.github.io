@@ -467,6 +467,22 @@ transition: color 0.2s, border-color 0.2s;
 }
 .nav-pill-gold:hover { color: #ffc85c; border-color: rgba(245,166,35,0.7); }
 
+.nav-pill-ice {
+display: inline-block;
+font-family: 'Space Mono', monospace;
+font-size: 0.85rem;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: #a8d8ea;
+text-decoration: none;
+padding: 0.75rem 2rem;
+border: 1px solid rgba(168,216,234,0.35);
+border-radius: 2rem;
+animation: breatheIce 3s ease-in-out infinite;
+transition: color 0.2s, border-color 0.2s;
+}
+.nav-pill-ice:hover { color: #cdeef9; border-color: rgba(168,216,234,0.7); }
+
 .btn-coming { display: inline-block; font-family: ‘Space Mono’, monospace; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; padding: 1rem 2.5rem; border: 1px solid rgba(255,255,255,0.15); color: #888; text-decoration: none; }
 footer { background: #000000; padding: 2.5rem 2rem; text-align: center; }
 footer p { font-family: ‘Space Mono’, monospace; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: #444; }
@@ -476,7 +492,7 @@ footer p { font-family: ‘Space Mono’, monospace; font-size: 0.58rem; letter-
 
 .book-section img { max-width: 200px !important; }
 .chord-badge .chord-text { font-size: 24px !important; }
-.trainer-link, .nav-pill-pink, .nav-pill-silver, .nav-pill-gold { font-size: 0.75rem !important; padding: 0.6rem 1.5rem !important; }
+.trainer-link, .nav-pill-pink, .nav-pill-silver, .nav-pill-gold, .nav-pill-ice { font-size: 0.75rem !important; padding: 0.6rem 1.5rem !important; }
 }
 
 /* Shape modal */
@@ -575,6 +591,7 @@ footer p { font-family: ‘Space Mono’, monospace; font-size: 0.58rem; letter-
 <div style="margin:0 auto;max-width:900px;padding:8px 0 32px;display:flex;flex-wrap:wrap;justify-content:space-evenly;align-items:center;gap:16px;">
   <a href="scales.html" class="nav-pill-pink">Scales</a>
   <a href="iconic-voicings.html" class="nav-pill-silver">Iconic Voicings</a>
+  <a href="tuner.html" class="nav-pill-ice">Tuner</a>
   <a href="exercises.html" class="nav-pill-gold">Exercise</a>
 </div>
 
