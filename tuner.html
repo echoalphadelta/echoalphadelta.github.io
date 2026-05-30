@@ -54,36 +54,42 @@ var curBtn = null;
 
 function guitarBuffer(freq) {
   var sr = ac.sampleRate;
-  var len = Math.floor(sr * 3.5);
+  var len = Math.floor(sr * 4.0);
   var ab = ac.createBuffer(1, len, sr);
   var ch = ab.getChannelData(0);
-  // [relative amplitude, decay time in seconds]
-  var H = [[1.00,3.2],[0.35,2.0],[0.18,1.2],[0.08,0.75],[0.05,0.5],[0.03,0.32]];
-  var rs = H.map(function(h, k) {
-    var f = freq * (k + 1);
-    if (f > sr * 0.48) return null;
-    var phi = Math.random() * 6.2832;
-    var inc = 6.2832 * f / sr;
-    return { a: h[0], sp: Math.sin(phi), cp: Math.cos(phi),
-             si: Math.sin(inc), ci: Math.cos(inc),
-             df: Math.exp(-1 / (h[1] * sr)), ev: 1.0 };
-  }).filter(Boolean);
+
+  // Karplus-Strong: delay line length = one period
+  var N = Math.round(sr / freq);
+  var dl = new Float32Array(N);
+
+  // Excitation: noise with warmth scaled by string (lower = warmer)
+  for (var i = 0; i < N; i++) dl[i] = Math.random() * 2 - 1;
+  var warmth = 0.25 + 0.45 * Math.max(0, 1 - freq / 350);
+  for (var i = 1; i < N; i++) dl[i] = (1 - warmth) * dl[i] + warmth * dl[i - 1];
+
+  // Per-sample decay: lower strings ring ~4s, higher strings ~2.5s
+  var T60 = 2.5 + 1.5 * Math.max(0, 1 - freq / 350);
+  var decay = Math.exp(-6.9 / (sr * T60));
+
+  // K-S loop: y[n] = decay * 0.5 * (y[n-N] + y[n-N-1])
   for (var i = 0; i < len; i++) {
-    var s = 0;
-    for (var j = 0; j < rs.length; j++) {
-      var r = rs[j];
-      s += r.a * r.ev * r.sp;
-      var ns = r.sp * r.ci + r.cp * r.si;
-      r.cp = r.cp * r.ci - r.sp * r.si;
-      r.sp = ns;
-      r.ev *= r.df;
-    }
-    ch[i] = s * 0.42;
+    var p = i % N;
+    var q = (i - 1 + N) % N;
+    var y = decay * 0.5 * (dl[p] + dl[q]);
+    dl[p] = y;
+    ch[i] = y;
   }
-  // Short noise transient for the pluck attack
-  var te = 0.25, td = Math.exp(-1 / (ac.sampleRate * 0.003));
-  var tl = Math.floor(ac.sampleRate * 0.012);
-  for (var i = 0; i < tl; i++) { ch[i] += (Math.random() * 2 - 1) * te; te *= td; }
+
+  // Normalize peak to 0.7
+  var peak = 0;
+  for (var i = 0; i < Math.min(N * 10, len); i++) { var a = Math.abs(ch[i]); if (a > peak) peak = a; }
+  if (peak > 0.001) { var sc = 0.7 / peak; for (var i = 0; i < len; i++) ch[i] *= sc; }
+
+  // 3ms fade-in to remove click; 60ms fade-out at tail
+  var fi = Math.floor(sr * 0.003), fo = Math.floor(sr * 0.06);
+  for (var i = 0; i < fi; i++) ch[i] *= i / fi;
+  for (var i = len - fo; i < len; i++) ch[i] *= (len - i) / fo;
+
   return ab;
 }
 
