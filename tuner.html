@@ -70,8 +70,10 @@ function guitarBuffer(freq) {
   m /= N;
   for (var i = 0; i < N; i++) dl[i] -= m;
 
-  var T60 = 5.5;
-  var decay = Math.exp(-6.9 / (sr * T60));
+  // Compensate decay for K-S averaging filter's frequency-dependent loss,
+  // so all strings reach the same T60 at the fundamental
+  var T60 = 6.0;
+  var decay = Math.exp(-6.9 / (sr * T60) - Math.log(Math.cos(Math.PI / N)) / N);
 
   for (var i = 0; i < len; i++) {
     var p = i % N, q = (i - 1 + N) % N;
@@ -81,7 +83,9 @@ function guitarBuffer(freq) {
 
   var peak = 0;
   for (var i = 0; i < Math.min(N * 10, len); i++) { var a = Math.abs(ch[i]); if (a > peak) peak = a; }
-  if (peak > 0.001) { var sc = 0.7 / peak; for (var i = 0; i < len; i++) ch[i] *= sc; }
+  // Boost higher strings to match perceived loudness: higher freq = thinner harmonics
+  var normAmp = 0.50 * Math.pow(freq / 82.41, 0.3);
+  if (peak > 0.001) { var sc = normAmp / peak; for (var i = 0; i < len; i++) ch[i] *= sc; }
 
   var fi = Math.floor(sr * 0.015);
   for (var i = 0; i < fi; i++) ch[i] *= 0.5 * (1 - Math.cos(Math.PI * i / fi));
