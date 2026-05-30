@@ -63,7 +63,7 @@ document.querySelectorAll('.str-btn').forEach(function(btn) {
 
       var osc  = ac.createOscillator();
       var gain = ac.createGain();
-      osc.type = 'triangle';
+      osc.type = 'sine';
       osc.frequency.value = parseFloat(btn.dataset.hz);
       osc.connect(gain);
       gain.connect(ac.destination);
