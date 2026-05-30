@@ -105,9 +105,9 @@ var VOICINGS = [
 ];
 
 var POWER_CHORDS = [
-  {position: 'Echo Position', key: 'F\u266f', color: '#4a9eff', strings: [2,4,4,-1,-1,-1], nashville: ['1','5','1','','','']},
-  {position: 'Alpha Position', key: 'C\u266f', color: '#ff4a4a', strings: [-1,4,6,6,-1,-1], nashville: ['','1','5','1','','']},
-  {position: 'Delta Position', key: 'E\u266d', color: '#4aff7a', strings: [-1,-1,1,3,4,-1], nashville: ['','','1','5','1','']},
+  {position: 'Echo', key: 'F\u266f', color: '#4a9eff', strings: [2,4,4,-1,-1,-1], nashville: ['1','5','1','','','']},
+  {position: 'Alpha', key: 'C\u266f', color: '#ff4a4a', strings: [-1,4,6,6,-1,-1], nashville: ['','1','5','1','','']},
+  {position: 'Delta', key: 'E\u266d', color: '#4aff7a', strings: [-1,-1,1,3,4,-1], nashville: ['','','1','5','1','']},
 ];
 
 function render() {
@@ -120,8 +120,8 @@ function render() {
           + '</div>';
   });
   html += '<div class="power-section">'
-        + '<h2 style="color:#f5a623;">Power Chords \u2014 Three Positions</h2>'
-        + '<span class="subname" style="color:#f5a623;">Root and fifth across the three shape positions</span>'
+        + '<h2 style="color:#f5a623;">The &#8220;Power Chord&#8221;</h2>'
+        + '<p style="margin-bottom:28px;">The power chord is a dyad that lives at the bottom of all our shapes. It is spelled 1&#8209;5&#8209;1. This is the strong foundation that we can build from. With no third in the voicing, it&#8217;s a neutral base that we can add major, minor or dominant tonalities onto. Or let the raw power chords do the work. Here&#8217;s how they look.</p>'
 ;
   POWER_CHORDS.forEach(function(pc) {
     html += '<div class="power-card">'
