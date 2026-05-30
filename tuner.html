@@ -49,33 +49,61 @@ h1 { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; 
 </div>
 <script>
 var ac = null;
-var curOsc = null;
+var curSrc = null;
 var curBtn = null;
+
+function guitarBuffer(freq) {
+  var sr = ac.sampleRate;
+  var len = Math.floor(sr * 3.5);
+  var ab = ac.createBuffer(1, len, sr);
+  var ch = ab.getChannelData(0);
+  // [relative amplitude, decay time in seconds]
+  var H = [[1.00,3.2],[0.35,2.0],[0.18,1.2],[0.08,0.75],[0.05,0.5],[0.03,0.32]];
+  var rs = H.map(function(h, k) {
+    var f = freq * (k + 1);
+    if (f > sr * 0.48) return null;
+    var phi = Math.random() * 6.2832;
+    var inc = 6.2832 * f / sr;
+    return { a: h[0], sp: Math.sin(phi), cp: Math.cos(phi),
+             si: Math.sin(inc), ci: Math.cos(inc),
+             df: Math.exp(-1 / (h[1] * sr)), ev: 1.0 };
+  }).filter(Boolean);
+  for (var i = 0; i < len; i++) {
+    var s = 0;
+    for (var j = 0; j < rs.length; j++) {
+      var r = rs[j];
+      s += r.a * r.ev * r.sp;
+      var ns = r.sp * r.ci + r.cp * r.si;
+      r.cp = r.cp * r.ci - r.sp * r.si;
+      r.sp = ns;
+      r.ev *= r.df;
+    }
+    ch[i] = s * 0.42;
+  }
+  // Short noise transient for the pluck attack
+  var te = 0.25, td = Math.exp(-1 / (ac.sampleRate * 0.003));
+  var tl = Math.floor(ac.sampleRate * 0.012);
+  for (var i = 0; i < tl; i++) { ch[i] += (Math.random() * 2 - 1) * te; te *= td; }
+  return ab;
+}
 
 document.querySelectorAll('.str-btn').forEach(function(btn) {
   btn.onclick = function() {
     if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
-
-    // Always resume — no-op if already running, wakes it if suspended
     ac.resume().then(function() {
-      if (curOsc) { try { curOsc.stop(0); } catch(e) {} }
+      if (curSrc) { try { curSrc.stop(0); } catch(e) {} }
       if (curBtn) { curBtn.classList.remove('playing'); }
 
-      var osc  = ac.createOscillator();
-      var gain = ac.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = parseFloat(btn.dataset.hz);
-      osc.connect(gain);
-      gain.connect(ac.destination);
-      gain.gain.setValueAtTime(0.45, ac.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 3.0);
-      osc.start();
-      osc.stop(ac.currentTime + 3.1);
+      var buf = guitarBuffer(parseFloat(btn.dataset.hz));
+      var src = ac.createBufferSource();
+      src.buffer = buf;
+      src.connect(ac.destination);
+      src.start();
 
-      curOsc = osc;
+      curSrc = src;
       curBtn = btn;
       btn.classList.add('playing');
-      osc.onended = function() {
+      src.onended = function() {
         if (curBtn === btn) { btn.classList.remove('playing'); curBtn = null; }
       };
     });
