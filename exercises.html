@@ -221,6 +221,12 @@ const SHAPE_ROOT_STR = { echo: 0, alpha: 1, delta: 2 };
 const SHAPE_COLORS   = { echo: '#4a9eff', alpha: '#ff4a4a', delta: '#4aff7a' };
 const SHAPE_LABELS   = { echo: 'Echo', alpha: 'Alpha', delta: 'Delta' };
 
+const SHAPE_CONFIG = {
+  echo:  { anchor: 0, strings: [0,1,2,3,4,5], win: 2 },
+  alpha: { anchor: 1, strings: [1,2,3,4,5],   win: 2 },
+  delta: { anchor: 2, strings: [2,3,4,5],      win: 3 },
+};
+
 const NOTES   = ['A','Bb','B','C','C#','D','Eb','E','F','F#','G','Ab'];
 const NOTE_PC = { A:9, Bb:10, B:11, C:0, 'C#':1, D:2, Eb:3, E:4, F:5, 'F#':6, G:7, Ab:8 };
 
@@ -241,16 +247,13 @@ let gs = {
 };
 
 function computeGripWindow(shape, rootPc) {
-  const rootStr  = SHAPE_ROOT_STR[shape];
-  const openPc   = STR_OPEN[rootStr];
-  let rootFret   = (rootPc - openPc + 12) % 12;
-  if (rootFret === 0) rootFret = 12; // prefer 12th-fret position over open
-  const gripStart = Math.max(0, rootFret - 1);
-  const gripEnd   = Math.min(12, gripStart + 4);
-  return { gripStart, gripEnd };
+  const { anchor, win } = SHAPE_CONFIG[shape];
+  const anchorFret = (rootPc - STR_OPEN[anchor] + 12) % 12;
+  return { gripStart: anchorFret, gripEnd: Math.min(12, anchorFret + win) };
 }
 
 function isGripTone(f, si) {
+  if (!SHAPE_CONFIG[gs.shape].strings.includes(si)) return false;
   if (f < gs.gripStart || f > gs.gripEnd) return false;
   const intv = ((STR_OPEN[si] + f) % 12 - gs.rootPc + 12) % 12;
   return gs.intervals.includes(intv);
