@@ -217,15 +217,8 @@ h1 {
 const STR_OPEN  = [4, 9, 2, 7, 11, 4]; // E A D G B e
 const STR_THICK = [3.5, 2.7, 1.9, 1.3, 0.9, 0.5];
 
-const SHAPE_ROOT_STR = { echo: 0, alpha: 1, delta: 2 };
-const SHAPE_COLORS   = { echo: '#4a9eff', alpha: '#ff4a4a', delta: '#4aff7a' };
-const SHAPE_LABELS   = { echo: 'Echo', alpha: 'Alpha', delta: 'Delta' };
-
-const SHAPE_CONFIG = {
-  echo:  { anchor: 0, strings: [0,1,2,3,4,5], win: 2 },
-  alpha: { anchor: 1, strings: [1,2,3,4,5],   win: 2 },
-  delta: { anchor: 2, strings: [2,3,4,5],      win: 3 },
-};
+const SHAPE_COLORS = { echo: '#4a9eff', alpha: '#ff4a4a', delta: '#4aff7a' };
+const SHAPE_LABELS = { echo: 'Echo', alpha: 'Alpha', delta: 'Delta' };
 
 const NOTES   = ['A','Bb','B','C','C#','D','Eb','E','F','F#','G','Ab'];
 const NOTE_PC = { A:9, Bb:10, B:11, C:0, 'C#':1, D:2, Eb:3, E:4, F:5, 'F#':6, G:7, Ab:8 };
@@ -239,36 +232,129 @@ const QUALITIES = [
   { s: 'sus4', iv: [0,5,7]    },
 ];
 
-let gs = {
-  active: false, key: null, qual: null, shape: null,
-  rootPc: null, intervals: null,
-  gripStart: 0, gripEnd: 4,
-  checked: false, hasOffGrip: false, sel: new Set(), pinKey: null,
+// Maps exercise quality strings → main-page quality names used in getShapeNotes
+const QUAL_MAP = { '':'major', 'm':'minor', '7':'7', 'maj7':'Maj7', 'm7':'m7', 'sus4':'sus4' };
+
+// Exact intervals from main page (sus4 uses [0,4,7] + sus-swap logic, not [0,5,7])
+const QUALITY_INTERVALS_MAIN = {
+  major:[0,4,7], minor:[0,3,7], '7':[0,4,7,10],
+  Maj7:[0,4,7,11], m7:[0,3,7,10], sus4:[0,4,7],
+};
+const TONE_NAMES_MAIN = {
+  0:'root', 2:'ninth', 3:'minor-third', 4:'third', 5:'fourth',
+  7:'fifth', 9:'sixth', 10:'seventh', 11:'maj7',
 };
 
-function computeGripWindow(shape, rootPc) {
-  const { anchor, win } = SHAPE_CONFIG[shape];
-  const anchorFret = (rootPc - STR_OPEN[anchor] + 12) % 12;
-  return { gripStart: anchorFret, gripEnd: Math.min(12, anchorFret + win) };
+// Mirrors the config object inside getShapeNotes on the main page
+const GRIP_CONFIG = {
+  echo:  { anchor:0, strings:[0,1,2,3,4,5], win:2, upper:[3,4,5] },
+  alpha: { anchor:1, strings:[1,2,3,4,5],   win:2, upper:[3,4,5] },
+  delta: { anchor:2, strings:[2,3,4,5],      win:3, upper:[5]     },
+};
+
+function findFrets(si, pc) {
+  const out = [];
+  for (let f = 0; f <= 12; f++) if ((STR_OPEN[si] + f) % 12 === pc) out.push(f);
+  return out;
+}
+
+// Mirrors getShapeNotes() from the main page exactly, returns a Set of "fret-si" keys
+function computeGripTones(shapeName, qualStr, rootPc) {
+  const quality   = QUAL_MAP[qualStr] || 'major';
+  const r         = rootPc % 12;
+  const intervals = QUALITY_INTERVALS_MAIN[quality];
+  const { anchor, strings, win, upper } = GRIP_CONFIG[shapeName];
+  const anchorFret = findFrets(anchor, r)[0];
+  if (anchorFret === undefined) return new Set();
+
+  const isSus             = quality === 'sus4';
+  const suppressUpperRoot = quality === '7';
+  const echoSlideback     = shapeName === 'echo' && quality === 'Maj7';
+  const dots = [];
+
+  strings.forEach(s => {
+    for (let fo = 0; fo <= win; fo++) {
+      let f = anchorFret + fo;
+      if (f > 12) f -= 12;
+      if (f > 12) continue;
+      const noteAtFret = (STR_OPEN[s] + f) % 12;
+      intervals.forEach(interval => {
+        if (noteAtFret !== (r + interval) % 12) return;
+        // Delta: thirds only on string 5
+        if (shapeName === 'delta' && (interval === 4 || interval === 3) && s !== 5) return;
+        const isThird     = interval === 4 || interval === 3;
+        const isUpperStr  = upper.includes(s);
+        const isUpperRoot = interval === 0 && isUpperStr && s !== anchor;
+        if (suppressUpperRoot && isUpperRoot && fo > 0) return;
+        if (echoSlideback && interval === 11) return;
+        if (isSus && isThird && isUpperStr) {
+          const sf = f + 1 > 12 ? f - 11 : f + 1;
+          dots.push({ s, fret: sf, t: 'fourth', isRoot: false });
+        } else {
+          const t = TONE_NAMES_MAIN[interval] || 'tone';
+          dots.push({ s, fret: f, t, isRoot: interval === 0 });
+          if (f === 12) dots.push({ s, fret:  0, t, isRoot: interval === 0 });
+          if (f === 0)  dots.push({ s, fret: 12, t, isRoot: interval === 0 });
+        }
+      });
+    }
+  });
+
+  // Echo Maj7: add maj7 tone on high e separately
+  if (echoSlideback) {
+    const target = (r + 11) % 12;
+    for (let f2 = 0; f2 <= 12; f2++) {
+      if ((STR_OPEN[5] + f2) % 12 === target) {
+        dots.push({ s: 5, fret: f2, t: 'maj7', isRoot: false });
+        break;
+      }
+    }
+  }
+
+  // Deduplicate: one dot per string — mirrors main page deduplication logic exactly
+  const byStr = {};
+  dots.forEach(d => { (byStr[d.s] = byStr[d.s] || []).push(d); });
+  const priority = ['sixth','ninth','seventh','maj7','fourth','fifth','minor-third','third','root'];
+  const result = new Set();
+  Object.entries(byStr).forEach(([sStr, group]) => {
+    const s = parseInt(sStr);
+    let pick;
+    if (group.length === 1) {
+      pick = group[0];
+    } else if (s === anchor) {
+      pick = group.find(d => d.isRoot) || group[0];
+    } else {
+      group.sort((a, b) => {
+        const ai = priority.indexOf(a.t), bi = priority.indexOf(b.t);
+        return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi);
+      });
+      pick = group[0];
+    }
+    result.add(`${pick.fret}-${s}`);
+  });
+  return result;
 }
 
 function isGripTone(f, si) {
-  if (!SHAPE_CONFIG[gs.shape].strings.includes(si)) return false;
-  if (f < gs.gripStart || f > gs.gripEnd) return false;
-  const intv = ((STR_OPEN[si] + f) % 12 - gs.rootPc + 12) % 12;
-  return gs.intervals.includes(intv);
+  return gs.gripTones.has(`${f}-${si}`);
 }
+
+let gs = {
+  active: false, key: null, qual: null, shape: null,
+  rootPc: null, intervals: null,
+  gripTones: new Set(),
+  checked: false, hasOffGrip: false, sel: new Set(), pinKey: null,
+};
 
 function newChallenge() {
   const key   = gs.pinKey || NOTES[Math.floor(Math.random() * 12)];
   const qual  = QUALITIES[Math.floor(Math.random() * QUALITIES.length)];
   const shape = ['echo','alpha','delta'][Math.floor(Math.random() * 3)];
   const rootPc = NOTE_PC[key];
-  const { gripStart, gripEnd } = computeGripWindow(shape, rootPc);
   gs = {
     active: true, key, qual, shape,
     rootPc, intervals: qual.iv,
-    gripStart, gripEnd,
+    gripTones: computeGripTones(shape, qual.s, rootPc),
     checked: false, hasOffGrip: false, sel: new Set(), pinKey: gs.pinKey,
   };
   document.getElementById('roundResult').textContent = '';
@@ -287,10 +373,10 @@ function checkAnswer() {
   gs.checked = true;
   let correct = 0, wrong = 0, offGrip = 0;
   gs.sel.forEach(k => {
-    const [f, si] = k.split('-').map(Number);
-    if (isGripTone(f, si)) {
+    if (gs.gripTones.has(k)) {
       correct++;
     } else {
+      const [f, si] = k.split('-').map(Number);
       const intv = ((STR_OPEN[si] + f) % 12 - gs.rootPc + 12) % 12;
       gs.intervals.includes(intv) ? offGrip++ : wrong++;
     }
