@@ -61,18 +61,22 @@ function guitarBuffer(freq) {
   var N = Math.round(sr / freq);
   var dl = new Float32Array(N);
 
-  // Physical pluck: triangular displacement at 15% from bridge
-  // Gives 1/n² harmonic rolloff; small noise adds pick texture
+  // Pure triangular pluck at 15% from bridge — no noise
   var pp = Math.round(N * 0.15);
   for (var i = 0; i < N; i++) {
-    dl[i] = (i < pp ? i / pp : (N - i) / (N - pp)) + 0.07 * (Math.random() * 2 - 1);
+    dl[i] = i < pp ? i / pp : (N - i) / (N - pp);
   }
+  // Subtract DC so the delay line is zero-mean (kills hum)
+  var mean = 0;
+  for (var i = 0; i < N; i++) mean += dl[i];
+  mean /= N;
+  for (var i = 0; i < N; i++) dl[i] -= mean;
 
-  // Per-sample decay: T60 ~4s (low E) tapering to ~2.5s (high e)
+  // Per-sample decay: T60 ~4s (low E) to ~2.5s (high e)
   var T60 = 2.5 + 1.5 * Math.max(0, 1 - freq / 350);
   var decay = Math.exp(-6.9 / (sr * T60));
 
-  // K-S loop: y[n] = decay * avg(y[n-N], y[n-N-1])
+  // K-S loop
   for (var i = 0; i < len; i++) {
     var p = i % N, q = (i - 1 + N) % N;
     var y = decay * 0.5 * (dl[p] + dl[q]);
@@ -80,18 +84,14 @@ function guitarBuffer(freq) {
     ch[i] = y;
   }
 
-  // Pick transient: 3ms sharp noise burst at onset
-  var pa = 0.15, pd = Math.exp(-1 / (sr * 0.0008)), pl = Math.floor(sr * 0.003);
-  for (var i = 0; i < pl; i++) { ch[i] += (Math.random() * 2 - 1) * pa; pa *= pd; }
-
-  // DC block (prevents low-frequency drift in K-S)
-  var hb = 1 - 2 * Math.PI * 8 / sr, hp = 0, hx = 0;
-  for (var i = 0; i < len; i++) { var x = ch[i]; hp = x - hx + hb * hp; hx = x; ch[i] = hp; }
-
   // Normalize to 0.7 peak
   var peak = 0;
   for (var i = 0; i < Math.min(N * 10, len); i++) { var a = Math.abs(ch[i]); if (a > peak) peak = a; }
   if (peak > 0.001) { var sc = 0.7 / peak; for (var i = 0; i < len; i++) ch[i] *= sc; }
+
+  // 3ms fade-in (DC offset from zero-centered triangle causes abrupt start)
+  var fi = Math.floor(sr * 0.003);
+  for (var i = 0; i < fi; i++) ch[i] *= i / fi;
 
   // 60ms fade-out
   var fo = Math.floor(sr * 0.06);
