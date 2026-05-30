@@ -15,46 +15,27 @@ body { color: #f0ede8; font-family: 'Share Tech Mono', monospace; line-height: 1
 .back-link:hover { color: #ffc85c; border-color: rgba(245,166,35,0.5); box-shadow: 0 0 12px rgba(245,166,35,0.2); }
 h1 { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #f5a623; text-shadow: 0 0 16px rgba(245,166,35,0.4); margin: 0 0 8px 0; }
 .subtitle { font-size: 0.78rem; color: rgba(240,237,232,0.42); margin: 0 0 44px; letter-spacing: 0.04em; }
-
 .ref-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,166,35,0.5); margin-bottom: 16px; }
-.strings-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
+.strings-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 .str-btn {
-  width: 68px; height: 68px; border-radius: 50%; background: rgba(245,166,35,0.06);
-  border: 1.5px solid rgba(245,166,35,0.26); color: #f5a623;
-  font-family: 'Space Mono', monospace; font-weight: 700;
+  width: 72px; height: 72px; border-radius: 50%;
+  background: rgba(245,166,35,0.06);
+  border: 1.5px solid rgba(245,166,35,0.26);
+  color: #f5a623; font-family: 'Space Mono', monospace; font-weight: 700;
   cursor: pointer; transition: all 0.2s ease;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 2px; line-height: 1; padding: 0;
 }
-.str-btn .sn { font-size: 1.05rem; color: #4aff7a; }
+.str-btn .sn { font-size: 1.1rem; color: #4aff7a; }
 .str-btn .sf { font-size: 0.46rem; opacity: 0.48; letter-spacing: 0.03em; }
 .str-btn:hover { background: rgba(245,166,35,0.13); border-color: rgba(245,166,35,0.52); box-shadow: 0 0 14px rgba(245,166,35,0.22); }
-.str-btn.playing { background: rgba(245,166,35,0.19); border-color: rgba(245,166,35,0.85); box-shadow: 0 0 22px rgba(245,166,35,0.36); }
-
-.mic-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 36px; }
-.mic-btn { font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: #a8d8ea; background: none; border: 1px solid rgba(168,216,234,0.28); border-radius: 2rem; padding: 0.55rem 1.8rem; cursor: pointer; transition: all 0.3s ease; }
-.mic-btn:hover { border-color: rgba(168,216,234,0.52); box-shadow: 0 0 12px rgba(168,216,234,0.18); }
-.mic-btn.on { background: rgba(168,216,234,0.08); border-color: rgba(168,216,234,0.7); box-shadow: 0 0 16px rgba(168,216,234,0.26); }
-.mic-msg { font-size: 0.63rem; color: rgba(240,237,232,0.3); letter-spacing: 0.1em; min-height: 1em; }
-
-.tuner-panel { display: none; flex-direction: column; align-items: center; padding-top: 8px; }
-.tuner-panel.show { display: flex; }
-.tnote { font-family: 'Space Mono', monospace; font-size: 4rem; font-weight: 700; letter-spacing: 0.04em; color: #f5a623; text-align: center; line-height: 1; margin-bottom: 6px; min-height: 1.1em; transition: color 0.15s, text-shadow 0.15s; }
-.tnote.green { color: #4aff7a; text-shadow: 0 0 20px rgba(74,255,122,0.45); }
-.tcents { font-family: 'Space Mono', monospace; font-size: 0.88rem; letter-spacing: 0.08em; color: rgba(245,166,35,0.7); text-align: center; margin-bottom: 22px; min-height: 1.3em; transition: color 0.15s; }
-.tcents.green { color: #4aff7a; }
-.gauge-outer { width: 100%; max-width: 320px; }
-
-@keyframes blink { 0%,100%{opacity:0.25} 50%{opacity:0.7} }
-.listening { font-size: 0.62rem; color: rgba(240,237,232,0.28); letter-spacing: 0.14em; margin-top: 14px; animation: blink 2.2s ease-in-out infinite; }
-
+.str-btn.playing { background: rgba(74,255,122,0.1); border-color: rgba(74,255,122,0.7); box-shadow: 0 0 22px rgba(74,255,122,0.35); }
 @media (max-width: 520px) {
   h1 { font-size: 1.1rem; }
   .page { padding: 24px 16px 60px; }
-  .str-btn { width: 52px; height: 52px; }
+  .str-btn { width: 56px; height: 56px; }
   .str-btn .sn { font-size: 0.9rem; }
-  .strings-row { gap: 8px; }
-  .tnote { font-size: 3.2rem; }
+  .strings-row { gap: 10px; }
 }
 </style>
 </head>
@@ -62,8 +43,7 @@ h1 { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; 
 <div class="page">
   <a href="index.html" class="back-link">&#8592; Back to Map</a>
   <h1>Tuner</h1>
-  <p class="subtitle">Tap a string to hear its reference pitch. Use the mic for live tuning.</p>
-
+  <p class="subtitle">Tap a string to hear its reference pitch.</p>
   <div class="ref-label">Reference Tones</div>
   <div class="strings-row">
     <button class="str-btn" data-hz="82.41"  onclick="playRef(this)"><span class="sn">E</span><span class="sf">82 Hz</span></button>
@@ -73,47 +53,8 @@ h1 { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; 
     <button class="str-btn" data-hz="246.94" onclick="playRef(this)"><span class="sn">B</span><span class="sf">247 Hz</span></button>
     <button class="str-btn" data-hz="329.63" onclick="playRef(this)"><span class="sn">e</span><span class="sf">330 Hz</span></button>
   </div>
-
-  <div class="mic-wrap">
-    <button class="mic-btn" id="micBtn" onclick="toggleMic()">Use Mic</button>
-    <span class="mic-msg" id="micMsg"></span>
-  </div>
-
-  <div class="tuner-panel" id="tunerPanel">
-    <div class="tnote" id="tNote">—</div>
-    <div class="tcents" id="tCents">&nbsp;</div>
-    <div class="gauge-outer">
-      <!--
-        Gauge arc: center (150,145), radius 120, spans -60° to +60° clockwise from up.
-        Flat end (θ=-60°): (46.1, 85).  Sharp end (θ=+60°): (253.9, 85).
-        Short 120° arc through top (150,25): sweep=1 (CW in SVG), large-arc=0.
-      -->
-      <svg viewBox="0 0 300 160" width="100%" xmlns="http://www.w3.org/2000/svg">
-        <!-- Background arc -->
-        <path d="M 46.1 85 A 120 120 0 0 1 253.9 85" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="3" stroke-linecap="round"/>
-        <!-- In-tune zone (±15° = ±12.5 cents visual band) -->
-        <path d="M 118.9 29.1 A 120 120 0 0 1 181.1 29.1" fill="none" stroke="rgba(74,255,122,0.18)" stroke-width="10" stroke-linecap="round"/>
-        <!-- Tick: centre (in-tune) -->
-        <line x1="150" y1="38" x2="150" y2="25" stroke="rgba(255,255,255,0.28)" stroke-width="1.5"/>
-        <!-- Ticks: ±30° (≈ ±25 cents) -->
-        <line x1="96.5" y1="52.4" x2="90" y2="41.1" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"/>
-        <line x1="203.5" y1="52.4" x2="210" y2="41.1" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"/>
-        <!-- Flat / Sharp labels -->
-        <text x="30" y="100" font-family="Space Mono,monospace" font-size="8" fill="rgba(245,166,35,0.32)" text-anchor="middle">flat</text>
-        <text x="270" y="100" font-family="Space Mono,monospace" font-size="8" fill="rgba(245,166,35,0.32)" text-anchor="middle">sharp</text>
-        <!-- Needle -->
-        <line id="gNeedle" x1="150" y1="145" x2="150" y2="27" stroke="rgba(245,166,35,0.65)" stroke-width="2" stroke-linecap="round"/>
-        <!-- Pivot -->
-        <circle id="gPivot" cx="150" cy="145" r="5" fill="#f5a623"/>
-      </svg>
-    </div>
-    <span class="listening">Listening&#8230;</span>
-  </div>
 </div>
-
 <script>
-// ── Reference tones ──────────────────────────────────────────────────
-// Create a fresh AudioContext per click — most reliable across browsers/iOS.
 var refBtn = null, refOsc = null, refCtx = null;
 
 function playRef(btn) {
@@ -122,175 +63,31 @@ function playRef(btn) {
   if (refBtn) refBtn.classList.remove('playing');
 
   var ctx = new (window.AudioContext || window.webkitAudioContext)();
-  var osc = ctx.createOscillator();
-  var gain = ctx.createGain();
-  osc.type = 'triangle';
-  osc.frequency.value = parseFloat(btn.dataset.hz);
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  gain.gain.setValueAtTime(0.4, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 3.0);
-  osc.start();
-  osc.stop(ctx.currentTime + 3.1);
 
-  refOsc = osc; refCtx = ctx; refBtn = btn;
-  btn.classList.add('playing');
-  osc.onended = function() {
-    if (refBtn === btn) { refBtn = null; btn.classList.remove('playing'); }
-    try { ctx.close(); } catch(e) {}
-  };
-}
-
-// ── Mic / live tuner ─────────────────────────────────────────────────
-// Separate AudioContext so playback and mic never share state.
-var micCtx = null;
-var micActive = false, micStream = null, analyser = null, micSrc = null, rafId = null;
-var pitchBuf = [];
-
-var NOTES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
-
-function hzToInfo(hz) {
-  if (hz < 55 || hz > 1500) return null;
-  var midi = 12 * Math.log2(hz / 440) + 69;
-  var m = Math.round(midi);
-  var cents = Math.round((midi - m) * 100);
-  var note = NOTES[((m % 12) + 12) % 12];
-  var octave = Math.floor(m / 12) - 1;
-  return { label: note + octave, cents: cents };
-}
-
-function detectHz(buf, rate) {
-  var n = buf.length, half = n >> 1;
-  var rms = 0;
-  for (var i = 0; i < n; i++) rms += buf[i] * buf[i];
-  if (Math.sqrt(rms / n) < 0.006) return -1;
-
-  var corr = new Float32Array(half);
-  for (var tau = 0; tau < half; tau++) {
-    var d = 0;
-    for (var i = 0; i < half; i++) d += Math.abs(buf[i] - buf[i + tau]);
-    corr[tau] = 1 - d / half;
+  function start() {
+    var osc  = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = parseFloat(btn.dataset.hz);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    gain.gain.setValueAtTime(0.45, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 3.0);
+    osc.start();
+    osc.stop(ctx.currentTime + 3.1);
+    refOsc = osc; refCtx = ctx; refBtn = btn;
+    btn.classList.add('playing');
+    osc.onended = function() {
+      if (refBtn === btn) { refBtn = null; btn.classList.remove('playing'); }
+      try { ctx.close(); } catch(e) {}
+    };
   }
 
-  var t = 1;
-  while (t < half - 1 && corr[t] > corr[t + 1]) t++;
-
-  var bestT = -1, bestC = 0;
-  for (; t < half - 1; t++) {
-    if (corr[t] > corr[t - 1] && corr[t] > corr[t + 1]) {
-      if (corr[t] > 0.8 && corr[t] > bestC) {
-        bestC = corr[t];
-        bestT = t;
-        if (corr[t] > 0.9) break;
-      }
-    }
+  if (ctx.state === 'running') {
+    start();
+  } else {
+    ctx.resume().then(start);
   }
-
-  if (bestT < 1) return -1;
-
-  var c0 = corr[bestT - 1], c1 = corr[bestT], c2 = corr[bestT + 1];
-  var denom = 2 * c1 - c0 - c2;
-  var shift = denom > 0.0001 ? (c2 - c0) / (2 * denom) : 0;
-  return rate / (bestT + shift);
-}
-
-function needlePt(cents) {
-  var c = Math.max(-50, Math.min(50, cents || 0));
-  var th = c * (60 / 50) * Math.PI / 180;
-  return { x: 150 + 117 * Math.sin(th), y: 145 - 117 * Math.cos(th) };
-}
-
-function updateGauge(cents, green) {
-  var pt = needlePt(cents);
-  var needle = document.getElementById('gNeedle');
-  var pivot  = document.getElementById('gPivot');
-  needle.setAttribute('x2', pt.x.toFixed(1));
-  needle.setAttribute('y2', pt.y.toFixed(1));
-  needle.setAttribute('stroke', green ? '#4aff7a' : 'rgba(245,166,35,0.7)');
-  pivot.setAttribute('fill',   green ? '#4aff7a' : '#f5a623');
-}
-
-function loop() {
-  if (!micActive || !analyser || !micCtx) return;
-  var buf = new Float32Array(analyser.fftSize);
-  analyser.getFloatTimeDomainData(buf);
-  var hz = detectHz(buf, micCtx.sampleRate);
-
-  if (hz > 0) {
-    pitchBuf.push(hz);
-    if (pitchBuf.length > 5) pitchBuf.shift();
-    var sorted = pitchBuf.slice().sort(function(a, b) { return a - b; });
-    var median = sorted[Math.floor(sorted.length / 2)];
-    var info = hzToInfo(median);
-    if (info) {
-      var green = Math.abs(info.cents) <= 5;
-      document.getElementById('tNote').textContent = info.label;
-      document.getElementById('tNote').className = 'tnote' + (green ? ' green' : '');
-      document.getElementById('tCents').textContent = (info.cents >= 0 ? '+' : '') + info.cents + '¢';
-      document.getElementById('tCents').className = 'tcents' + (green ? ' green' : '');
-      updateGauge(info.cents, green);
-    }
-  }
-
-  rafId = requestAnimationFrame(loop);
-}
-
-function toggleMic() {
-  micActive ? stopMic() : startMic();
-}
-
-function startMic() {
-  var btn = document.getElementById('micBtn');
-  var msg = document.getElementById('micMsg');
-
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    msg.textContent = 'Mic unavailable (HTTPS required).';
-    return;
-  }
-
-  // Create mic AudioContext in this user-gesture handler (required by browsers)
-  if (!micCtx || micCtx.state === 'closed') {
-    micCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-
-  msg.textContent = 'Requesting access…';
-
-  // Resume the context first, then request mic, then wire up analyser
-  var resumeP = micCtx.state === 'running' ? Promise.resolve() : micCtx.resume();
-  resumeP
-    .then(function() {
-      return navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-    })
-    .then(function(stream) {
-      micStream = stream;
-      micSrc    = micCtx.createMediaStreamSource(stream);
-      analyser  = micCtx.createAnalyser();
-      analyser.fftSize = 2048;
-      analyser.smoothingTimeConstant = 0;
-      micSrc.connect(analyser);
-      micActive = true;
-      btn.textContent = 'Mic On';
-      btn.classList.add('on');
-      msg.textContent = '';
-      document.getElementById('tunerPanel').classList.add('show');
-      rafId = requestAnimationFrame(loop);
-    })
-    .catch(function(err) {
-      console.error('Mic error:', err);
-      msg.textContent = 'Mic access denied.';
-    });
-}
-
-function stopMic() {
-  micActive = false;
-  if (rafId) cancelAnimationFrame(rafId);
-  if (micStream) micStream.getTracks().forEach(function(t) { t.stop(); });
-  if (micSrc) { try { micSrc.disconnect(); } catch(e) {} }
-  micStream = null; micSrc = null; analyser = null;
-  pitchBuf = [];
-  document.getElementById('micBtn').textContent = 'Use Mic';
-  document.getElementById('micBtn').classList.remove('on');
-  document.getElementById('tunerPanel').classList.remove('show');
 }
 </script>
 </body>
