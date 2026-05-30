@@ -112,42 +112,38 @@ h1 { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; 
 </div>
 
 <script>
-var audioCtx = null;
-var activeOsc = null;
-var activeBtn = null;
-
-function getCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  return audioCtx;
-}
+// ── Reference tones ──────────────────────────────────────────────────
+// Create a fresh AudioContext per click — most reliable across browsers/iOS.
+var refBtn = null, refOsc = null, refCtx = null;
 
 function playRef(btn) {
-  if (activeOsc) { try { activeOsc.stop(0); } catch(e) {} }
-  if (activeBtn) activeBtn.classList.remove('playing');
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  var ready = audioCtx.state === 'running' ? Promise.resolve() : audioCtx.resume();
-  ready.then(function() {
-    var c = audioCtx;
-    var osc = c.createOscillator();
-    var g = c.createGain();
-    osc.type = 'triangle';
-    osc.frequency.value = parseFloat(btn.dataset.hz);
-    osc.connect(g);
-    g.connect(c.destination);
-    g.gain.setValueAtTime(0.42, c.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 3.2);
-    osc.start();
-    osc.stop(c.currentTime + 3.3);
-    activeOsc = osc;
-    activeBtn = btn;
-    btn.classList.add('playing');
-    osc.onended = function() {
-      if (activeBtn === btn) { btn.classList.remove('playing'); activeBtn = null; }
-    };
-  });
+  if (refOsc) { try { refOsc.stop(); } catch(e) {} }
+  if (refCtx) { try { refCtx.close(); } catch(e) {} }
+  if (refBtn) refBtn.classList.remove('playing');
+
+  var ctx = new (window.AudioContext || window.webkitAudioContext)();
+  var osc = ctx.createOscillator();
+  var gain = ctx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.value = parseFloat(btn.dataset.hz);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  gain.gain.setValueAtTime(0.4, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 3.0);
+  osc.start();
+  osc.stop(ctx.currentTime + 3.1);
+
+  refOsc = osc; refCtx = ctx; refBtn = btn;
+  btn.classList.add('playing');
+  osc.onended = function() {
+    if (refBtn === btn) { refBtn = null; btn.classList.remove('playing'); }
+    try { ctx.close(); } catch(e) {}
+  };
 }
 
+// ── Mic / live tuner ─────────────────────────────────────────────────
+// Separate AudioContext so playback and mic never share state.
+var micCtx = null;
 var micActive = false, micStream = null, analyser = null, micSrc = null, rafId = null;
 var pitchBuf = [];
 
@@ -176,11 +172,9 @@ function detectHz(buf, rate) {
     corr[tau] = 1 - d / half;
   }
 
-  // Slide past the trivial peak at tau=0
   var t = 1;
   while (t < half - 1 && corr[t] > corr[t + 1]) t++;
 
-  // Find first significant local maximum
   var bestT = -1, bestC = 0;
   for (; t < half - 1; t++) {
     if (corr[t] > corr[t - 1] && corr[t] > corr[t + 1]) {
@@ -194,7 +188,6 @@ function detectHz(buf, rate) {
 
   if (bestT < 1) return -1;
 
-  // Sub-sample parabolic interpolation
   var c0 = corr[bestT - 1], c1 = corr[bestT], c2 = corr[bestT + 1];
   var denom = 2 * c1 - c0 - c2;
   var shift = denom > 0.0001 ? (c2 - c0) / (2 * denom) : 0;
@@ -210,35 +203,31 @@ function needlePt(cents) {
 function updateGauge(cents, green) {
   var pt = needlePt(cents);
   var needle = document.getElementById('gNeedle');
-  var pivot = document.getElementById('gPivot');
+  var pivot  = document.getElementById('gPivot');
   needle.setAttribute('x2', pt.x.toFixed(1));
   needle.setAttribute('y2', pt.y.toFixed(1));
-  var col = green ? '#4aff7a' : 'rgba(245,166,35,0.7)';
-  needle.setAttribute('stroke', col);
-  pivot.setAttribute('fill', green ? '#4aff7a' : '#f5a623');
+  needle.setAttribute('stroke', green ? '#4aff7a' : 'rgba(245,166,35,0.7)');
+  pivot.setAttribute('fill',   green ? '#4aff7a' : '#f5a623');
 }
 
 function loop() {
-  if (!micActive || !analyser) return;
+  if (!micActive || !analyser || !micCtx) return;
   var buf = new Float32Array(analyser.fftSize);
   analyser.getFloatTimeDomainData(buf);
-  var hz = detectHz(buf, audioCtx.sampleRate);
+  var hz = detectHz(buf, micCtx.sampleRate);
 
   if (hz > 0) {
     pitchBuf.push(hz);
     if (pitchBuf.length > 5) pitchBuf.shift();
-    // Median smoothing
     var sorted = pitchBuf.slice().sort(function(a, b) { return a - b; });
     var median = sorted[Math.floor(sorted.length / 2)];
     var info = hzToInfo(median);
     if (info) {
       var green = Math.abs(info.cents) <= 5;
-      var noteEl = document.getElementById('tNote');
-      var centsEl = document.getElementById('tCents');
-      noteEl.textContent = info.label;
-      noteEl.className = 'tnote' + (green ? ' green' : '');
-      centsEl.textContent = (info.cents >= 0 ? '+' : '') + info.cents + '¢';
-      centsEl.className = 'tcents' + (green ? ' green' : '');
+      document.getElementById('tNote').textContent = info.label;
+      document.getElementById('tNote').className = 'tnote' + (green ? ' green' : '');
+      document.getElementById('tCents').textContent = (info.cents >= 0 ? '+' : '') + info.cents + '¢';
+      document.getElementById('tCents').className = 'tcents' + (green ? ' green' : '');
       updateGauge(info.cents, green);
     }
   }
@@ -251,16 +240,31 @@ function toggleMic() {
 }
 
 function startMic() {
-  getCtx();
   var btn = document.getElementById('micBtn');
   var msg = document.getElementById('micMsg');
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    msg.textContent = 'Mic unavailable (HTTPS required).';
+    return;
+  }
+
+  // Create mic AudioContext in this user-gesture handler (required by browsers)
+  if (!micCtx || micCtx.state === 'closed') {
+    micCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
   msg.textContent = 'Requesting access…';
 
-  navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+  // Resume the context first, then request mic, then wire up analyser
+  var resumeP = micCtx.state === 'running' ? Promise.resolve() : micCtx.resume();
+  resumeP
+    .then(function() {
+      return navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    })
     .then(function(stream) {
       micStream = stream;
-      micSrc = audioCtx.createMediaStreamSource(stream);
-      analyser = audioCtx.createAnalyser();
+      micSrc    = micCtx.createMediaStreamSource(stream);
+      analyser  = micCtx.createAnalyser();
       analyser.fftSize = 2048;
       analyser.smoothingTimeConstant = 0;
       micSrc.connect(analyser);
@@ -271,21 +275,21 @@ function startMic() {
       document.getElementById('tunerPanel').classList.add('show');
       rafId = requestAnimationFrame(loop);
     })
-    .catch(function() {
+    .catch(function(err) {
+      console.error('Mic error:', err);
       msg.textContent = 'Mic access denied.';
     });
 }
 
 function stopMic() {
   micActive = false;
-  cancelAnimationFrame(rafId);
+  if (rafId) cancelAnimationFrame(rafId);
   if (micStream) micStream.getTracks().forEach(function(t) { t.stop(); });
-  if (micSrc) micSrc.disconnect();
-  micStream = micSrc = analyser = null;
+  if (micSrc) { try { micSrc.disconnect(); } catch(e) {} }
+  micStream = null; micSrc = null; analyser = null;
   pitchBuf = [];
-  var btn = document.getElementById('micBtn');
-  btn.textContent = 'Use Mic';
-  btn.classList.remove('on');
+  document.getElementById('micBtn').textContent = 'Use Mic';
+  document.getElementById('micBtn').classList.remove('on');
   document.getElementById('tunerPanel').classList.remove('show');
 }
 </script>
