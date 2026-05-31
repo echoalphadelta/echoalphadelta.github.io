@@ -369,6 +369,7 @@ border-radius: 2px;
   </div>
   <button class="start-btn hidden" id="playAgainBtn" onclick="startGame()">Play Again</button>
   <button class="start-btn hidden" id="certContinueBtn" onclick="certContinue()">Continue →</button>
+  <button class="start-btn hidden" id="certTryAgainBtn" onclick="certTryAgain()">Try Again</button>
 </div>
 
 <script>
@@ -787,39 +788,88 @@ function showResults() {
   // Clear fretboard after game
   drawFretboard();
 
-  // Certification mode: swap Play Again for Continue
+  // Certification mode: pass = 10/10 AND every answer under 3s
   const certPhase = sessionStorage.getItem('certPhase');
   if (certPhase === '1' || certPhase === '2') {
     document.getElementById('playAgainBtn').classList.add('hidden');
-    document.getElementById('certContinueBtn').classList.remove('hidden');
+    const pass = correctCount === TOTAL_Q && avgTime < 3.0;
+    if (pass) {
+      document.getElementById('certContinueBtn').classList.remove('hidden');
+    } else {
+      document.getElementById('certTryAgainBtn').classList.remove('hidden');
+    }
   }
 }
 
 function certContinue() {
   const phase = sessionStorage.getItem('certPhase');
   if (phase === '1') {
+    // Generate 3 unique random keys for phase 2
+    const all = [0,1,2,3,4,5,6,7,8,9,10,11];
+    for (let i = all.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [all[i], all[j]] = [all[j], all[i]];
+    }
+    sessionStorage.setItem('certPhase2Keys', JSON.stringify(all.slice(0, 3)));
+    sessionStorage.setItem('certPhase2Round', '0');
     sessionStorage.setItem('certPhase', '2');
     location.href = 'trainer.html';
   } else if (phase === '2') {
-    sessionStorage.setItem('certPhase', '3');
-    sessionStorage.setItem('certExercise', '1');
-    location.href = 'exercises.html';
+    const round = parseInt(sessionStorage.getItem('certPhase2Round') || '0');
+    if (round < 2) {
+      sessionStorage.setItem('certPhase2Round', round + 1);
+      location.href = 'trainer.html';
+    } else {
+      sessionStorage.removeItem('certPhase2Keys');
+      sessionStorage.removeItem('certPhase2Round');
+      sessionStorage.setItem('certPhase', '3');
+      sessionStorage.setItem('certExercise', '1');
+      sessionStorage.setItem('certStrikes', '0');
+      location.href = 'exercises.html';
+    }
   }
+}
+
+function certTryAgain() {
+  // Phase stays the same; for phase 2 certPhase2Round stays the same (retry same key)
+  location.href = 'trainer.html';
 }
 
 // Initial blank fretboard on game screen and start screen
 drawFretboard();
 
-// Certification mode startup
+// Certification mode startup — all cert behaviour is gated here; normal visits unaffected
 (function() {
   const phase = sessionStorage.getItem('certPhase');
   if (phase !== '1' && phase !== '2') return;
+
+  // Hide mode toggle so user cannot switch modes during certification
+  document.querySelector('.mode-toggle').style.display = 'none';
+
   const banner = document.getElementById('certBanner');
-  banner.textContent = phase === '1'
-    ? 'Certification · Phase 1 of 3 · Standard'
-    : 'Certification · Phase 2 of 3 · Harmonic Mode';
+
+  if (phase === '1') {
+    banner.textContent = 'Certification · Phase 1 of 3 · Standard · 10/10 under 3s to pass';
+    banner.style.display = 'block';
+    return;
+  }
+
+  // Phase 2: three random keys, one per reload
+  const keys  = JSON.parse(sessionStorage.getItem('certPhase2Keys') || '[]');
+  const round = parseInt(sessionStorage.getItem('certPhase2Round') || '0');
+  const keyName = KEY_NAMES[keys[round]];
+
+  banner.textContent = `Certification · Phase 2 of 3 · Harmonic · Key ${round + 1} of 3: ${keyName} · 10/10 under 3s`;
   banner.style.display = 'block';
-  if (phase === '2') setMode('harmonic');
+
+  // Auto-select the tonic and activate harmonic mode
+  tonicRoot = keys[round];
+  setMode('harmonic');                                        // shows tonic selector
+  document.getElementById('tonicSelector').style.display = 'none'; // hide it — locked
+  if (document.getElementById('harmonicStartInstruction')) {
+    document.getElementById('harmonicStartInstruction').classList.add('hidden');
+  }
+  startGame();  // skip the "Begin" screen
 })();
 
 </script>

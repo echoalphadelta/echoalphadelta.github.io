@@ -199,12 +199,15 @@ h1 {
     <div id="trainerFb"></div>
   </div>
 
-  <div id="certCounter" style="display:none;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(245,166,35,0.65);text-align:center;margin-top:14px;">Exercise <span id="certN">1</span> of 25</div>
+  <div id="certCounter" style="display:none;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(245,166,35,0.65);text-align:center;margin-top:14px;">
+    Exercise <span id="certN">1</span> of 25 &nbsp;·&nbsp; <span id="certStrikeDisplay">○ ○ ○</span>
+  </div>
 
   <div class="trainer-controls">
     <button class="trainer-btn btn-check" id="checkBtn" onclick="checkAnswer()" disabled>Check</button>
     <button class="trainer-btn btn-next" id="newChallengeBtn" onclick="newChallenge()">New Challenge</button>
     <button class="trainer-btn btn-next" id="certNextBtn" style="display:none;" onclick="certNext()">Next Exercise →</button>
+    <button class="trainer-btn btn-next" id="certFailBtn" style="display:none;color:#ff4a4a;border-color:rgba(255,74,74,0.4);" onclick="certFail()">3 Strikes — Try Again</button>
   </div>
 
   <div class="round-result" id="roundResult"></div>
@@ -393,9 +396,18 @@ function checkAnswer() {
   document.getElementById('roundResult').textContent = parts.join(' · ');
   render();
 
-  // Certification mode: show Next Exercise, hide New Challenge
+  // Certification mode: wrong notes = strike; off-grip (silver halo) is not a strike
   if (sessionStorage.getItem('certPhase') === '3') {
     document.getElementById('newChallengeBtn').style.display = 'none';
+    if (wrong > 0) {
+      let strikes = parseInt(sessionStorage.getItem('certStrikes') || '0') + 1;
+      sessionStorage.setItem('certStrikes', strikes);
+      certUpdateStrikes(strikes);
+      if (strikes >= 3) {
+        document.getElementById('certFailBtn').style.display = '';
+        return;
+      }
+    }
     document.getElementById('certNextBtn').style.display = '';
   }
 }
@@ -529,11 +541,18 @@ function render() {
     (gs.checked && gs.hasOffGrip) ? 'block' : 'none';
 }
 
+function certUpdateStrikes(n) {
+  const filled = '◆', empty = '○';
+  document.getElementById('certStrikeDisplay').textContent =
+    [filled.repeat(n), empty.repeat(3 - n)].join(' ').trim().replace(/(.)/g, '$1 ').trim();
+}
+
 function certNext() {
   const n = parseInt(sessionStorage.getItem('certExercise') || '1');
   if (n >= 25) {
     sessionStorage.removeItem('certPhase');
     sessionStorage.removeItem('certExercise');
+    sessionStorage.removeItem('certStrikes');
     location.href = 'certification.html#complete';
   } else {
     sessionStorage.setItem('certExercise', n + 1);
@@ -543,13 +562,22 @@ function certNext() {
   }
 }
 
+function certFail() {
+  sessionStorage.setItem('certExercise', '1');
+  sessionStorage.setItem('certStrikes', '0');
+  location.href = 'exercises.html';
+}
+
 newChallenge();
 
-// Certification mode startup
+// Certification mode startup — gated; normal visits unaffected
 (function() {
   if (sessionStorage.getItem('certPhase') !== '3') return;
   document.getElementById('certCounter').style.display = 'block';
-  document.getElementById('certN').textContent = sessionStorage.getItem('certExercise') || '1';
+  const n = parseInt(sessionStorage.getItem('certExercise') || '1');
+  const s = parseInt(sessionStorage.getItem('certStrikes') || '0');
+  document.getElementById('certN').textContent = n;
+  certUpdateStrikes(s);
   document.getElementById('newChallengeBtn').style.display = 'none';
   newChallenge();
 })();
