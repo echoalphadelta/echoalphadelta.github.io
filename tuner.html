@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tuner — Echo Alpha Delta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+html, body { margin: 0; padding: 0; background: #000; }
+* { box-sizing: border-box; }
+body { color: #f0ede8; font-family: 'Share Tech Mono', monospace; line-height: 1.85; }
+.page { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
+.back-link { display: inline-block; font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #f5a623; text-decoration: none; padding: 0.5rem 1.2rem; border: 1px solid rgba(245,166,35,0.25); border-radius: 2rem; margin-bottom: 40px; transition: all 0.3s ease; }
+.back-link:hover { color: #ffc85c; border-color: rgba(245,166,35,0.5); box-shadow: 0 0 12px rgba(245,166,35,0.2); }
+h1 { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #f5a623; text-shadow: 0 0 16px rgba(245,166,35,0.4); margin: 0 0 8px 0; }
+.subtitle { font-size: 0.78rem; color: rgba(240,237,232,0.42); margin: 0 0 44px; letter-spacing: 0.04em; }
+.ref-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,166,35,0.5); margin-bottom: 16px; }
+.strings-row { display: flex; flex-wrap: nowrap; gap: clamp(4px, 2vw, 14px); justify-content: center; }
+.str-btn {
+  width: clamp(42px, 12vw, 72px); height: clamp(42px, 12vw, 72px);
+  border-radius: 50%; background: rgba(245,166,35,0.06);
+  border: 1.5px solid rgba(245,166,35,0.26);
+  cursor: pointer; transition: all 0.2s ease;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; line-height: 1; padding: 0;
+  font-family: 'Space Mono', monospace; font-weight: 700;
+}
+.str-btn .sn { font-size: clamp(0.72rem, 3.5vw, 1.1rem); color: #4aff7a; }
+.str-btn .sf { font-size: clamp(0.36rem, 1.1vw, 0.46rem); color: rgba(245,166,35,0.5); }
+.str-btn:hover { background: rgba(245,166,35,0.13); border-color: rgba(245,166,35,0.52); box-shadow: 0 0 14px rgba(245,166,35,0.22); }
+.str-btn.playing { background: rgba(245,166,35,0.16); border-color: rgba(245,166,35,0.9); box-shadow: 0 0 24px rgba(245,166,35,0.45); }
+</style>
+</head>
+<body>
+<div class="page">
+  <a href="index.html" class="back-link">&#8592; Back to Map</a>
+  <h1>Tuner</h1>
+  <p class="subtitle">Tap a string to hear its reference pitch.</p>
+  <div class="ref-label">Reference Tones</div>
+  <div class="strings-row">
+    <button class="str-btn" data-hz="82.41" ><span class="sn">E</span><span class="sf">82 Hz</span></button>
+    <button class="str-btn" data-hz="110"   ><span class="sn">A</span><span class="sf">110 Hz</span></button>
+    <button class="str-btn" data-hz="146.83"><span class="sn">D</span><span class="sf">147 Hz</span></button>
+    <button class="str-btn" data-hz="196"   ><span class="sn">G</span><span class="sf">196 Hz</span></button>
+    <button class="str-btn" data-hz="246.94"><span class="sn">B</span><span class="sf">247 Hz</span></button>
+    <button class="str-btn" data-hz="329.63"><span class="sn">E</span><span class="sf">330 Hz</span></button>
+  </div>
+</div>
+<script>
+var ac = null;
+var curSrc = null;
+var curGain = null;
+var curBtn = null;
+var bufCache = {};
+
+function guitarBuffer(freq) {
+  var sr = ac.sampleRate;
+  var len = Math.floor(sr * 6.0);
+  var ab = ac.createBuffer(1, len, sr);
+  var ch = ab.getChannelData(0);
+
+  var N = Math.round(sr / freq);
+  var dl = new Float32Array(N);
+
+  var pp = Math.round(N * 0.15);
+  for (var i = 0; i < N; i++) dl[i] = i < pp ? i / pp : (N - i) / (N - pp);
+  var m = 0;
+  for (var i = 0; i < N; i++) m += dl[i];
+  m /= N;
+  for (var i = 0; i < N; i++) dl[i] -= m;
+
+  // Compensate decay for K-S averaging filter's frequency-dependent loss,
+  // so all strings reach the same T60 at the fundamental
+  var T60 = 6.0;
+  var decay = Math.exp(-6.9 / (sr * T60) - Math.log(Math.cos(Math.PI / N)) / N);
+
+  for (var i = 0; i < len; i++) {
+    var p = i % N, q = (i - 1 + N) % N;
+    var y = decay * 0.5 * (dl[p] + dl[q]);
+    dl[p] = y; ch[i] = y;
+  }
+
+  var peak = 0;
+  for (var i = 0; i < Math.min(N * 10, len); i++) { var a = Math.abs(ch[i]); if (a > peak) peak = a; }
+  if (peak > 0.001) { var sc = 0.65 / peak; for (var i = 0; i < len; i++) ch[i] *= sc; }
+
+  var fi = Math.floor(sr * 0.015);
+  for (var i = 0; i < fi; i++) ch[i] *= 0.5 * (1 - Math.cos(Math.PI * i / fi));
+
+  var fo = Math.floor(sr * 0.06);
+  for (var i = len - fo; i < len; i++) ch[i] *= (len - i) / fo;
+
+  return ab;
+}
+
+document.querySelectorAll('.str-btn').forEach(function(btn) {
+  btn.onclick = function() {
+    if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
+    ac.resume().then(function() {
+      // Smooth fade-out of previous note; no abrupt stop
+      if (curGain) curGain.gain.setTargetAtTime(0, ac.currentTime, 0.008);
+      if (curSrc) { var s = curSrc; curSrc = null; s.stop(ac.currentTime + 0.1); }
+      if (curBtn) { curBtn.classList.remove('playing'); curBtn = null; }
+
+      // Compute buffer once per frequency, cache thereafter
+      var hz = btn.dataset.hz;
+      if (!bufCache[hz]) bufCache[hz] = guitarBuffer(parseFloat(hz));
+
+      var src = ac.createBufferSource();
+      var gain = ac.createGain();
+      src.buffer = bufCache[hz];
+      src.connect(gain);
+      gain.connect(ac.destination);
+      // Schedule 30ms ahead so JS computation finishes before audio begins
+      src.start(ac.currentTime + 0.03);
+
+      curSrc = src;
+      curGain = gain;
+      curBtn = btn;
+      btn.classList.add('playing');
+      src.onended = function() {
+        if (curBtn === btn) { btn.classList.remove('playing'); curBtn = null; }
+      };
+    });
+  };
+});
+</script>
+</body>
+</html>

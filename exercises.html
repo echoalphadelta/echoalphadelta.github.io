@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Exercise — Echo Alpha Delta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+html, body { margin: 0; padding: 0; background: #000 !important; }
+* { box-sizing: border-box; }
+body {
+  color: #f0ede8;
+  font-family: 'Share Tech Mono', monospace;
+  line-height: 1.85;
+}
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+.back-link {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #f5a623;
+  text-decoration: none;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(245,166,35,0.25);
+  border-radius: 2rem;
+  margin-bottom: 40px;
+  transition: all 0.3s ease;
+}
+.back-link:hover {
+  color: #ffc85c;
+  border-color: rgba(245,166,35,0.5);
+  box-shadow: 0 0 12px rgba(245,166,35,0.2);
+}
+h1 {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f5a623;
+  text-shadow: 0 0 16px rgba(245,166,35,0.4), 0 0 40px rgba(245,166,35,0.15);
+  margin: 0 0 12px 0;
+}
+.intro {
+  font-size: 0.88rem;
+  color: #666;
+  margin: 0 0 36px 0;
+}
+
+/* ── Chord prompt ── */
+.chord-prompt { margin-bottom: 20px; }
+.chord-name {
+  font-family: 'Space Mono', monospace;
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+}
+.prompt-key  { color: #f0ede8; }
+.prompt-qual { color: #f5a623; }
+.prompt-shape {
+  display: block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #444;
+  margin-top: 10px;
+}
+
+/* ── Fretboard ── */
+.fretboard-wrap {
+  margin: 16px 0;
+  background: #080808;
+  border-radius: 8px;
+  border: 1px solid #1a1a1a;
+  padding: 12px 8px 8px;
+}
+
+/* ── Controls ── */
+.trainer-controls { display: flex; gap: 12px; margin: 14px 0 6px; }
+.trainer-btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 11px 24px;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-check {
+  color: #f5a623;
+  border: 1px solid rgba(245,166,35,0.45);
+}
+.btn-check:hover:not(:disabled) {
+  background: rgba(245,166,35,0.08);
+  border-color: rgba(245,166,35,0.8);
+}
+.btn-check:disabled { opacity: 0.22; cursor: default; }
+.btn-next {
+  color: #666;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.btn-next:hover { color: #aaa; border-color: rgba(255,255,255,0.25); }
+
+.round-result {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: #484848;
+  min-height: 1.4em;
+  margin-bottom: 4px;
+}
+
+/* ── Key grid ── */
+.key-pin-hint {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #383838;
+  margin: 36px 0 10px;
+}
+.key-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  max-width: 360px;
+}
+.key-cell {
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 13px 8px;
+  border: 1px solid rgba(245,166,35,0.12);
+  border-radius: 6px;
+  color: #f5a623;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.key-cell:hover { border-color: rgba(245,166,35,0.4); color: #ffc85c; }
+.key-cell.pinned {
+  background: rgba(74,158,255,0.1);
+  border-color: rgba(74,158,255,0.55);
+  color: #4a9eff;
+}
+.random-btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 10px 22px;
+  border-radius: 4px;
+  border: 1px solid rgba(245,166,35,0.3);
+  background: transparent;
+  color: #f5a623;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 18px;
+  display: block;
+}
+.random-btn:hover { background: rgba(245,166,35,0.07); border-color: rgba(245,166,35,0.6); }
+
+@media (max-width: 600px) {
+  .page { padding: 24px 16px 40px; }
+  h1 { font-size: 1.1rem; }
+  .chord-name { font-size: 1.9rem; }
+  .key-grid { max-width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a href="index.html" class="back-link">← Back to Map</a>
+
+  <h1>The Exercise</h1>
+  <p class="intro">Pick the chord tones for the shape and position shown. Select, then check.</p>
+
+  <div class="chord-prompt">
+    <div class="chord-name">
+      <span class="prompt-key" id="pKey">—</span><span class="prompt-qual" id="pQual"></span>
+    </div>
+    <span class="prompt-shape" id="pShape">press new challenge to begin</span>
+  </div>
+
+  <div class="fretboard-wrap">
+    <div id="trainerFb"></div>
+  </div>
+
+  <div id="certCounter" style="display:none;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(245,166,35,0.65);text-align:center;margin-top:14px;">
+    Exercise <span id="certN">1</span> of 25 &nbsp;·&nbsp; <span id="certStrikeDisplay">○ ○ ○</span>
+  </div>
+
+  <div class="trainer-controls">
+    <button class="trainer-btn btn-check" id="checkBtn" onclick="checkAnswer()" disabled>Check</button>
+    <button class="trainer-btn btn-next" id="newChallengeBtn" onclick="newChallenge()">New Challenge</button>
+    <button class="trainer-btn btn-next" id="certNextBtn" style="display:none;" onclick="certNext()">Next Exercise →</button>
+    <button class="trainer-btn btn-next" id="certFailBtn" style="display:none;color:#ff4a4a;border-color:rgba(255,74,74,0.4);" onclick="certFail()">3 Strikes — Try Again</button>
+  </div>
+
+  <div class="round-result" id="roundResult"></div>
+  <div id="gripLegend" style="display:none;margin-top:10px;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.13em;color:#888;padding:8px 12px;border:1px solid rgba(192,192,192,0.15);border-radius:4px;max-width:480px;">
+    <span style="display:inline-block;width:10px;height:10px;border-radius:50%;border:1.5px solid #c0c0c0;box-shadow:0 0 5px rgba(192,192,192,0.4);vertical-align:middle;margin-right:7px;"></span>
+    Not part of this basic shape, but part of this chord
+  </div>
+
+
+</div>
+
+<script>
+const STR_OPEN  = [4, 9, 2, 7, 11, 4]; // E A D G B e
+const STR_THICK = [3.5, 2.7, 1.9, 1.3, 0.9, 0.5];
+
+const SHAPE_COLORS = { echo: '#4a9eff', alpha: '#ff4a4a', delta: '#4aff7a' };
+const SHAPE_LABELS = { echo: 'Echo', alpha: 'Alpha', delta: 'Delta' };
+
+const NOTES   = ['A','Bb','B','C','C#','D','Eb','E','F','F#','G','Ab'];
+const NOTE_PC = { A:9, Bb:10, B:11, C:0, 'C#':1, D:2, Eb:3, E:4, F:5, 'F#':6, G:7, Ab:8 };
+
+const QUALITIES = [
+  { s: '',     iv: [0,4,7]    },
+  { s: 'm',    iv: [0,3,7]    },
+  { s: '7',    iv: [0,4,7,10] },
+  { s: 'maj7', iv: [0,4,7,11] },
+  { s: 'm7',   iv: [0,3,7,10] },
+  { s: 'sus4', iv: [0,5,7]    },
+];
+
+// Maps exercise quality strings → main-page quality names used in getShapeNotes
+const QUAL_MAP = { '':'major', 'm':'minor', '7':'7', 'maj7':'Maj7', 'm7':'m7', 'sus4':'sus4' };
+
+// Exact intervals from main page (sus4 uses [0,4,7] + sus-swap logic, not [0,5,7])
+const QUALITY_INTERVALS_MAIN = {
+  major:[0,4,7], minor:[0,3,7], '7':[0,4,7,10],
+  Maj7:[0,4,7,11], m7:[0,3,7,10], sus4:[0,4,7],
+};
+const TONE_NAMES_MAIN = {
+  0:'root', 2:'ninth', 3:'minor-third', 4:'third', 5:'fourth',
+  7:'fifth', 9:'sixth', 10:'seventh', 11:'maj7',
+};
+
+// Mirrors the config object inside getShapeNotes on the main page
+const GRIP_CONFIG = {
+  echo:  { anchor:0, strings:[0,1,2,3,4,5], win:2, upper:[3,4,5] },
+  alpha: { anchor:1, strings:[1,2,3,4,5],   win:2, upper:[3,4,5] },
+  delta: { anchor:2, strings:[2,3,4,5],      win:3, upper:[5]     },
+};
+
+function findFrets(si, pc) {
+  const out = [];
+  for (let f = 0; f <= 12; f++) if ((STR_OPEN[si] + f) % 12 === pc) out.push(f);
+  return out;
+}
+
+// Mirrors getShapeNotes() from the main page exactly, returns a Set of "fret-si" keys
+function computeGripTones(shapeName, qualStr, rootPc) {
+  const quality   = QUAL_MAP[qualStr] || 'major';
+  const r         = rootPc % 12;
+  const intervals = QUALITY_INTERVALS_MAIN[quality];
+  const { anchor, strings, win, upper } = GRIP_CONFIG[shapeName];
+  const anchorFret = findFrets(anchor, r)[0];
+  if (anchorFret === undefined) return new Set();
+
+  const isSus             = quality === 'sus4';
+  const suppressUpperRoot = quality === '7';
+  const echoSlideback     = shapeName === 'echo' && quality === 'Maj7';
+  const dots = [];
+
+  strings.forEach(s => {
+    for (let fo = 0; fo <= win; fo++) {
+      let f = anchorFret + fo;
+      if (f > 12) f -= 12;
+      if (f > 12) continue;
+      const noteAtFret = (STR_OPEN[s] + f) % 12;
+      intervals.forEach(interval => {
+        if (noteAtFret !== (r + interval) % 12) return;
+        // Delta: thirds only on string 5
+        if (shapeName === 'delta' && (interval === 4 || interval === 3) && s !== 5) return;
+        const isThird     = interval === 4 || interval === 3;
+        const isUpperStr  = upper.includes(s);
+        const isUpperRoot = interval === 0 && isUpperStr && s !== anchor;
+        if (suppressUpperRoot && isUpperRoot && fo > 0) return;
+        if (echoSlideback && interval === 11) return;
+        if (isSus && isThird && isUpperStr) {
+          const sf = f + 1 > 12 ? f - 11 : f + 1;
+          dots.push({ s, fret: sf, t: 'fourth', isRoot: false });
+        } else {
+          const t = TONE_NAMES_MAIN[interval] || 'tone';
+          dots.push({ s, fret: f, t, isRoot: interval === 0 });
+          if (f === 12) dots.push({ s, fret:  0, t, isRoot: interval === 0 });
+          if (f === 0)  dots.push({ s, fret: 12, t, isRoot: interval === 0 });
+        }
+      });
+    }
+  });
+
+  // Echo Maj7: add maj7 tone on high e separately
+  if (echoSlideback) {
+    const target = (r + 11) % 12;
+    for (let f2 = 0; f2 <= 12; f2++) {
+      if ((STR_OPEN[5] + f2) % 12 === target) {
+        dots.push({ s: 5, fret: f2, t: 'maj7', isRoot: false });
+        break;
+      }
+    }
+  }
+
+  // Deduplicate: one dot per string — mirrors main page deduplication logic exactly
+  const byStr = {};
+  dots.forEach(d => { (byStr[d.s] = byStr[d.s] || []).push(d); });
+  const priority = ['sixth','ninth','seventh','maj7','fourth','fifth','minor-third','third','root'];
+  const result = new Set();
+  Object.entries(byStr).forEach(([sStr, group]) => {
+    const s = parseInt(sStr);
+    let pick;
+    if (group.length === 1) {
+      pick = group[0];
+    } else if (s === anchor) {
+      pick = group.find(d => d.isRoot) || group[0];
+    } else {
+      group.sort((a, b) => {
+        const ai = priority.indexOf(a.t), bi = priority.indexOf(b.t);
+        return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi);
+      });
+      pick = group[0];
+    }
+    result.add(`${pick.fret}-${s}`);
+  });
+  return result;
+}
+
+function isGripTone(f, si) {
+  return gs.gripTones.has(`${f}-${si}`);
+}
+
+let gs = {
+  active: false, key: null, qual: null, shape: null,
+  rootPc: null, intervals: null,
+  gripTones: new Set(),
+  checked: false, hasOffGrip: false, sel: new Set(), pinKey: null,
+};
+
+function newChallenge() {
+  const key   = gs.pinKey || NOTES[Math.floor(Math.random() * 12)];
+  const qual  = QUALITIES[Math.floor(Math.random() * QUALITIES.length)];
+  const shape = ['echo','alpha','delta'][Math.floor(Math.random() * 3)];
+  const rootPc = NOTE_PC[key];
+  gs = {
+    active: true, key, qual, shape,
+    rootPc, intervals: qual.iv,
+    gripTones: computeGripTones(shape, qual.s, rootPc),
+    checked: false, hasOffGrip: false, sel: new Set(), pinKey: gs.pinKey,
+  };
+  document.getElementById('roundResult').textContent = '';
+  document.getElementById('gripLegend').style.display = 'none';
+  render();
+}
+
+function toggleDot(key) {
+  if (!gs.active || gs.checked) return;
+  gs.sel.has(key) ? gs.sel.delete(key) : gs.sel.add(key);
+  renderFb();
+}
+
+function checkAnswer() {
+  if (!gs.active || gs.checked) return;
+  gs.checked = true;
+  let correct = 0, wrong = 0, offGrip = 0;
+  gs.sel.forEach(k => {
+    if (gs.gripTones.has(k)) {
+      correct++;
+    } else {
+      const [f, si] = k.split('-').map(Number);
+      const intv = ((STR_OPEN[si] + f) % 12 - gs.rootPc + 12) % 12;
+      gs.intervals.includes(intv) ? offGrip++ : wrong++;
+    }
+  });
+  gs.hasOffGrip = offGrip > 0;
+  const parts = [];
+  if (correct)  parts.push(`${correct} correct`);
+  if (wrong)    parts.push(`${wrong} wrong`);
+  if (offGrip)  parts.push(`${offGrip} outside grip`);
+  if (!correct && !wrong && !offGrip) parts.push('nothing selected');
+  document.getElementById('roundResult').textContent = parts.join(' · ');
+  render();
+
+  // Certification mode: wrong notes = strike; off-grip (silver halo) is not a strike
+  if (sessionStorage.getItem('certPhase') === '3') {
+    document.getElementById('newChallengeBtn').style.display = 'none';
+    if (wrong > 0) {
+      let strikes = parseInt(sessionStorage.getItem('certStrikes') || '0') + 1;
+      sessionStorage.setItem('certStrikes', strikes);
+      certUpdateStrikes(strikes);
+      if (strikes >= 3) {
+        document.getElementById('certFailBtn').style.display = '';
+        return;
+      }
+    }
+    document.getElementById('certNextBtn').style.display = '';
+  }
+}
+
+function pinKey(el, keyName) {
+  if (gs.pinKey === keyName) {
+    gs.pinKey = null;
+    document.querySelectorAll('.key-cell').forEach(c => c.classList.remove('pinned'));
+  } else {
+    gs.pinKey = keyName;
+    document.querySelectorAll('.key-cell').forEach(c => c.classList.remove('pinned'));
+    el.classList.add('pinned');
+  }
+}
+
+function pickRandom() {
+  const cells = Array.from(document.querySelectorAll('.key-cell'));
+  const idx   = Math.floor(Math.random() * cells.length);
+  cells.forEach(c => c.classList.remove('pinned'));
+  cells[idx].classList.add('pinned');
+  gs.pinKey = NOTES[idx];
+  newChallenge();
+}
+
+function renderSVG() {
+  if (!gs.active) return '';
+
+  const W = 660, H = 310;
+  const ML = 36, MR = 8, MT = 22, MB = 38;
+  const NF = 12;
+  const FW = (W - ML - MR) / NF;  // ~51.3
+  const SH = (H - MT - MB) / 5;   // 50
+
+  const sy  = si => MT + (5 - si) * SH;
+  const fCx = f  => f === 0 ? ML - 16 : ML + (f - 0.5) * FW;
+
+  const clr = SHAPE_COLORS[gs.shape];
+
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" style="touch-action:manipulation;display:block;">`;
+
+  // Nut (extends beyond strings so they appear to cross over it)
+  s += `<line x1="${ML}" y1="${MT - 8}" x2="${ML}" y2="${H - MB + 8}" stroke="#d4cfc8" stroke-width="8"/>`;
+
+  // Fret lines
+  for (let i = 1; i <= NF; i++) {
+    const x = (ML + i * FW).toFixed(1);
+    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H - MB}" stroke="#666" stroke-width="1.5"/>`;
+  }
+
+  // Position markers (cell midpoints)
+  [3,5,7,9].forEach(f => {
+    s += `<circle cx="${fCx(f).toFixed(1)}" cy="${(MT + 2.5 * SH).toFixed(1)}" r="6" fill="#ccc"/>`;
+  });
+  s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT + 1.5 * SH).toFixed(1)}" r="6" fill="#ccc"/>`;
+  s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT + 3.5 * SH).toFixed(1)}" r="6" fill="#ccc"/>`;
+
+  // Strings (all 6) — extend left to cover open-string dot area
+  for (let si = 0; si < 6; si++) {
+    const y = sy(si).toFixed(1);
+    s += `<line x1="8" y1="${y}" x2="${W - MR}" y2="${y}" stroke="#999" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
+  }
+
+  // Fret labels (sparse)
+  [3,5,7,9,12].forEach(f => {
+    s += `<text x="${fCx(f).toFixed(1)}" y="${H - 10}" text-anchor="middle" fill="#666" font-size="10" font-family="monospace">${f}</text>`;
+  });
+
+  // Dots
+  for (let f = 0; f <= 12; f++) {
+    for (let si = 0; si < 6; si++) {
+      const intv        = ((STR_OPEN[si] + f) % 12 - gs.rootPc + 12) % 12;
+      const isChordTone = gs.intervals.includes(intv);
+      const key         = `${f}-${si}`;
+      const isSel       = gs.sel.has(key);
+      const cx = fCx(f).toFixed(1);
+      const cy = sy(si).toFixed(1);
+
+      if (!gs.checked) {
+        s += `<circle cx="${cx}" cy="${cy}" r="10" fill="${isSel ? clr : '#141414'}" stroke="${isSel ? clr : '#484848'}" stroke-width="1.5"/>`;
+        s += `<circle cx="${cx}" cy="${cy}" r="15" fill="none" pointer-events="all" style="cursor:pointer" onclick="toggleDot('${key}')"/>`;
+      } else {
+        const isGrip  = isGripTone(f, si);
+
+        // Amber halo behind all grip-tone dots (correct answer reveal)
+        if (isGrip) {
+          s += `<circle cx="${cx}" cy="${cy}" r="18" fill="none" stroke="rgba(245,166,35,0.12)" stroke-width="6"/>`;
+          s += `<circle cx="${cx}" cy="${cy}" r="13.5" fill="none" stroke="rgba(245,166,35,0.6)" stroke-width="2"/>`;
+        }
+
+        if (isSel && isGrip) {
+          // Correctly selected grip tone — green fill inside amber halo
+          s += `<circle cx="${cx}" cy="${cy}" r="10" fill="#2ecc71" stroke="#2ecc71" stroke-width="1.5"/>`;
+        } else if (isSel && isChordTone) {
+          // Valid chord tone but outside this grip — silver halo
+          s += `<circle cx="${cx}" cy="${cy}" r="18" fill="none" stroke="rgba(192,192,192,0.12)" stroke-width="6"/>`;
+          s += `<circle cx="${cx}" cy="${cy}" r="13.5" fill="none" stroke="rgba(192,192,192,0.6)" stroke-width="2"/>`;
+          s += `<circle cx="${cx}" cy="${cy}" r="10" fill="#141414" stroke="#c0c0c0" stroke-width="1.5"/>`;
+        } else if (isSel) {
+          // Wrong — red
+          s += `<circle cx="${cx}" cy="${cy}" r="10" fill="#e74c3c" stroke="#e74c3c" stroke-width="1.5"/>`;
+        } else if (isGrip) {
+          // Missed grip tone — amber halo already drawn, dim fill
+          s += `<circle cx="${cx}" cy="${cy}" r="10" fill="#141414" stroke="#484848" stroke-width="1"/>`;
+        } else {
+          // Irrelevant
+          s += `<circle cx="${cx}" cy="${cy}" r="9" fill="#0f0f0f" stroke="#1e1e1e" stroke-width="1" opacity="0.3"/>`;
+        }
+      }
+    }
+  }
+
+  s += '</svg>';
+  return s;
+}
+
+function renderFb() {
+  document.getElementById('trainerFb').innerHTML = renderSVG();
+}
+
+function render() {
+  if (gs.active) {
+    document.getElementById('pKey').textContent  = gs.key;
+    document.getElementById('pQual').textContent = gs.qual.s;
+    const c = SHAPE_COLORS[gs.shape];
+    document.getElementById('pShape').innerHTML  =
+      `<span style="color:${c}">${SHAPE_LABELS[gs.shape]}</span> shape`;
+  }
+  renderFb();
+  document.getElementById('checkBtn').disabled = !gs.active || gs.checked;
+  document.getElementById('gripLegend').style.display =
+    (gs.checked && gs.hasOffGrip) ? 'block' : 'none';
+}
+
+function certUpdateStrikes(n) {
+  const filled = '◆', empty = '○';
+  document.getElementById('certStrikeDisplay').textContent =
+    [filled.repeat(n), empty.repeat(3 - n)].join(' ').trim().replace(/(.)/g, '$1 ').trim();
+}
+
+function certNext() {
+  const n = parseInt(sessionStorage.getItem('certExercise') || '1');
+  if (n >= 25) {
+    sessionStorage.removeItem('certPhase');
+    sessionStorage.removeItem('certExercise');
+    sessionStorage.removeItem('certStrikes');
+    location.href = 'certification.html#complete';
+  } else {
+    sessionStorage.setItem('certExercise', n + 1);
+    document.getElementById('certN').textContent = n + 1;
+    document.getElementById('certNextBtn').style.display = 'none';
+    newChallenge();
+  }
+}
+
+function certFail() {
+  sessionStorage.setItem('certExercise', '1');
+  sessionStorage.setItem('certStrikes', '0');
+  location.href = 'exercises.html';
+}
+
+newChallenge();
+
+// Certification mode startup — gated; normal visits unaffected
+(function() {
+  if (sessionStorage.getItem('certPhase') !== '3') return;
+  document.getElementById('certCounter').style.display = 'block';
+  const n = parseInt(sessionStorage.getItem('certExercise') || '1');
+  const s = parseInt(sessionStorage.getItem('certStrikes') || '0');
+  document.getElementById('certN').textContent = n;
+  certUpdateStrikes(s);
+  document.getElementById('newChallengeBtn').style.display = 'none';
+  newChallenge();
+})();
+</script>
+</body>
+</html>
