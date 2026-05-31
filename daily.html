@@ -367,12 +367,16 @@ function shareResult() {
   const emojis = dailyChords.map((chord, i) =>
     gs.results[i].correct ? SHAPE_EMOJIS[chord.shape] : '⬛'
   ).join('');
-  const text = `Daily Chord Game · ${dateStr}\n${emojis}\nechoalphadelta.com/daily.html`;
+  const text = `Daily Chord Game · ${dateStr}\n${emojis}`;
   const msg  = document.getElementById('shareMsg');
   if (navigator.share) {
-    navigator.share({ text }).catch(() => {});
+    navigator.share({
+      title: 'Daily Chord Game',
+      text,
+      url: 'https://echoalphadelta.com/daily.html'
+    }).catch(() => {});
   } else {
-    navigator.clipboard.writeText(text).then(() => {
+    navigator.clipboard.writeText(`${text}\nhttps://echoalphadelta.com/daily.html`).then(() => {
       msg.textContent = 'Copied to clipboard';
       setTimeout(() => { msg.textContent = ''; }, 2500);
     }).catch(() => {
