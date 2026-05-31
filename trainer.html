@@ -72,6 +72,7 @@ border: 1px solid #222;
 border-radius: 3px;
 overflow: hidden;
 }
+body.cert-mode .mode-toggle { display: none !important; }
 
 .mode-btn {
 font-family: 'Share Tech Mono', monospace;
@@ -844,7 +845,7 @@ drawFretboard();
   if (phase !== '1' && phase !== '2') return;
 
   // Hide mode toggle so user cannot switch modes during certification
-  document.querySelector('.mode-toggle').style.display = 'none';
+  document.body.classList.add('cert-mode');
 
   const banner = document.getElementById('certBanner');
 
