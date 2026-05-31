@@ -199,9 +199,12 @@ h1 {
     <div id="trainerFb"></div>
   </div>
 
+  <div id="certCounter" style="display:none;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(245,166,35,0.65);text-align:center;margin-top:14px;">Exercise <span id="certN">1</span> of 25</div>
+
   <div class="trainer-controls">
     <button class="trainer-btn btn-check" id="checkBtn" onclick="checkAnswer()" disabled>Check</button>
-    <button class="trainer-btn btn-next" onclick="newChallenge()">New Challenge</button>
+    <button class="trainer-btn btn-next" id="newChallengeBtn" onclick="newChallenge()">New Challenge</button>
+    <button class="trainer-btn btn-next" id="certNextBtn" style="display:none;" onclick="certNext()">Next Exercise →</button>
   </div>
 
   <div class="round-result" id="roundResult"></div>
@@ -389,6 +392,12 @@ function checkAnswer() {
   if (!correct && !wrong && !offGrip) parts.push('nothing selected');
   document.getElementById('roundResult').textContent = parts.join(' · ');
   render();
+
+  // Certification mode: show Next Exercise, hide New Challenge
+  if (sessionStorage.getItem('certPhase') === '3') {
+    document.getElementById('newChallengeBtn').style.display = 'none';
+    document.getElementById('certNextBtn').style.display = '';
+  }
 }
 
 function pinKey(el, keyName) {
@@ -520,7 +529,30 @@ function render() {
     (gs.checked && gs.hasOffGrip) ? 'block' : 'none';
 }
 
+function certNext() {
+  const n = parseInt(sessionStorage.getItem('certExercise') || '1');
+  if (n >= 25) {
+    sessionStorage.removeItem('certPhase');
+    sessionStorage.removeItem('certExercise');
+    location.href = 'certification.html#complete';
+  } else {
+    sessionStorage.setItem('certExercise', n + 1);
+    document.getElementById('certN').textContent = n + 1;
+    document.getElementById('certNextBtn').style.display = 'none';
+    newChallenge();
+  }
+}
+
 newChallenge();
+
+// Certification mode startup
+(function() {
+  if (sessionStorage.getItem('certPhase') !== '3') return;
+  document.getElementById('certCounter').style.display = 'block';
+  document.getElementById('certN').textContent = sessionStorage.getItem('certExercise') || '1';
+  document.getElementById('newChallengeBtn').style.display = 'none';
+  newChallenge();
+})();
 </script>
 </body>
 </html>

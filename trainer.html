@@ -288,6 +288,7 @@ border-radius: 2px;
   <div id="tonicDisplay" class="hidden" style="margin-top:0.6rem;">
     <span id="tonicLabel"></span>
   </div>
+  <div id="certBanner" style="display:none;margin-top:0.5rem;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(245,166,35,0.6);"></div>
 </div>
 
 <!-- MID: fretboard + controls -->
@@ -367,6 +368,7 @@ border-radius: 2px;
     <div class="status-item">Avg Time<span id="avgTime">—</span></div>
   </div>
   <button class="start-btn hidden" id="playAgainBtn" onclick="startGame()">Play Again</button>
+  <button class="start-btn hidden" id="certContinueBtn" onclick="certContinue()">Continue →</button>
 </div>
 
 <script>
@@ -784,10 +786,41 @@ function showResults() {
 
   // Clear fretboard after game
   drawFretboard();
+
+  // Certification mode: swap Play Again for Continue
+  const certPhase = sessionStorage.getItem('certPhase');
+  if (certPhase === '1' || certPhase === '2') {
+    document.getElementById('playAgainBtn').classList.add('hidden');
+    document.getElementById('certContinueBtn').classList.remove('hidden');
+  }
+}
+
+function certContinue() {
+  const phase = sessionStorage.getItem('certPhase');
+  if (phase === '1') {
+    sessionStorage.setItem('certPhase', '2');
+    location.href = 'trainer.html';
+  } else if (phase === '2') {
+    sessionStorage.setItem('certPhase', '3');
+    sessionStorage.setItem('certExercise', '1');
+    location.href = 'exercises.html';
+  }
 }
 
 // Initial blank fretboard on game screen and start screen
 drawFretboard();
+
+// Certification mode startup
+(function() {
+  const phase = sessionStorage.getItem('certPhase');
+  if (phase !== '1' && phase !== '2') return;
+  const banner = document.getElementById('certBanner');
+  banner.textContent = phase === '1'
+    ? 'Certification · Phase 1 of 3 · Standard'
+    : 'Certification · Phase 2 of 3 · Harmonic Mode';
+  banner.style.display = 'block';
+  if (phase === '2') setMode('harmonic');
+})();
 
 </script>
 
