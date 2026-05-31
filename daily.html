@@ -69,7 +69,7 @@ h1 { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; 
   border-radius: 4px; padding: 14px; cursor: pointer; transition: all 0.2s;
 }
 .share-btn:hover { background: rgba(244,114,182,0.08); border-color: rgba(244,114,182,0.7); box-shadow: 0 0 16px rgba(244,114,182,0.2); }
-.share-msg { text-align: center; font-size: 0.7rem; color: rgba(240,237,232,0.45); letter-spacing: 0.1em; margin-top: 12px; height: 20px; }
+.share-msg { margin-top: 12px; }
 
 /* Coming soon */
 .coming-soon { font-size: 0.78rem; color: rgba(240,237,232,0.38); text-align: center; padding: 60px 0; letter-spacing: 0.08em; }
@@ -78,7 +78,7 @@ h1 { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; 
 <body>
 <div class="page">
   <a href="index.html" class="back-link">&#8592; Back to Map</a>
-  <h1>★ Daily Game</h1>
+  <h1>Daily Game</h1>
   <p class="subtitle" id="dailySub"></p>
   <div id="gameArea"></div>
 </div>
@@ -364,30 +364,31 @@ function finishGame() {
 }
 
 function shareResult() {
-  const emojis = dailyChords.map((chord, i) =>
-    gs.results[i].correct ? SHAPE_EMOJIS[chord.shape] : '⬛'
-  ).join('');
-  const shareText = 'Daily Chord Game \xb7 ' + dateStr + '\n' + emojis + '\nhttps://echoalphadelta.com/daily.html';
-  const msg = document.getElementById('shareMsg');
-
-  function copyFallback() {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(shareText).then(function() {
-        msg.textContent = 'Copied to clipboard';
-        setTimeout(function() { msg.textContent = ''; }, 2500);
-      }).catch(function() { msg.textContent = shareText; });
-    } else {
-      msg.textContent = shareText;
-    }
-  }
+  var emojis = dailyChords.map(function(chord, i) {
+    return gs.results[i].correct ? SHAPE_EMOJIS[chord.shape] : '⬛';
+  }).join('');
+  var shareText = 'Daily Chord Game · ' + dateStr + '\n' + emojis + '\n' + window.location.href;
 
   if (navigator.share) {
     navigator.share({ text: shareText }).catch(function(err) {
-      if (err && err.name !== 'AbortError') copyFallback();
+      if (!err || err.name !== 'AbortError') showSharePanel(shareText);
     });
-  } else {
-    copyFallback();
+    return;
   }
+  showSharePanel(shareText);
+}
+
+function showSharePanel(text) {
+  var msg = document.getElementById('shareMsg');
+  if (document.getElementById('sharePanelText')) {
+    document.getElementById('sharePanelText').select();
+    return;
+  }
+  msg.innerHTML = '<textarea id="sharePanelText" readonly style="width:100%;background:#111;color:#f0ede8;border:1px solid rgba(244,114,182,0.3);border-radius:4px;padding:10px;font-family:\'Share Tech Mono\',monospace;font-size:0.75rem;line-height:1.7;resize:none;height:90px;display:block;-webkit-user-select:all;user-select:all;">' + text.replace(/</g, '&lt;') + '</textarea><p style="text-align:center;font-size:0.65rem;color:rgba(240,237,232,0.35);letter-spacing:0.12em;text-transform:uppercase;margin:8px 0 0;">Long-press to select &amp; copy</p>';
+  var ta = document.getElementById('sharePanelText');
+  ta.focus();
+  ta.select();
+}
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
