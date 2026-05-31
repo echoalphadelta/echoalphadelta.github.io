@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Game — Echo Alpha Delta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+html, body { margin: 0; padding: 0; background: #000; }
+* { box-sizing: border-box; }
+body { color: #f0ede8; font-family: 'Share Tech Mono', monospace; line-height: 1.85; }
+.page { max-width: 680px; margin: 0 auto; padding: 40px 24px 80px; }
+.back-link { display: inline-block; font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #f5a623; text-decoration: none; padding: 0.5rem 1.2rem; border: 1px solid rgba(245,166,35,0.25); border-radius: 2rem; margin-bottom: 40px; transition: all 0.3s; }
+.back-link:hover { color: #ffc85c; border-color: rgba(245,166,35,0.5); box-shadow: 0 0 12px rgba(245,166,35,0.2); }
+h1 { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #f472b6; text-shadow: 0 0 16px rgba(244,114,182,0.4); margin: 0 0 6px 0; }
+.subtitle { font-size: 0.72rem; color: rgba(240,237,232,0.38); margin: 0 0 36px; letter-spacing: 0.06em; }
+
+.chord-counter { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(240,237,232,0.35); margin-bottom: 10px; }
+.shape-badge { font-family: 'Space Mono', monospace; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 16px; }
+.fretboard-wrap { margin-bottom: 22px; border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; overflow: hidden; background: #080808; }
+.guess-row { display: flex; gap: 10px; margin-bottom: 16px; }
+.guess-select {
+  flex: 1; font-family: 'Space Mono', monospace; font-size: 0.78rem;
+  background: #0a0a0a; color: #f0ede8;
+  border: 1px solid rgba(255,255,255,0.15); border-radius: 4px;
+  padding: 10px 12px; letter-spacing: 0.06em; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+.guess-select:focus { outline: none; border-color: rgba(244,114,182,0.5); }
+.guess-select option { background: #111; }
+.submit-btn {
+  display: block; width: 100%; font-family: 'Space Mono', monospace; font-size: 0.8rem;
+  font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  background: #f472b6; color: #000; border: none; border-radius: 4px;
+  padding: 14px; cursor: pointer; transition: box-shadow 0.2s;
+}
+.submit-btn:hover { box-shadow: 0 0 24px rgba(244,114,182,0.5); }
+.submit-btn:disabled { opacity: 0.35; cursor: default; }
+.feedback { font-family: 'Space Mono', monospace; font-size: 0.8rem; letter-spacing: 0.1em; padding: 14px; border-radius: 4px; margin-bottom: 16px; text-align: center; }
+.feedback.hit { background: rgba(46,204,113,0.08); color: #2ecc71; border: 1px solid rgba(46,204,113,0.25); }
+.feedback.miss { background: rgba(231,76,60,0.08); color: #e74c3c; border: 1px solid rgba(231,76,60,0.2); }
+.next-btn {
+  display: block; width: 100%; font-family: 'Space Mono', monospace; font-size: 0.8rem;
+  font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  background: transparent; color: #f0ede8; border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 4px; padding: 14px; cursor: pointer; transition: all 0.2s;
+}
+.next-btn:hover { border-color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.04); }
+
+/* Score screen */
+.score-emojis { font-size: 2.4rem; letter-spacing: 0.15em; text-align: center; margin-bottom: 8px; }
+.score-tally { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(240,237,232,0.35); text-align: center; margin-bottom: 28px; }
+.result-rows { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+.result-row { display: flex; justify-content: space-between; align-items: center; font-family: 'Space Mono', monospace; font-size: 0.72rem; padding: 10px 14px; border-radius: 4px; letter-spacing: 0.06em; }
+.result-row.hit { background: rgba(46,204,113,0.07); border: 1px solid rgba(46,204,113,0.2); }
+.result-row.miss { background: rgba(231,76,60,0.07); border: 1px solid rgba(231,76,60,0.15); }
+.result-row .r-shape { font-weight: 700; }
+.result-row .r-answer { color: rgba(240,237,232,0.6); }
+.result-row .r-mark { font-size: 0.9rem; }
+.share-btn {
+  display: block; width: 100%; font-family: 'Space Mono', monospace; font-size: 0.8rem;
+  font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  background: transparent; color: #f472b6; border: 1px solid rgba(244,114,182,0.4);
+  border-radius: 4px; padding: 14px; cursor: pointer; transition: all 0.2s;
+}
+.share-btn:hover { background: rgba(244,114,182,0.08); border-color: rgba(244,114,182,0.7); box-shadow: 0 0 16px rgba(244,114,182,0.2); }
+.share-msg { text-align: center; font-size: 0.7rem; color: rgba(240,237,232,0.45); letter-spacing: 0.1em; margin-top: 12px; height: 20px; }
+
+/* Coming soon */
+.coming-soon { font-size: 0.78rem; color: rgba(240,237,232,0.38); text-align: center; padding: 60px 0; letter-spacing: 0.08em; }
+</style>
+</head>
+<body>
+<div class="page">
+  <a href="index.html" class="back-link">&#8592; Back to Map</a>
+  <h1>★ Daily Game</h1>
+  <p class="subtitle" id="dailySub"></p>
+  <div id="gameArea"></div>
+</div>
+
+<script>
+// ── Shared constants (ported from exercises.html) ──────────────────────────
+const STR_OPEN  = [4, 9, 2, 7, 11, 4];
+const STR_THICK = [3.5, 2.7, 1.9, 1.3, 0.9, 0.5];
+const NOTES   = ['A','Bb','B','C','C#','D','Eb','E','F','F#','G','Ab'];
+const NOTE_PC = { A:9, Bb:10, B:11, C:0, 'C#':1, D:2, Eb:3, E:4, F:5, 'F#':6, G:7, Ab:8 };
+const QUAL_MAP = { '':'major','m':'minor','7':'7','maj7':'Maj7','m7':'m7','sus4':'sus4' };
+const QUALITY_INTERVALS_MAIN = {
+  major:[0,4,7], minor:[0,3,7], '7':[0,4,7,10], Maj7:[0,4,7,11], m7:[0,3,7,10], sus4:[0,4,7],
+};
+const TONE_NAMES_MAIN = {
+  0:'root',2:'ninth',3:'minor-third',4:'third',5:'fourth',7:'fifth',9:'sixth',10:'seventh',11:'maj7',
+};
+const GRIP_CONFIG = {
+  echo:  { anchor:0, strings:[0,1,2,3,4,5], win:2, upper:[3,4,5] },
+  alpha: { anchor:1, strings:[1,2,3,4,5],   win:2, upper:[3,4,5] },
+  delta: { anchor:2, strings:[2,3,4,5],      win:3, upper:[5]     },
+};
+const SHAPE_COLORS  = { echo:'#4a9eff', alpha:'#ff4a4a', delta:'#4aff7a' };
+const SHAPE_LABELS  = { echo:'Echo',    alpha:'Alpha',   delta:'Delta'   };
+const SHAPE_EMOJIS  = { echo:'🟦',      alpha:'🟥',      delta:'🟩'      };
+const QUALITIES = [
+  { s:'',     label:'Major', iv:[0,4,7]    },
+  { s:'m',    label:'Minor', iv:[0,3,7]    },
+  { s:'7',    label:'7',     iv:[0,4,7,10] },
+  { s:'maj7', label:'Maj7',  iv:[0,4,7,11] },
+  { s:'m7',   label:'m7',    iv:[0,3,7,10] },
+  { s:'sus4', label:'sus4',  iv:[0,5,7]    },
+];
+
+// ── Grip computation (exact port from exercises.html) ──────────────────────
+function findFrets(si, pc) {
+  const out = [];
+  for (let f = 0; f <= 12; f++) if ((STR_OPEN[si] + f) % 12 === pc) out.push(f);
+  return out;
+}
+function computeGripTones(shapeName, qualStr, rootPc) {
+  const quality   = QUAL_MAP[qualStr] || 'major';
+  const r         = rootPc % 12;
+  const intervals = QUALITY_INTERVALS_MAIN[quality];
+  const { anchor, strings, win, upper } = GRIP_CONFIG[shapeName];
+  const anchorFret = findFrets(anchor, r)[0];
+  if (anchorFret === undefined) return new Set();
+  const isSus = quality === 'sus4', suppressUpperRoot = quality === '7';
+  const echoSlideback = shapeName === 'echo' && quality === 'Maj7';
+  const dots = [];
+  strings.forEach(s => {
+    for (let fo = 0; fo <= win; fo++) {
+      let f = anchorFret + fo;
+      if (f > 12) f -= 12;
+      if (f > 12) continue;
+      const noteAtFret = (STR_OPEN[s] + f) % 12;
+      intervals.forEach(interval => {
+        if (noteAtFret !== (r + interval) % 12) return;
+        if (shapeName === 'delta' && (interval === 4 || interval === 3) && s !== 5) return;
+        const isThird = interval === 4 || interval === 3;
+        const isUpperStr = upper.includes(s);
+        const isUpperRoot = interval === 0 && isUpperStr && s !== anchor;
+        if (suppressUpperRoot && isUpperRoot && fo > 0) return;
+        if (echoSlideback && interval === 11) return;
+        if (isSus && isThird && isUpperStr) {
+          const sf = f + 1 > 12 ? f - 11 : f + 1;
+          dots.push({ s, fret:sf, t:'fourth', isRoot:false });
+        } else {
+          const t = TONE_NAMES_MAIN[interval] || 'tone';
+          dots.push({ s, fret:f, t, isRoot:interval === 0 });
+          if (f === 12) dots.push({ s, fret:0,  t, isRoot:interval === 0 });
+          if (f === 0)  dots.push({ s, fret:12, t, isRoot:interval === 0 });
+        }
+      });
+    }
+  });
+  if (echoSlideback) {
+    const target = (r + 11) % 12;
+    for (let f2 = 0; f2 <= 12; f2++) {
+      if ((STR_OPEN[5] + f2) % 12 === target) { dots.push({ s:5, fret:f2, t:'maj7', isRoot:false }); break; }
+    }
+  }
+  const byStr = {};
+  dots.forEach(d => { (byStr[d.s] = byStr[d.s] || []).push(d); });
+  const priority = ['sixth','ninth','seventh','maj7','fourth','fifth','minor-third','third','root'];
+  const result = new Set();
+  Object.entries(byStr).forEach(([sStr, group]) => {
+    const s = parseInt(sStr);
+    let pick;
+    if (group.length === 1) { pick = group[0]; }
+    else if (s === anchor) { pick = group.find(d => d.isRoot) || group[0]; }
+    else {
+      group.sort((a,b) => {
+        const ai = priority.indexOf(a.t), bi = priority.indexOf(b.t);
+        return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi);
+      });
+      pick = group[0];
+    }
+    result.add(`${pick.fret}-${s}`);
+  });
+  return result;
+}
+
+// ── Fretboard SVG (display-only) ───────────────────────────────────────────
+function renderChordFretboard(gripTones, shape) {
+  const W=660, H=280, ML=36, MR=8, MT=18, MB=34, NF=12;
+  const FW=(W-ML-MR)/NF, SH=(H-MT-MB)/5;
+  const sy  = si => MT + (5-si)*SH;
+  const fCx = f  => f === 0 ? ML-16 : ML+(f-0.5)*FW;
+  const clr = SHAPE_COLORS[shape];
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg">`;
+  s += `<line x1="${ML}" y1="${MT-8}" x2="${ML}" y2="${H-MB+8}" stroke="#d4cfc8" stroke-width="8"/>`;
+  for (let i=1;i<=NF;i++) {
+    const x=(ML+i*FW).toFixed(1);
+    s += `<line x1="${x}" y1="${MT}" x2="${x}" y2="${H-MB}" stroke="#333" stroke-width="1.5"/>`;
+  }
+  [3,5,7,9].forEach(f => {
+    s += `<circle cx="${fCx(f).toFixed(1)}" cy="${(MT+2.5*SH).toFixed(1)}" r="5" fill="#2a2a2a"/>`;
+  });
+  s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT+1.5*SH).toFixed(1)}" r="5" fill="#2a2a2a"/>`;
+  s += `<circle cx="${fCx(12).toFixed(1)}" cy="${(MT+3.5*SH).toFixed(1)}" r="5" fill="#2a2a2a"/>`;
+  for (let si=0;si<6;si++) {
+    const y=sy(si).toFixed(1);
+    s += `<line x1="8" y1="${y}" x2="${W-MR}" y2="${y}" stroke="#444" stroke-width="${STR_THICK[si]}" stroke-linecap="round"/>`;
+  }
+  [3,5,7,9,12].forEach(f => {
+    s += `<text x="${fCx(f).toFixed(1)}" y="${H-8}" text-anchor="middle" fill="#333" font-size="10" font-family="monospace">${f}</text>`;
+  });
+  for (let f=0;f<=12;f++) for (let si=0;si<6;si++) {
+    if (!gripTones.has(`${f}-${si}`)) continue;
+    const cx=fCx(f).toFixed(1), cy=sy(si).toFixed(1);
+    s += `<circle cx="${cx}" cy="${cy}" r="12" fill="${clr}" opacity="0.18"/>`;
+    s += `<circle cx="${cx}" cy="${cy}" r="10" fill="${clr}" stroke="${clr}" stroke-width="1.5"/>`;
+  }
+  s += '</svg>';
+  return s;
+}
+
+// ── Daily seed & chord generation ──────────────────────────────────────────
+function seededRand(n) { const x=Math.sin(n+0.5)*10000; return x-Math.floor(x); }
+function seededInt(n, max) { return Math.floor(seededRand(n)*max); }
+
+const todayDate = new Date();
+const dayNum    = Math.floor(todayDate.getTime() / 86400000);
+const isNameMode = true; // Name the Chord every day until Map the Chord is ready
+const dateStr   = todayDate.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+
+document.getElementById('dailySub').textContent = dateStr + '  ·  Name the Chord';
+
+const dailyChords = ['echo','alpha','delta'].map((shape, i) => {
+  const rootIdx = seededInt(dayNum * 17 + i * 5,     12);
+  const qualIdx = seededInt(dayNum * 17 + i * 5 + 1, QUALITIES.length);
+  const key     = NOTES[rootIdx];
+  const qual    = QUALITIES[qualIdx];
+  return { shape, key, qual, rootPc: NOTE_PC[key],
+           gripTones: computeGripTones(shape, qual.s, NOTE_PC[key]) };
+});
+
+// ── Persistence ────────────────────────────────────────────────────────────
+const saveKey = 'dailyGame_' + dayNum;
+
+// ── Game state ─────────────────────────────────────────────────────────────
+let gs = { phase: 'playing', current: 0, results: [] };
+
+const saved = localStorage.getItem(saveKey);
+if (saved) {
+  const data = JSON.parse(saved);
+  gs = { phase: 'done', current: 3, results: data.results };
+}
+
+// ── Rendering ──────────────────────────────────────────────────────────────
+function render() {
+  const area = document.getElementById('gameArea');
+  if (gs.phase === 'done')     { area.innerHTML = renderScoreScreen(); return; }
+  if (gs.phase === 'feedback') { area.innerHTML = renderFeedback();    return; }
+  area.innerHTML = renderQuestion();
+}
+
+function qSelectHTML(id, items, placeholder) {
+  const opts = items.map(([v,l]) => `<option value="${v}">${l}</option>`).join('');
+  return `<select id="${id}" class="guess-select"><option value="" disabled selected hidden>${placeholder}</option>${opts}</select>`;
+}
+
+function renderQuestion() {
+  const chord = dailyChords[gs.current];
+  const clr   = SHAPE_COLORS[chord.shape];
+  const lbl   = SHAPE_LABELS[chord.shape];
+  const rootOpts = NOTES.map(n => [n, n]);
+  const qualOpts = QUALITIES.map(q => [q.s, q.label]);
+  return `
+    <div class="chord-counter">Chord ${gs.current+1} of 3</div>
+    <div class="shape-badge" style="color:${clr}">▮ ${lbl} Shape</div>
+    <div class="fretboard-wrap">${renderChordFretboard(chord.gripTones, chord.shape)}</div>
+    <div class="guess-row">
+      ${qSelectHTML('guessRoot', rootOpts, 'Root ▾')}
+      ${qSelectHTML('guessQual', qualOpts, 'Quality ▾')}
+    </div>
+    <button class="submit-btn" onclick="submitGuess()">Submit</button>
+  `;
+}
+
+function renderFeedback() {
+  const chord    = dailyChords[gs.current];
+  const result   = gs.pendingResult;
+  const clr      = SHAPE_COLORS[chord.shape];
+  const lbl      = SHAPE_LABELS[chord.shape];
+  const isLast   = gs.current === 2;
+  const answerLabel = chord.key + (chord.qual.label === 'Major' ? '' : ' ' + chord.qual.label);
+  const fbClass  = result.correct ? 'hit' : 'miss';
+  const fbText   = result.correct
+    ? '✓ Correct'
+    : `✗  Answer: ${answerLabel}`;
+  const btnLabel = isLast ? 'See Score' : 'Next →';
+  const btnFn    = isLast ? 'finishGame()' : 'nextChord()';
+  return `
+    <div class="chord-counter">Chord ${gs.current+1} of 3</div>
+    <div class="shape-badge" style="color:${clr}">▮ ${lbl} Shape</div>
+    <div class="fretboard-wrap">${renderChordFretboard(chord.gripTones, chord.shape)}</div>
+    <div class="feedback ${fbClass}">${fbText}</div>
+    <button class="next-btn" onclick="${btnFn}">${btnLabel}</button>
+  `;
+}
+
+function renderScoreScreen() {
+  const emojis = dailyChords.map((chord, i) =>
+    gs.results[i].correct ? SHAPE_EMOJIS[chord.shape] : '⬛'
+  ).join('');
+  const count = gs.results.filter(r => r.correct).length;
+
+  const rows = dailyChords.map((chord, i) => {
+    const r   = gs.results[i];
+    const clr = SHAPE_COLORS[chord.shape];
+    const lbl = SHAPE_LABELS[chord.shape];
+    const ans = chord.key + (chord.qual.label === 'Major' ? '' : ' ' + chord.qual.label);
+    const guess = r.guessRoot + (r.guessQualLabel === 'Major' ? '' : ' ' + r.guessQualLabel);
+    return `
+      <div class="result-row ${r.correct ? 'hit' : 'miss'}">
+        <span class="r-shape" style="color:${clr}">${lbl}</span>
+        <span class="r-answer">${ans}</span>
+        <span class="r-mark">${r.correct ? '✓' : `✗ (${guess})`}</span>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="score-emojis">${emojis}</div>
+    <div class="score-tally">${count} / 3 correct · ${dateStr}</div>
+    <div class="result-rows">${rows}</div>
+    <button class="share-btn" onclick="shareResult()">Share Result</button>
+    <div class="share-msg" id="shareMsg"></div>
+  `;
+}
+
+// ── Actions ────────────────────────────────────────────────────────────────
+function submitGuess() {
+  const rootEl = document.getElementById('guessRoot');
+  const qualEl = document.getElementById('guessQual');
+  const root   = rootEl ? rootEl.value : '';
+  const qual   = qualEl ? qualEl.value : '';
+  if (!root || qual === '') return;
+
+  const chord    = dailyChords[gs.current];
+  const qualObj  = QUALITIES.find(q => q.s === qual);
+  const correct  = root === chord.key && qual === chord.qual.s;
+  gs.pendingResult = { correct, guessRoot: root, guessQual: qual, guessQualLabel: qualObj ? qualObj.label : qual };
+  gs.phase = 'feedback';
+  render();
+}
+
+function nextChord() {
+  gs.results.push(gs.pendingResult);
+  gs.pendingResult = null;
+  gs.current++;
+  gs.phase = 'playing';
+  render();
+}
+
+function finishGame() {
+  gs.results.push(gs.pendingResult);
+  gs.pendingResult = null;
+  gs.phase = 'done';
+  localStorage.setItem(saveKey, JSON.stringify({ results: gs.results }));
+  render();
+}
+
+function shareResult() {
+  const emojis = dailyChords.map((chord, i) =>
+    gs.results[i].correct ? SHAPE_EMOJIS[chord.shape] : '⬛'
+  ).join('');
+  const text = `Daily Chord Game · ${dateStr}\n${emojis}\nechoalphadelta.com/daily.html`;
+  const msg  = document.getElementById('shareMsg');
+  if (navigator.share) {
+    navigator.share({ text }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      msg.textContent = 'Copied to clipboard';
+      setTimeout(() => { msg.textContent = ''; }, 2500);
+    }).catch(() => {
+      msg.textContent = text;
+    });
+  }
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
