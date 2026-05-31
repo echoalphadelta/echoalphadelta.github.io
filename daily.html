@@ -367,21 +367,26 @@ function shareResult() {
   const emojis = dailyChords.map((chord, i) =>
     gs.results[i].correct ? SHAPE_EMOJIS[chord.shape] : '⬛'
   ).join('');
-  const text = `Daily Chord Game · ${dateStr}\n${emojis}`;
-  const msg  = document.getElementById('shareMsg');
+  const shareText = 'Daily Chord Game \xb7 ' + dateStr + '\n' + emojis + '\nhttps://echoalphadelta.com/daily.html';
+  const msg = document.getElementById('shareMsg');
+
+  function copyFallback() {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shareText).then(function() {
+        msg.textContent = 'Copied to clipboard';
+        setTimeout(function() { msg.textContent = ''; }, 2500);
+      }).catch(function() { msg.textContent = shareText; });
+    } else {
+      msg.textContent = shareText;
+    }
+  }
+
   if (navigator.share) {
-    navigator.share({
-      title: 'Daily Chord Game',
-      text,
-      url: 'https://echoalphadelta.com/daily.html'
-    }).catch(() => {});
-  } else {
-    navigator.clipboard.writeText(`${text}\nhttps://echoalphadelta.com/daily.html`).then(() => {
-      msg.textContent = 'Copied to clipboard';
-      setTimeout(() => { msg.textContent = ''; }, 2500);
-    }).catch(() => {
-      msg.textContent = text;
+    navigator.share({ text: shareText }).catch(function(err) {
+      if (err && err.name !== 'AbortError') copyFallback();
     });
+  } else {
+    copyFallback();
   }
 }
 
