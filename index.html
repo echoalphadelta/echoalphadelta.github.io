@@ -399,6 +399,11 @@ to   { stroke-dashoffset: -687; }
 50% { box-shadow: 0 0 24px rgba(192,192,192,0.8), 0 0 70px rgba(192,192,192,0.35), 0 0 120px rgba(192,192,192,0.15); }
 }
 
+@keyframes breatheGreen {
+0%, 100% { box-shadow: 0 0 12px rgba(76,175,110,0.4), 0 0 40px rgba(76,175,110,0.15), 0 0 80px rgba(76,175,110,0.08); }
+50% { box-shadow: 0 0 24px rgba(76,175,110,0.8), 0 0 70px rgba(76,175,110,0.35), 0 0 120px rgba(76,175,110,0.15); }
+}
+
 .trainer-link {
 display: inline-block;
 font-family: ‘Space Mono’, monospace;
@@ -462,6 +467,7 @@ text-decoration: none;
 padding: 0.75rem 2rem;
 border: 1px solid rgba(76,175,110,0.35);
 border-radius: 2rem;
+animation: breatheGreen 3s ease-in-out infinite;
 transition: color 0.2s, border-color 0.2s;
 }
 .nav-pill-gold:hover { color: #6dd68a; border-color: rgba(76,175,110,0.7); }
