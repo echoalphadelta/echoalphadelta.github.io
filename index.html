@@ -495,42 +495,42 @@ transition: color 0.2s, border-color 0.2s;
 .nav-pill-ice:hover { color: #e8f8ff; border-color: rgba(168,216,234,0.85); text-shadow: 0 0 10px rgba(168,216,234,1), 0 0 25px rgba(168,216,234,0.7); }
 
 @keyframes breatheGold {
-  0%, 100% { box-shadow: 0 0 28px rgba(245,166,35,0.45), 0 0 60px rgba(245,166,35,0.2); }
-  50% { box-shadow: 0 0 52px rgba(245,166,35,0.75), 0 0 110px rgba(245,166,35,0.35); }
+  0%, 100% { box-shadow: 0 0 28px rgba(245,166,35,0.25), 0 0 60px rgba(245,166,35,0.1), inset 0 0 28px rgba(245,166,35,0.06); }
+  50% { box-shadow: 0 0 52px rgba(245,166,35,0.55), 0 0 110px rgba(245,166,35,0.2), inset 0 0 52px rgba(245,166,35,0.1); }
 }
 @keyframes breatheRose {
-  0%, 100% { box-shadow: 0 0 18px rgba(57,255,20,0.45), 0 0 40px rgba(57,255,20,0.2); }
-  50% { box-shadow: 0 0 34px rgba(57,255,20,0.75), 0 0 72px rgba(57,255,20,0.35); }
+  0%, 100% { box-shadow: 0 0 18px rgba(57,255,20,0.25), 0 0 40px rgba(57,255,20,0.1), inset 0 0 18px rgba(57,255,20,0.06); }
+  50% { box-shadow: 0 0 34px rgba(57,255,20,0.55), 0 0 72px rgba(57,255,20,0.2), inset 0 0 34px rgba(57,255,20,0.1); }
 }
 .cert-circle {
   display: flex; align-items: center; justify-content: center; text-align: center;
   width: 190px; height: 190px; border-radius: 50%;
-  background: #f5a623;
-  border: none;
+  background: transparent;
+  border: 3px solid rgba(245,166,35,0.7);
   text-decoration: none;
   animation: breatheGold 4s ease-in-out infinite;
-  transition: opacity 0.3s;
+  transition: border-color 0.3s;
 }
-.cert-circle:hover { opacity: 0.88; }
+.cert-circle:hover { border-color: rgba(245,166,35,1); }
 .cert-circle-label {
   font-family: 'Space Mono', monospace; font-weight: 700;
   font-size: 0.9rem; letter-spacing: 0.14em; text-transform: uppercase;
-  color: #000; line-height: 1.5;
+  color: #f5a623; text-shadow: 0 0 14px rgba(245,166,35,0.55); line-height: 1.5;
 }
 .daily-circle-link {
   display: flex; align-items: center; justify-content: center; text-align: center;
   width: 125px; height: 125px; border-radius: 2rem;
-  background: #39ff14;
-  border: none;
+  background: transparent;
+  border: 3px solid rgba(57,255,20,0.7);
   text-decoration: none;
   animation: breatheRose 4s ease-in-out infinite;
-  transition: opacity 0.3s;
+  transition: border-color 0.3s;
 }
-.daily-circle-link:hover { opacity: 0.88; }
+.daily-circle-link:hover { border-color: rgba(57,255,20,1); }
 .daily-circle-label {
   font-family: 'Space Mono', monospace; font-weight: 700;
   font-size: 0.82rem; letter-spacing: 0.14em; text-transform: uppercase;
-  color: #000; line-height: 1.5;
+  color: #39ff14; text-shadow: 0 0 14px rgba(57,255,20,0.55); line-height: 1.5;
 }
 
 .btn-coming { display: inline-block; font-family: ‘Space Mono’, monospace; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; padding: 1rem 2.5rem; border: 1px solid rgba(255,255,255,0.15); color: #888; text-decoration: none; }
