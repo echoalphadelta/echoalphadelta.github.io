@@ -499,8 +499,8 @@ transition: color 0.2s, border-color 0.2s;
   50% { box-shadow: 0 0 52px rgba(245,166,35,0.4), 0 0 110px rgba(245,166,35,0.15), inset 0 0 52px rgba(245,166,35,0.09); }
 }
 @keyframes breatheRose {
-  0%, 100% { filter: drop-shadow(0 0 5px rgba(244,114,182,0.22)) drop-shadow(0 0 16px rgba(244,114,182,0.09)); }
-  50% { filter: drop-shadow(0 0 14px rgba(244,114,182,0.55)) drop-shadow(0 0 36px rgba(244,114,182,0.22)); }
+  0%, 100% { box-shadow: 0 0 18px rgba(244,114,182,0.18), 0 0 40px rgba(244,114,182,0.07), inset 0 0 18px rgba(244,114,182,0.04); }
+  50% { box-shadow: 0 0 34px rgba(244,114,182,0.4), 0 0 72px rgba(244,114,182,0.15), inset 0 0 34px rgba(244,114,182,0.09); }
 }
 .cert-circle {
   display: flex; align-items: center; justify-content: center; text-align: center;
@@ -517,19 +517,20 @@ transition: color 0.2s, border-color 0.2s;
   font-size: 0.9rem; letter-spacing: 0.14em; text-transform: uppercase;
   color: #f5a623; text-shadow: 0 0 14px rgba(245,166,35,0.55); line-height: 1.5;
 }
-.daily-star-link {
-  position: relative; display: flex; align-items: center; justify-content: center;
-  width: 170px; height: 170px; text-decoration: none;
+.daily-circle-link {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  width: 125px; height: 125px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, rgba(244,114,182,0.1), rgba(244,114,182,0.02));
+  border: 1.5px solid rgba(244,114,182,0.4);
+  text-decoration: none;
   animation: breatheRose 4s ease-in-out infinite;
+  transition: border-color 0.3s;
 }
-.daily-star-link svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-.daily-star-link:hover svg polygon { stroke: rgba(244,114,182,0.8); }
+.daily-circle-link:hover { border-color: rgba(244,114,182,0.75); }
 .daily-circle-label {
-  position: relative; z-index: 1;
   font-family: 'Space Mono', monospace; font-weight: 700;
-  font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
-  color: #f472b6; text-shadow: 0 0 14px rgba(244,114,182,0.55); line-height: 1.6;
-  text-align: center; padding-top: 6px;
+  font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: #f472b6; text-shadow: 0 0 14px rgba(244,114,182,0.55); line-height: 1.5;
 }
 
 .btn-coming { display: inline-block; font-family: ‘Space Mono’, monospace; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; padding: 1rem 2.5rem; border: 1px solid rgba(255,255,255,0.15); color: #888; text-decoration: none; }
@@ -641,21 +642,14 @@ footer p { font-family: ‘Space Mono’, monospace; font-size: 0.58rem; letter-
   <a href="tuner.html" class="nav-pill-ice">Tuner</a>
   <a href="exercises.html" class="nav-pill-gold">Exercise</a>
 </div>
-<div style="margin:0 auto;max-width:900px;padding:24px 0 32px;display:flex;justify-content:center;">
-  <a href="certification.html" class="cert-circle">
-    <span class="cert-circle-label">Get<br>Certified</span>
+<div style="margin:0 auto;max-width:900px;padding:24px 0 20px;display:flex;justify-content:center;">
+  <a href="daily.html" class="daily-circle-link">
+    <span class="daily-circle-label">Daily<br>Game</span>
   </a>
 </div>
 <div style="margin:0 auto;max-width:900px;padding:0 0 56px;display:flex;justify-content:center;">
-  <a href="daily.html" class="daily-star-link">
-    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35"
-               fill="rgba(244,114,182,0.07)"
-               stroke="rgba(244,114,182,0.45)"
-               stroke-width="1.5"
-               stroke-linejoin="round"/>
-    </svg>
-    <span class="daily-circle-label">Daily<br>Game</span>
+  <a href="certification.html" class="cert-circle">
+    <span class="cert-circle-label">Get<br>Certified</span>
   </a>
 </div>
 
