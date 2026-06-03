@@ -335,9 +335,10 @@ function renderScoreScreen() {
 function submitGuess() {
   const rootEl = document.getElementById('guessRoot');
   const qualEl = document.getElementById('guessQual');
-  const root   = rootEl ? rootEl.value : '';
-  const qual   = qualEl ? qualEl.value : '';
-  if (!root || qual === '') return;
+  if (!rootEl || !qualEl) return;
+  if (rootEl.selectedIndex <= 0 || qualEl.selectedIndex <= 0) return;
+  const root = rootEl.value;
+  const qual = qualEl.value;
 
   const chord    = dailyChords[gs.current];
   const qualObj  = QUALITIES.find(q => q.s === qual);
