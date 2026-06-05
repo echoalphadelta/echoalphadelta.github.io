@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Three Shapes — Numbered</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=B612+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;600;700&family=Turret+Road:wght@400;700&display=swap" rel="stylesheet">
 <style>
   html, body { margin: 0; padding: 0; background: #000 !important; }
   * { box-sizing: border-box; }
@@ -89,19 +89,19 @@ function buildDiagram() {
   // Echo — above, over frets 2-4
   const echoCenter = (sx(2) + sx(4)) / 2;
   svg += `<text x="${echoCenter}" y="${labelTopY}" text-anchor="middle"
-    font-family="'B612 Mono', monospace" font-size="${labelFontSize}" font-weight="700"
+    font-family="'Jura', monospace" font-size="${labelFontSize}" font-weight="700"
     letter-spacing="0.3em" fill="${ECHO_COLOR}" text-transform="uppercase">ECHO</text>`;
 
   // Alpha — above, over frets 9-11
   const alphaCenter = (sx(9) + sx(11)) / 2;
   svg += `<text x="${alphaCenter}" y="${labelTopY}" text-anchor="middle"
-    font-family="'B612 Mono', monospace" font-size="${labelFontSize}" font-weight="700"
+    font-family="'Jura', monospace" font-size="${labelFontSize}" font-weight="700"
     letter-spacing="0.3em" fill="${ALPHA_COLOR}" text-transform="uppercase">ALPHA</text>`;
 
   // Delta — below, shifted right: center between frets 5.5 and 7
   const deltaCenter = (sx(5) + sx(7)) / 2 + (fretPos(6) - fretPos(5)) * 0.3;
   svg += `<text x="${deltaCenter}" y="${labelBotY}" text-anchor="middle"
-    font-family="'B612 Mono', monospace" font-size="${labelFontSize}" font-weight="700"
+    font-family="'Jura', monospace" font-size="${labelFontSize}" font-weight="700"
     letter-spacing="0.3em" fill="${DELTA_COLOR}" text-transform="uppercase">DELTA</text>`;
 
   // ── FRETBOARD ──
@@ -179,7 +179,7 @@ function buildDiagram() {
     // Number — BLACK, bold, prominent
     const fontSize = Math.round(r * 1.3);
     svg += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central"
-      font-family="'B612 Mono', monospace" font-size="${fontSize}" font-weight="700"
+      font-family="'Jura', monospace" font-size="${fontSize}" font-weight="700"
       fill="#000">${dot.num}</text>`;
   });
 
