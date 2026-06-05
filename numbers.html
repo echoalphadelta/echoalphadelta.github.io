@@ -6,13 +6,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Number System — Echo Alpha Delta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=B612+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 html, body { margin: 0; padding: 0; background: #000000 !important; }
 * { box-sizing: border-box; }
 body {
   color: #f5a623;
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'B612 Mono', monospace;
   font-weight: 400;
   line-height: 1.85;
   text-shadow: 0 0 8px rgba(245,166,35,0.25), 0 0 20px rgba(245,166,35,0.08);
@@ -28,7 +28,7 @@ padding: 40px 24px 60px;
 /* ── HEADER / NAV ── */
 .back-link {
 display: inline-block;
-font-family: 'Space Mono', monospace;
+font-family: 'B612 Mono', monospace;
 font-size: 0.75rem;
 letter-spacing: 0.2em;
 text-transform: uppercase;
@@ -48,7 +48,7 @@ box-shadow: 0 0 12px rgba(245,166,35,0.2);
 
 /* ── HEADINGS ── */
 h1 {
-font-family: 'Space Mono', monospace;
+font-family: 'B612 Mono', monospace;
 font-size: 1.6rem;
 font-weight: 700;
 letter-spacing: 0.15em;
@@ -59,7 +59,7 @@ margin: 0 0 12px 0;
 line-height: 1.3;
 }
 h2 {
-font-family: 'Space Mono', monospace;
+font-family: 'B612 Mono', monospace;
 font-size: 1.05rem;
 font-weight: 700;
 letter-spacing: 0.12em;
@@ -105,7 +105,7 @@ margin: 20px 0 28px 0;
 font-size: 0.82rem;
 }
 .num-table th {
-font-family: 'Space Mono', monospace;
+font-family: 'B612 Mono', monospace;
 font-size: 0.72rem;
 letter-spacing: 0.15em;
 text-transform: uppercase;
@@ -138,7 +138,7 @@ padding: 24px 20px;
 margin: 24px 0;
 }
 .tool-label {
-font-family: 'Space Mono', monospace;
+font-family: 'B612 Mono', monospace;
 font-size: 0.7rem;
 letter-spacing: 0.2em;
 text-transform: uppercase;
@@ -152,7 +152,7 @@ gap: 6px;
 margin-bottom: 20px;
 }
 .key-btn {
-font-family: 'Share Tech Mono', monospace;
+font-family: 'B612 Mono', monospace;
 font-size: 0.82rem;
 color: #f5a623;
 background: transparent;
@@ -632,9 +632,9 @@ render();
 
   // Labels
   const ly = LABEL_TOP - 10;
-  svg += `<text x="${(sx(2)+sx(4))/2}" y="${ly}" text-anchor="middle" font-family="'Space Mono',monospace" font-size="18" font-weight="700" letter-spacing="0.3em" fill="${ECHO_COLOR}">ECHO</text>`;
-  svg += `<text x="${(sx(9)+sx(11))/2}" y="${ly}" text-anchor="middle" font-family="'Space Mono',monospace" font-size="18" font-weight="700" letter-spacing="0.3em" fill="${ALPHA_COLOR}">ALPHA</text>`;
-  svg += `<text x="${(sx(5)+sx(7))/2 + (fretPos(6)-fretPos(5))*0.3}" y="${LABEL_TOP+FB_H+28}" text-anchor="middle" font-family="'Space Mono',monospace" font-size="18" font-weight="700" letter-spacing="0.3em" fill="${DELTA_COLOR}">DELTA</text>`;
+  svg += `<text x="${(sx(2)+sx(4))/2}" y="${ly}" text-anchor="middle" font-family="'B612 Mono',monospace" font-size="18" font-weight="700" letter-spacing="0.3em" fill="${ECHO_COLOR}">ECHO</text>`;
+  svg += `<text x="${(sx(9)+sx(11))/2}" y="${ly}" text-anchor="middle" font-family="'B612 Mono',monospace" font-size="18" font-weight="700" letter-spacing="0.3em" fill="${ALPHA_COLOR}">ALPHA</text>`;
+  svg += `<text x="${(sx(5)+sx(7))/2 + (fretPos(6)-fretPos(5))*0.3}" y="${LABEL_TOP+FB_H+28}" text-anchor="middle" font-family="'B612 Mono',monospace" font-size="18" font-weight="700" letter-spacing="0.3em" fill="${DELTA_COLOR}">DELTA</text>`;
 
   // Nut
   svg += `<line x1="${LEFT}" y1="${LABEL_TOP-6}" x2="${LEFT}" y2="${sy(0)+6}" stroke="#d4cfc8" stroke-width="10"/>`;
@@ -660,7 +660,7 @@ render();
     const {cx, cy, r} = dotPos(dot, i);
     svg += `<circle cx="${cx}" cy="${cy}" r="${r+2.5}" fill="#080808"/>`;
     svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${dot.color}"/>`;
-    svg += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central" font-family="'Space Mono',monospace" font-size="${Math.round(r*1.3)}" font-weight="700" fill="#000">${dot.num}</text>`;
+    svg += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central" font-family="'B612 Mono',monospace" font-size="${Math.round(r*1.3)}" font-weight="700" fill="#000">${dot.num}</text>`;
   });
 
   svg += `</svg>`;
