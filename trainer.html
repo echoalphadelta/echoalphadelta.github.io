@@ -560,15 +560,23 @@ function buildButtons() {
   } else {
     wrap.classList.remove('harmonic-grid');
 
-    // Top row: [spacer] [C#] [Eb] [spacer] [F#] [Ab] [Bb]
+    // Top row: [half-sp] [C#] [Eb] [full-sp] [F#] [Ab] [Bb] [half-sp]
+    // Half spacers at each end offset the row by half a key width,
+    // centering each black key over the boundary between two white keys.
     const topRow = document.createElement('div');
     topRow.className = 'piano-row';
-    const sp = () => { const d = document.createElement('div'); d.className = 'piano-spacer'; return d; };
-    topRow.appendChild(sp());
+    const sp = (half) => {
+      const d = document.createElement('div');
+      d.className = 'piano-spacer';
+      if (half) d.style.flex = '0.5';
+      return d;
+    };
+    topRow.appendChild(sp(true));
     BLACK_KEYS.forEach(k => {
-      if (!k) { topRow.appendChild(sp()); return; }
+      if (!k) { topRow.appendChild(sp(false)); return; }
       topRow.appendChild(makeNoteBtn(k.note, k.label, 'accidental'));
     });
+    topRow.appendChild(sp(true));
 
     // Bottom row: [C] [D] [E] [F] [G] [A] [B]
     const botRow = document.createElement('div');
