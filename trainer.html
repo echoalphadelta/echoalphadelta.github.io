@@ -110,22 +110,15 @@ box-shadow: 0 0 6px rgba(245,166,35,0.5);
 
 /* ── NOTE BUTTONS ── */
 .note-buttons {
-display: flex;
-flex-direction: column;
+display: grid;
+grid-template-columns: repeat(14, 1fr);
+grid-template-rows: auto auto;
 gap: 4px;
 width: 100%;
 max-width: 600px;
 }
 
-.piano-row {
-display: flex;
-gap: 4px;
-}
-
-.piano-spacer { flex: 1; }
-
 .note-btn {
-flex: 1;
 font-family: 'Jura', sans-serif;
 font-size: 0.72rem;
 padding: 14px 0;
@@ -138,23 +131,19 @@ transition: all 0.12s;
 letter-spacing: 0.03em;
 }
 
-
 .note-btn:hover { border-color: #555; color: #e0e0e0; }
 .note-btn.correct { background: #0a2a0a !important; border-color: #7ed856 !important; color: #7ed856 !important; }
 .note-btn.wrong   { background: #2a0a0a !important; border-color: #ff3030 !important; color: #ff3030 !important; }
 .note-btn:disabled { cursor: default; }
 
-/* Harmonic mode: simple 6-column grid */
+/* Harmonic mode: plain 6-column grid */
 .note-buttons.harmonic-grid {
-display: grid;
 grid-template-columns: repeat(6, 1fr);
+grid-template-rows: auto;
 }
 .note-buttons.harmonic-grid .note-btn {
-padding: 14px 0;
-color: #888;
-border-color: #222;
-background: #000;
-font-size: 0.72rem;
+grid-row: auto !important;
+grid-column: auto !important;
 }
 
 /* ── TONIC DISPLAY ── */
@@ -425,26 +414,23 @@ const KEY_NAMES = ['C','C#','D','Eb','E','F','F#','G','Ab','A','Bb','B'];
 let harmonicMode = false;
 let tonicRoot = 0; // note index of tonal centre
 const NOTE_NAMES   = ['C','C#','D','Eb','E','F','F#','G','Ab','A','Bb','B'];
-// Piano keyboard layout
-// Top row:    [spacer] [C#] [Eb] [spacer] [F#] [Ab] [Bb]
-// Bottom row: [C]      [D]  [E]  [F]      [G]  [A]  [B]
-// Each spacer = 1 flex unit, each button = 1 flex unit → 7 units per row
+// Piano keyboard layout — 14-column grid, each button spans 2 cols
+// Black keys (row 1) sit centred over white key boundaries (row 2)
 const WHITE_KEYS = [
-  { note: 0,  label: 'C' },
-  { note: 2,  label: 'D' },
-  { note: 4,  label: 'E' },
-  { note: 5,  label: 'F' },
-  { note: 7,  label: 'G' },
-  { note: 9,  label: 'A' },
-  { note: 11, label: 'B' },
+  { note: 0,  label: 'C',  col: '1/3' },
+  { note: 2,  label: 'D',  col: '3/5' },
+  { note: 4,  label: 'E',  col: '5/7' },
+  { note: 5,  label: 'F',  col: '7/9' },
+  { note: 7,  label: 'G',  col: '9/11' },
+  { note: 9,  label: 'A',  col: '11/13' },
+  { note: 11, label: 'B',  col: '13/15' },
 ];
 const BLACK_KEYS = [
-  { note: 1,  label: 'C#' },
-  { note: 3,  label: 'Eb' },
-  null, // gap over E–F (no black key)
-  { note: 6,  label: 'F#' },
-  { note: 8,  label: 'Ab' },
-  { note: 10, label: 'Bb' },
+  { note: 1,  label: 'C#', col: '2/4' },
+  { note: 3,  label: 'Eb', col: '4/6' },
+  { note: 6,  label: 'F#', col: '8/10' },
+  { note: 8,  label: 'Ab', col: '10/12' },
+  { note: 10, label: 'Bb', col: '12/14' },
 ];
 const TOTAL_Q   = 10;
 const MAX_TIME  = 10; // seconds per question
@@ -559,32 +545,20 @@ function buildButtons() {
     }
   } else {
     wrap.classList.remove('harmonic-grid');
-
-    // Top row: [half-sp] [C#] [Eb] [full-sp] [F#] [Ab] [Bb] [half-sp]
-    // Half spacers at each end offset the row by half a key width,
-    // centering each black key over the boundary between two white keys.
-    const topRow = document.createElement('div');
-    topRow.className = 'piano-row';
-    const sp = (half) => {
-      const d = document.createElement('div');
-      d.className = 'piano-spacer';
-      if (half) d.style.flex = '0.5';
-      return d;
-    };
-    topRow.appendChild(sp(true));
+    // Row 1: black keys centred over white key boundaries
     BLACK_KEYS.forEach(k => {
-      if (!k) { topRow.appendChild(sp(false)); return; }
-      topRow.appendChild(makeNoteBtn(k.note, k.label, 'accidental'));
+      const btn = makeNoteBtn(k.note, k.label, '');
+      btn.style.gridColumn = k.col;
+      btn.style.gridRow = '1';
+      wrap.appendChild(btn);
     });
-    topRow.appendChild(sp(true));
-
-    // Bottom row: [C] [D] [E] [F] [G] [A] [B]
-    const botRow = document.createElement('div');
-    botRow.className = 'piano-row';
-    WHITE_KEYS.forEach(k => botRow.appendChild(makeNoteBtn(k.note, k.label, 'natural')));
-
-    wrap.appendChild(topRow);
-    wrap.appendChild(botRow);
+    // Row 2: white keys
+    WHITE_KEYS.forEach(k => {
+      const btn = makeNoteBtn(k.note, k.label, '');
+      btn.style.gridColumn = k.col;
+      btn.style.gridRow = '2';
+      wrap.appendChild(btn);
+    });
   }
 }
 
