@@ -334,6 +334,10 @@ border-radius: 2px;
         Describe a note relative to the tonal centre
       </div>
     </div>
+    <div id="certHarmonicInfo" class="hidden" style="text-align:center;padding:0.5rem 0 0.4rem;">
+      <div style="font-family:'Jura',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#f5a623;margin-bottom:0.5rem;">Harmonic Mode</div>
+      <div style="font-family:'Jura',sans-serif;font-size:0.62rem;letter-spacing:0.1em;color:#555;line-height:1.85;">Identify each highlighted note as a Nashville number<br>relative to the tonal centre shown above.</div>
+    </div>
     <div class="tonic-selector" id="tonicSelector">
       <div class="tonic-label">Select Tonal Centre</div>
       <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;width:300px;" id="tonicGrid"></div>
@@ -884,6 +888,8 @@ drawFretboard();
   if (document.getElementById('harmonicStartInstruction')) {
     document.getElementById('harmonicStartInstruction').classList.add('hidden');
   }
+  const certInfo = document.getElementById('certHarmonicInfo');
+  if (certInfo) certInfo.classList.remove('hidden');
   // Begin button remains visible — user starts when ready
 })();
 
