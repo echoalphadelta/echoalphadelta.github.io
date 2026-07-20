@@ -120,7 +120,7 @@ max-width: 600px;
 .note-btn {
 font-family: 'Jura', sans-serif;
 font-size: 0.72rem;
-padding: 14px 0;
+padding: 12px 0;
 background: #000;
 border: 1px solid #222;
 color: #888;
@@ -128,6 +128,14 @@ cursor: pointer;
 border-radius: 0;
 transition: all 0.12s;
 letter-spacing: 0.03em;
+line-height: 1;
+}
+.note-btn-sub {
+display: block;
+font-size: 0.55rem;
+opacity: 0.45;
+margin-top: 4px;
+letter-spacing: 0.02em;
 }
 
 .note-btn:hover { border-color: #555; color: #e0e0e0; }
@@ -406,19 +414,19 @@ const KEY_NAMES = ['C','C#','D','Eb','E','F','F#','G','Ab','A','Bb','B'];
 let harmonicMode = false;
 let tonicRoot = 0; // note index of tonal centre
 const NOTE_NAMES   = ['C','C#','D','Eb','E','F','F#','G','Ab','A','Bb','B'];
-// Chromatic order for standard mode (4×3 grid: C C# D Eb / E F F# G / Ab A Bb B)
+// Chromatic order for standard mode (4×3 grid)
 const CHROMATIC_KEYS = [
   { note: 0,  label: 'C'  },
-  { note: 1,  label: 'C#' },
+  { note: 1,  label: 'C#', sub: 'Db' },
   { note: 2,  label: 'D'  },
-  { note: 3,  label: 'Eb' },
+  { note: 3,  label: 'Eb', sub: 'D#' },
   { note: 4,  label: 'E'  },
   { note: 5,  label: 'F'  },
-  { note: 6,  label: 'F#' },
+  { note: 6,  label: 'F#', sub: 'Gb' },
   { note: 7,  label: 'G'  },
-  { note: 8,  label: 'Ab' },
+  { note: 8,  label: 'Ab', sub: 'G#' },
   { note: 9,  label: 'A'  },
-  { note: 10, label: 'Bb' },
+  { note: 10, label: 'Bb', sub: 'A#' },
   { note: 11, label: 'B'  },
 ];
 const TOTAL_Q   = 10;
@@ -514,10 +522,14 @@ function randomQuestion() {
 }
 
 // ── Build note buttons ───────────────────────────────────────────
-function makeNoteBtn(noteIndex, label, type) {
+function makeNoteBtn(noteIndex, label, type, sub) {
   const btn = document.createElement('button');
   btn.className = 'note-btn ' + type;
-  btn.textContent = label;
+  if (sub) {
+    btn.innerHTML = label + '<span class="note-btn-sub">' + sub + '</span>';
+  } else {
+    btn.textContent = label;
+  }
   btn.dataset.note = noteIndex;
   btn.onclick = () => handleAnswer(noteIndex, btn);
   return btn;
@@ -534,7 +546,7 @@ function buildButtons() {
     }
   } else {
     wrap.classList.remove('harmonic-grid');
-    CHROMATIC_KEYS.forEach(k => wrap.appendChild(makeNoteBtn(k.note, k.label, '')));
+    CHROMATIC_KEYS.forEach(k => wrap.appendChild(makeNoteBtn(k.note, k.label, '', k.sub)));
   }
 }
 
