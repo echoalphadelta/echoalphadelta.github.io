@@ -111,8 +111,9 @@ box-shadow: 0 0 6px rgba(245,166,35,0.5);
 /* ── NOTE BUTTONS ── */
 .note-buttons {
 display: grid;
-grid-template-columns: repeat(6, 1fr);
-gap: 6px;
+grid-template-columns: repeat(14, 1fr);
+grid-template-rows: auto auto;
+gap: 4px;
 width: 100%;
 max-width: 600px;
 }
@@ -125,14 +126,50 @@ background: #000;
 border: 1px solid #222;
 color: #888;
 cursor: pointer;
-border-radius: 3px;
+border-radius: 0;
 transition: all 0.12s;
+letter-spacing: 0.03em;
 }
 
-.note-btn:hover { border-color: #555; color: #e0e0e0; background: #000; }
-.note-btn.correct { background: #0a2a0a; border-color: #7ed856; color: #7ed856; }
-.note-btn.wrong   { background: #2a0a0a; border-color: #ff3030; color: #ff3030; }
+/* Piano layout: white keys (row 2) */
+.note-btn.natural {
+grid-row: 2;
+padding: 22px 0;
+color: #ccc;
+border-color: #333;
+}
+
+/* Piano layout: black keys (row 1) */
+.note-btn.accidental {
+grid-row: 1;
+padding: 13px 0;
+background: #0d0d0d;
+border-color: #2a2a2a;
+color: #777;
+font-size: 0.62rem;
+}
+
+.note-btn:hover { border-color: #555; color: #e0e0e0; }
+.note-btn.natural:hover { background: #080808; }
+.note-btn.accidental:hover { background: #1c1c1c; }
+.note-btn.correct { background: #0a2a0a !important; border-color: #7ed856 !important; color: #7ed856 !important; }
+.note-btn.wrong   { background: #2a0a0a !important; border-color: #ff3030 !important; color: #ff3030 !important; }
 .note-btn:disabled { cursor: default; }
+
+/* Harmonic mode: plain 6-column grid */
+.note-buttons.harmonic-grid {
+grid-template-columns: repeat(6, 1fr);
+grid-template-rows: auto;
+}
+.note-buttons.harmonic-grid .note-btn {
+grid-row: 1 !important;
+grid-column: auto !important;
+padding: 14px 0;
+color: #888;
+border-color: #222;
+background: #000;
+font-size: 0.72rem;
+}
 
 /* ── TONIC DISPLAY ── */
 #tonicDisplay {
@@ -402,21 +439,22 @@ const KEY_NAMES = ['C','C#','D','Eb','E','F','F#','G','Ab','A','Bb','B'];
 let harmonicMode = false;
 let tonicRoot = 0; // note index of tonal centre
 const NOTE_NAMES   = ['C','C#','D','Eb','E','F','F#','G','Ab','A','Bb','B'];
-const BUTTON_ORDER  = [9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8]; // A through Ab
-const BUTTON_LABELS = {
-  9:  'A',
-  10: 'Bb / A#',
-  11: 'B',
-  0:  'C',
-  1:  'C# / Db',
-  2:  'D',
-  3:  'Eb / D#',
-  4:  'E',
-  5:  'F',
-  6:  'F# / Gb',
-  7:  'G',
-  8:  'Ab / G#',
-};
+// Piano keyboard layout: white keys on row 2, black keys on row 1
+// grid-column uses a 14-column grid (7 white keys × 2 columns each)
+const PIANO_KEYS = [
+  { note: 0,  label: 'C',  col: '1/3',   type: 'natural' },
+  { note: 1,  label: 'C#', col: '2/4',   type: 'accidental' },
+  { note: 2,  label: 'D',  col: '3/5',   type: 'natural' },
+  { note: 3,  label: 'Eb', col: '4/6',   type: 'accidental' },
+  { note: 4,  label: 'E',  col: '5/7',   type: 'natural' },
+  { note: 5,  label: 'F',  col: '7/9',   type: 'natural' },
+  { note: 6,  label: 'F#', col: '8/10',  type: 'accidental' },
+  { note: 7,  label: 'G',  col: '9/11',  type: 'natural' },
+  { note: 8,  label: 'Ab', col: '10/12', type: 'accidental' },
+  { note: 9,  label: 'A',  col: '11/13', type: 'natural' },
+  { note: 10, label: 'Bb', col: '12/14', type: 'accidental' },
+  { note: 11, label: 'B',  col: '13/15', type: 'natural' },
+];
 const TOTAL_Q   = 10;
 const MAX_TIME  = 10; // seconds per question
 
@@ -514,7 +552,7 @@ function buildButtons() {
   const wrap = document.getElementById('noteButtons');
   wrap.innerHTML = '';
   if (harmonicMode) {
-    // Order buttons 1 through Maj7 (intervals 0-11)
+    wrap.classList.add('harmonic-grid');
     for (let interval = 0; interval < 12; interval++) {
       const noteIndex = (tonicRoot + interval) % 12;
       const btn = document.createElement('button');
@@ -525,12 +563,14 @@ function buildButtons() {
       wrap.appendChild(btn);
     }
   } else {
-    BUTTON_ORDER.forEach(i => {
+    wrap.classList.remove('harmonic-grid');
+    PIANO_KEYS.forEach(k => {
       const btn = document.createElement('button');
-      btn.className = 'note-btn';
-      btn.textContent = BUTTON_LABELS[i];
-      btn.dataset.note = i;
-      btn.onclick = () => handleAnswer(i, btn);
+      btn.className = 'note-btn ' + k.type;
+      btn.textContent = k.label;
+      btn.dataset.note = k.note;
+      btn.style.gridColumn = k.col;
+      btn.onclick = () => handleAnswer(k.note, btn);
       wrap.appendChild(btn);
     });
   }
