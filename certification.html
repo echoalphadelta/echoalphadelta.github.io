@@ -9,22 +9,22 @@
 <style>
 html, body { margin: 0; padding: 0; background: #000; }
 * { box-sizing: border-box; }
-body { color: #f0ede8; font-size: 115%; font-family: 'Jura', monospace; line-height: 1.85; }
+body { color: #f0ede8; font-family: 'Jura', sans-serif; line-height: 1.85; }
 .page { max-width: 600px; margin: 0 auto; padding: 40px 24px 80px; text-align: center; }
-.back-link { display: inline-block; font-family: 'Jura', monospace; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #f5a623; text-decoration: none; padding: 0.5rem 1.2rem; border: 1px solid rgba(245,166,35,0.25); border-radius: 0; margin-bottom: 48px; transition: all 0.3s ease; }
+.back-link { display: inline-block; font-family: 'Jura', sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #f5a623; text-decoration: none; padding: 0.5rem 1.2rem; border: 1px solid rgba(245,166,35,0.25); border-radius: 0; margin-bottom: 48px; transition: all 0.3s ease; }
 .back-link:hover { color: #ffc85c; border-color: rgba(245,166,35,0.5); box-shadow: 0 0 12px rgba(245,166,35,0.2); }
-h1 { font-family: 'Jura', monospace; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #f5a623; text-shadow: 0 0 16px rgba(245,166,35,0.4); margin: 0 0 8px 0; }
+h1 { font-family: 'Turret Road', sans-serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #f5a623; text-shadow: 0 0 16px rgba(245,166,35,0.4); margin: 0 0 8px 0; }
 .subtitle { font-size: 0.78rem; color: rgba(240,237,232,0.42); margin: 0 0 48px; letter-spacing: 0.04em; }
 
 .phases { display: flex; flex-direction: column; gap: 16px; margin-bottom: 48px; text-align: left; }
-.phase { border: 1px solid rgba(245,166,35,0.18); border-radius: 8px; padding: 18px 20px; display: flex; align-items: flex-start; gap: 16px; }
-.phase-num { font-family: 'Jura', monospace; font-size: 1.4rem; font-weight: 700; color: rgba(245,166,35,0.35); line-height: 1; flex-shrink: 0; width: 28px; }
+.phase { border: 1px solid rgba(245,166,35,0.18); border-radius: 0; padding: 18px 20px; display: flex; align-items: flex-start; gap: 16px; }
+.phase-num { font-family: 'Turret Road', sans-serif; font-size: 1.4rem; font-weight: 700; color: rgba(245,166,35,0.35); line-height: 1; flex-shrink: 0; width: 28px; }
 .phase-body {}
-.phase-title { font-family: 'Jura', monospace; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #f5a623; margin-bottom: 4px; }
+.phase-title { font-family: 'Jura', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #f5a623; margin-bottom: 4px; }
 .phase-desc { font-size: 0.72rem; color: rgba(240,237,232,0.5); line-height: 1.7; }
 
 .start-btn {
-  font-family: 'Jura', monospace; font-size: 0.85rem; font-weight: 700;
+  font-family: 'Jura', sans-serif; font-size: 0.85rem; font-weight: 700;
   letter-spacing: 0.2em; text-transform: uppercase;
   color: #000; background: #f5a623; border: none; border-radius: 0;
   padding: 0.9rem 3rem; cursor: pointer;
@@ -32,6 +32,53 @@ h1 { font-family: 'Jura', monospace; font-size: 1.5rem; font-weight: 700; letter
   transition: box-shadow 0.3s, transform 0.15s;
 }
 .start-btn:hover { box-shadow: 0 0 52px rgba(245,166,35,0.65); transform: scale(1.03); }
+
+/* Quiz screens */
+.quiz-screen { display: none; text-align: left; }
+.quiz-screen.active { display: block; }
+.quiz-step { font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase; color: rgba(240,237,232,0.3); margin-bottom: 4px; }
+.quiz-key-label { font-family: 'Turret Road', sans-serif; font-size: 1.1rem; letter-spacing: 0.12em; color: #f5a623; margin-bottom: 6px; }
+.quiz-prompt { font-size: 0.8rem; color: rgba(240,237,232,0.55); margin-bottom: 18px; line-height: 1.5; letter-spacing: 0.03em; }
+.quiz-board { margin-bottom: 18px; border: 1px solid rgba(255,255,255,0.06); overflow: hidden; background: #080808; }
+.quiz-selects { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.quiz-select {
+  width: 100%; font-family: 'Jura', sans-serif; font-size: 0.82rem;
+  background: #0a0a0a; color: #f0ede8;
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 0;
+  padding: 11px 36px 11px 14px; letter-spacing: 0.06em; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+}
+.quiz-select:focus { outline: none; border-color: rgba(245,166,35,0.5); }
+.quiz-select option { background: #111; }
+.shape-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.shape-btn {
+  font-family: 'Jura', sans-serif; font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  background: #000; border: 1px solid; padding: 13px 0;
+  cursor: pointer; transition: opacity 0.12s; border-radius: 0;
+  opacity: 0.35;
+}
+.shape-btn.selected { opacity: 1; }
+.shape-btn:hover { opacity: 0.75; }
+.quiz-submit {
+  display: block; width: 100%; font-family: 'Jura', sans-serif; font-size: 0.8rem;
+  font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  background: #f5a623; color: #000; border: none; border-radius: 0;
+  padding: 14px; cursor: pointer; transition: box-shadow 0.2s; margin-bottom: 12px;
+}
+.quiz-submit:hover { box-shadow: 0 0 24px rgba(245,166,35,0.5); }
+.quiz-feedback { font-family: 'Jura', sans-serif; font-size: 0.78rem; letter-spacing: 0.06em; padding: 12px 14px; text-align: center; min-height: 20px; }
+.quiz-feedback.hit { background: rgba(46,204,113,0.06); color: #7ed856; border: 1px solid rgba(46,204,113,0.2); }
+.quiz-feedback.miss { background: rgba(231,76,60,0.06); color: #e74c3c; border: 1px solid rgba(231,76,60,0.15); }
+.quiz-next {
+  display: none; width: 100%; font-family: 'Jura', sans-serif; font-size: 0.8rem;
+  font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  background: transparent; color: #f0ede8; border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 0; padding: 14px; cursor: pointer; transition: all 0.2s; margin-top: 8px;
+}
+.quiz-next:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.04); }
 
 /* Complete screen */
 .complete { display: none; flex-direction: column; align-items: center; gap: 24px; }
@@ -42,47 +89,43 @@ h1 { font-family: 'Jura', monospace; font-size: 1.5rem; font-weight: 700; letter
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 0 60px rgba(245,166,35,0.35), inset 0 0 40px rgba(245,166,35,0.08);
 }
-.cert-badge-inner { font-family: 'Jura', monospace; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #f5a623; text-shadow: 0 0 14px rgba(245,166,35,0.6); line-height: 1.5; }
-.complete-title { font-family: 'Jura', monospace; font-size: 1.2rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #f5a623; text-shadow: 0 0 20px rgba(245,166,35,0.5); }
+.cert-badge-inner { font-family: 'Jura', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #f5a623; text-shadow: 0 0 14px rgba(245,166,35,0.6); line-height: 1.5; }
+.complete-title { font-family: 'Turret Road', sans-serif; font-size: 1.2rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #f5a623; text-shadow: 0 0 20px rgba(245,166,35,0.5); }
 .complete-sub { font-size: 0.74rem; color: rgba(240,237,232,0.45); max-width: 360px; line-height: 1.8; }
-.home-link { font-family: 'Jura', monospace; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #f5a623; text-decoration: none; padding: 0.6rem 2rem; border: 1px solid rgba(245,166,35,0.35); border-radius: 0; transition: all 0.3s; }
+.home-link { font-family: 'Jura', sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #f5a623; text-decoration: none; padding: 0.6rem 2rem; border: 1px solid rgba(245,166,35,0.35); border-radius: 0; transition: all 0.3s; }
 .home-link:hover { border-color: rgba(245,166,35,0.7); box-shadow: 0 0 14px rgba(245,166,35,0.25); }
-
 .email-section { width: 100%; max-width: 360px; border-top: 1px solid rgba(245,166,35,0.12); padding-top: 28px; display: flex; flex-direction: column; gap: 10px; }
 .email-label { font-size: 0.7rem; color: rgba(240,237,232,0.45); letter-spacing: 0.06em; line-height: 1.7; }
 .email-row { display: flex; gap: 8px; }
 .email-input {
-  flex: 1; font-family: 'Jura', monospace; font-size: 0.8rem;
+  flex: 1; font-family: 'Jura', sans-serif; font-size: 0.8rem;
   background: #080808; color: #f0ede8;
-  border: 1px solid rgba(245,166,35,0.25); border-radius: 4px;
+  border: 1px solid rgba(245,166,35,0.25); border-radius: 0;
   padding: 10px 14px; letter-spacing: 0.04em; outline: none;
   transition: border-color 0.2s;
 }
 .email-input:focus { border-color: rgba(245,166,35,0.6); }
 .email-input::placeholder { color: rgba(240,237,232,0.25); }
 .email-submit {
-  font-family: 'Jura', monospace; font-size: 0.72rem; font-weight: 700;
+  font-family: 'Jura', sans-serif; font-size: 0.72rem; font-weight: 700;
   letter-spacing: 0.15em; text-transform: uppercase;
-  color: #000; background: #f5a623; border: none; border-radius: 4px;
+  color: #000; background: #f5a623; border: none; border-radius: 0;
   padding: 10px 18px; cursor: pointer; white-space: nowrap;
   transition: box-shadow 0.2s;
 }
 .email-submit:hover { box-shadow: 0 0 20px rgba(245,166,35,0.5); }
 .email-submit:disabled { opacity: 0.4; cursor: default; }
 .email-confirm { font-size: 0.7rem; color: rgba(245,166,35,0.7); letter-spacing: 0.06em; min-height: 1.2em; }
-
-#intro { }
 </style>
 </head>
 <body>
 <div class="page">
   <a href="index.html" class="back-link">&#8592; Back to Map</a>
 
-  <!-- Intro / start screen -->
+  <!-- Intro -->
   <div id="intro">
     <h1>Get Certified</h1>
-    <p class="subtitle">Complete three stages to earn your certification.</p>
-
+    <p class="subtitle">Complete five stages to earn your certification.</p>
     <div class="phases">
       <div class="phase">
         <div class="phase-num">1</div>
@@ -101,13 +144,86 @@ h1 { font-family: 'Jura', monospace; font-size: 1.5rem; font-weight: 700; letter
       <div class="phase">
         <div class="phase-num">3</div>
         <div class="phase-body">
+          <div class="phase-title">Name the Note — Key of A</div>
+          <div class="phase-desc">A note is highlighted on the fretboard. Identify its name, Nashville number, and shape.</div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-num">4</div>
+        <div class="phase-body">
+          <div class="phase-title">Name the Note — Key of Eb</div>
+          <div class="phase-desc">Same challenge in a different key. Different string, different position.</div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-num">5</div>
+        <div class="phase-body">
           <div class="phase-title">25 Exercises</div>
           <div class="phase-desc">25 chord grip challenges in a row, random keys, qualities, and shapes across Echo, Alpha, and Delta.</div>
         </div>
       </div>
     </div>
-
     <button class="start-btn" onclick="startCert()">Start Certification</button>
+  </div>
+
+  <!-- Quiz 1: Key of A, B string fret 5 → E, 5, Echo -->
+  <div class="quiz-screen" id="quiz1">
+    <p class="quiz-step">Stage 3 of 5</p>
+    <p class="quiz-key-label">Key of A</p>
+    <p class="quiz-prompt">In the Key of A, how do we identify this note?</p>
+    <div class="quiz-board" id="board1"></div>
+    <div class="quiz-selects">
+      <select id="q1-note" class="quiz-select">
+        <option value="" disabled selected hidden>Note name ▾</option>
+        <option>A</option><option>Bb</option><option>B</option><option>C</option>
+        <option>C#</option><option>D</option><option>Eb</option><option>E</option>
+        <option>F</option><option>F#</option><option>G</option><option>Ab</option>
+      </select>
+      <select id="q1-number" class="quiz-select">
+        <option value="" disabled selected hidden>Nashville number ▾</option>
+        <option>1</option><option>b2</option><option>2</option><option>b3</option>
+        <option>3</option><option>4</option><option>b5</option><option>5</option>
+        <option>b6</option><option>6</option><option>b7</option><option>7</option>
+      </select>
+    </div>
+    <div class="shape-btns" id="q1-shapes">
+      <button class="shape-btn" data-val="echo" style="color:#4a9eff;border-color:rgba(74,158,255,0.4);" onclick="selectShape('q1-shapes',this)">Echo</button>
+      <button class="shape-btn" data-val="alpha" style="color:#ff4a4a;border-color:rgba(255,74,74,0.4);" onclick="selectShape('q1-shapes',this)">Alpha</button>
+      <button class="shape-btn" data-val="delta" style="color:#4aff7a;border-color:rgba(74,255,122,0.4);" onclick="selectShape('q1-shapes',this)">Delta</button>
+    </div>
+    <button class="quiz-submit" onclick="submitQuiz(1)">Submit</button>
+    <div class="quiz-feedback" id="fb1"></div>
+    <button class="quiz-next" id="next1" onclick="showScreen('quiz2')">Next &#8594;</button>
+  </div>
+
+  <!-- Quiz 2: Key of Eb, high E string fret 3 → G, 3, Delta -->
+  <div class="quiz-screen" id="quiz2">
+    <p class="quiz-step">Stage 4 of 5</p>
+    <p class="quiz-key-label">Key of Eb</p>
+    <p class="quiz-prompt">In the Key of Eb, how do we identify this note?</p>
+    <div class="quiz-board" id="board2"></div>
+    <div class="quiz-selects">
+      <select id="q2-note" class="quiz-select">
+        <option value="" disabled selected hidden>Note name ▾</option>
+        <option>A</option><option>Bb</option><option>B</option><option>C</option>
+        <option>C#</option><option>D</option><option>Eb</option><option>E</option>
+        <option>F</option><option>F#</option><option>G</option><option>Ab</option>
+      </select>
+      <select id="q2-number" class="quiz-select">
+        <option value="" disabled selected hidden>Nashville number ▾</option>
+        <option>1</option><option>b2</option><option>2</option><option>b3</option>
+        <option>3</option><option>4</option><option>b5</option><option>5</option>
+        <option>b6</option><option>6</option><option>b7</option><option>7</option>
+      </select>
+    </div>
+    <div class="shape-btns" id="q2-shapes">
+      <button class="shape-btn" data-val="echo" style="color:#4a9eff;border-color:rgba(74,158,255,0.4);" onclick="selectShape('q2-shapes',this)">Echo</button>
+      <button class="shape-btn" data-val="alpha" style="color:#ff4a4a;border-color:rgba(255,74,74,0.4);" onclick="selectShape('q2-shapes',this)">Alpha</button>
+      <button class="shape-btn" data-val="delta" style="color:#4aff7a;border-color:rgba(74,255,122,0.4);" onclick="selectShape('q2-shapes',this)">Delta</button>
+    </div>
+    <button class="quiz-submit" onclick="submitQuiz(2)">Submit</button>
+    <div class="quiz-feedback" id="fb2"></div>
+    <button class="quiz-next" id="next2" onclick="goToExercises()">Continue to Exercises &#8594;</button>
   </div>
 
   <!-- Complete screen -->
@@ -116,7 +232,7 @@ h1 { font-family: 'Jura', monospace; font-size: 1.5rem; font-weight: 700; letter
       <div class="cert-badge-inner">Certified<br>&#10003;</div>
     </div>
     <div class="complete-title">Certification Complete</div>
-    <p class="complete-sub">You've completed the Fretboard Trainer, Harmonic Mode, and 25 exercises in a row. The fretboard is yours.</p>
+    <p class="complete-sub">You've completed all five stages. The fretboard is yours.</p>
     <a href="index.html" class="home-link">Back to Map</a>
     <div class="email-section">
       <p class="email-label">Enter your email to receive your certification document and stickers.</p>
@@ -130,34 +246,157 @@ h1 { font-family: 'Jura', monospace; font-size: 1.5rem; font-weight: 700; letter
 </div>
 
 <script>
+// ── Fretboard renderer ─────────────────────────────────────────────────────
+function renderQuizBoard(highlightStr, highlightFret) {
+  var W=660, H=200, ML=44, MR=8, MT=20, MB=28, NF=12;
+  var FW=(W-ML-MR)/NF, SH=(H-MT-MB)/5;
+  var sy = function(si) { return MT + (5-si)*SH; };
+  var fCx = function(f) { return ML + (f-0.5)*FW; };
+  var STR_THICK = [3.5, 2.7, 1.9, 1.3, 0.9, 0.5];
+  var AMBER = '#f5a623';
+  var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" xmlns="http://www.w3.org/2000/svg">';
+  s += '<line x1="' + ML + '" y1="' + (MT-4) + '" x2="' + ML + '" y2="' + (H-MB+4) + '" stroke="#d4cfc8" stroke-width="7"/>';
+  for (var i=1; i<=NF; i++) {
+    var x = (ML + i*FW).toFixed(1);
+    s += '<line x1="' + x + '" y1="' + MT + '" x2="' + x + '" y2="' + (H-MB) + '" stroke="#2a2a2a" stroke-width="1.5"/>';
+  }
+  [3,5,7,9].forEach(function(f) {
+    s += '<circle cx="' + fCx(f).toFixed(1) + '" cy="' + (MT+2.5*SH).toFixed(1) + '" r="4" fill="#1a1a1a"/>';
+  });
+  s += '<circle cx="' + fCx(12).toFixed(1) + '" cy="' + (MT+1.5*SH).toFixed(1) + '" r="4" fill="#1a1a1a"/>';
+  s += '<circle cx="' + fCx(12).toFixed(1) + '" cy="' + (MT+3.5*SH).toFixed(1) + '" r="4" fill="#1a1a1a"/>';
+  for (var si=0; si<6; si++) {
+    var y = sy(si).toFixed(1);
+    s += '<line x1="' + ML + '" y1="' + y + '" x2="' + (W-MR) + '" y2="' + y + '" stroke="#3a3a3a" stroke-width="' + STR_THICK[si] + '" stroke-linecap="round"/>';
+  }
+  [3,5,7,9,12].forEach(function(f) {
+    s += '<text x="' + fCx(f).toFixed(1) + '" y="' + (H-6) + '" text-anchor="middle" fill="#2a2a2a" font-size="10" font-family="Jura,sans-serif">' + f + '</text>';
+  });
+  var hx = fCx(highlightFret).toFixed(1);
+  var hy = sy(highlightStr).toFixed(1);
+  s += '<circle cx="' + hx + '" cy="' + hy + '" r="16" fill="' + AMBER + '" opacity="0.2"/>';
+  s += '<circle cx="' + hx + '" cy="' + hy + '" r="11" fill="' + AMBER + '" opacity="0.92"/>';
+  s += '</svg>';
+  return s;
+}
+
+// Render fretboards: Quiz1 = B string (si=4) fret 5, Quiz2 = high E (si=5) fret 3
+document.getElementById('board1').innerHTML = renderQuizBoard(4, 5);
+document.getElementById('board2').innerHTML = renderQuizBoard(5, 3);
+
+// ── Shape buttons ──────────────────────────────────────────────────────────
+function selectShape(groupId, btn) {
+  document.getElementById(groupId).querySelectorAll('.shape-btn').forEach(function(b) {
+    b.classList.remove('selected');
+  });
+  btn.classList.add('selected');
+}
+
+function getSelectedShape(groupId) {
+  var sel = document.getElementById(groupId).querySelector('.shape-btn.selected');
+  return sel ? sel.getAttribute('data-val') : '';
+}
+
+// ── Answers ────────────────────────────────────────────────────────────────
+var ANSWERS = {
+  1: { note: 'E', number: '5', shape: 'echo' },
+  2: { note: 'G', number: '3', shape: 'delta' }
+};
+
+function submitQuiz(n) {
+  var note   = document.getElementById('q' + n + '-note').value;
+  var number = document.getElementById('q' + n + '-number').value;
+  var shape  = getSelectedShape('q' + n + '-shapes');
+  var fb     = document.getElementById('fb' + n);
+  var nextBtn = document.getElementById('next' + n);
+
+  if (!note || !number || !shape) {
+    fb.className = 'quiz-feedback miss';
+    fb.textContent = 'Select all three answers before submitting.';
+    nextBtn.style.display = 'none';
+    return;
+  }
+
+  var ans = ANSWERS[n];
+  if (note === ans.note && number === ans.number && shape === ans.shape) {
+    fb.className = 'quiz-feedback hit';
+    fb.textContent = '✓ Correct';
+    nextBtn.style.display = 'block';
+  } else {
+    fb.className = 'quiz-feedback miss';
+    var hints = [];
+    if (note   !== ans.note)   hints.push('Note: ' + ans.note);
+    if (number !== ans.number) hints.push('Number: ' + ans.number);
+    if (shape  !== ans.shape)  hints.push('Shape: ' + ans.shape.charAt(0).toUpperCase() + ans.shape.slice(1));
+    fb.textContent = '✗ Not quite. ' + hints.join('  ·  ');
+    nextBtn.style.display = 'none';
+  }
+}
+
+// ── Screen transitions ─────────────────────────────────────────────────────
+var SCREENS = ['intro', 'quiz1', 'quiz2', 'complete'];
+
+function showScreen(id) {
+  SCREENS.forEach(function(s) {
+    var el = document.getElementById(s);
+    if (!el) return;
+    if (s === 'complete') {
+      el.classList.remove('visible');
+      el.style.display = 'none';
+    } else if (el.classList.contains('quiz-screen')) {
+      el.classList.remove('active');
+    } else {
+      el.style.display = 'none';
+    }
+  });
+  var target = document.getElementById(id);
+  if (!target) return;
+  if (id === 'complete') {
+    target.classList.add('visible');
+    target.style.display = 'flex';
+  } else if (target.classList.contains('quiz-screen')) {
+    target.classList.add('active');
+  } else {
+    target.style.display = 'block';
+  }
+  window.scrollTo(0, 0);
+}
+
+// ── Entry points ───────────────────────────────────────────────────────────
 function startCert() {
   sessionStorage.setItem('certPhase', '1');
   sessionStorage.setItem('certExercise', '1');
   location.href = 'trainer.html';
 }
 
-if (location.hash === '#complete') {
-  document.getElementById('intro').style.display = 'none';
-  document.getElementById('complete').classList.add('visible');
+function goToExercises() {
+  location.href = 'exercises.html';
 }
 
+// Route on load
+if (location.hash === '#complete') {
+  showScreen('complete');
+} else if (location.hash === '#quiz') {
+  showScreen('quiz1');
+  history.replaceState(null, '', location.pathname);
+}
+
+// ── Email ──────────────────────────────────────────────────────────────────
 function submitCertEmail() {
-  const input = document.getElementById('certEmail');
-  const btn   = document.getElementById('certEmailBtn');
-  const conf  = document.getElementById('certEmailConfirm');
-  const email = input.value.trim();
+  var input = document.getElementById('certEmail');
+  var btn   = document.getElementById('certEmailBtn');
+  var conf  = document.getElementById('certEmailConfirm');
+  var email = input.value.trim();
   if (!email || !email.includes('@')) {
     conf.style.color = 'rgba(231,76,60,0.8)';
     conf.textContent = 'Please enter a valid email.';
     return;
   }
-  btn.disabled = true;
-  input.disabled = true;
-  // Send to Formspree (replace with your own endpoint or service)
+  btn.disabled = true; input.disabled = true;
   fetch('https://formspree.io/f/certified', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({ email, source: 'certification' })
+    body: JSON.stringify({ email: email, source: 'certification' })
   }).then(function(r) {
     conf.style.color = 'rgba(245,166,35,0.8)';
     conf.textContent = r.ok ? 'Got it, check your inbox soon.' : 'Something went wrong. Try again.';
