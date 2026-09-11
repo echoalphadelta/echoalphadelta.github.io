@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;600;700&family=Turret+Road:wght@400;700&display=swap" rel="stylesheet">
 <style>
-html, body { margin: 0; padding: 0; background: #000; }
+html, body { margin: 0; padding: 0; background: #0f0f13; }
 * { box-sizing: border-box; }
 body { color: #f0ede8; font-size: 115%; font-family: 'Jura', monospace; line-height: 1.85; }
 .page { max-width: 680px; margin: 0 auto; padding: 40px 24px 80px; }
@@ -52,7 +52,6 @@ h1 { font-family: 'Jura', monospace; font-size: 1.5rem; font-weight: 700; letter
 }
 .next-btn:hover { border-color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.04); }
 
-/* Score screen */
 .score-emojis { font-size: 2.4rem; letter-spacing: 0.15em; text-align: center; margin-bottom: 8px; }
 .score-tally { font-family: 'Jura', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(240,237,232,0.35); text-align: center; margin-bottom: 28px; }
 .result-rows { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
@@ -71,7 +70,6 @@ h1 { font-family: 'Jura', monospace; font-size: 1.5rem; font-weight: 700; letter
 .share-btn:hover { background: rgba(57,255,20,0.08); border-color: rgba(57,255,20,0.7); box-shadow: 0 0 16px rgba(57,255,20,0.2); }
 .share-msg { margin-top: 12px; }
 
-/* Coming soon */
 .coming-soon { font-size: 0.78rem; color: rgba(240,237,232,0.38); text-align: center; padding: 60px 0; letter-spacing: 0.08em; }
 </style>
 </head>
@@ -84,7 +82,6 @@ h1 { font-family: 'Jura', monospace; font-size: 1.5rem; font-weight: 700; letter
 </div>
 
 <script>
-// ── Shared constants (ported from exercises.html) ──────────────────────────
 const STR_OPEN  = [4, 9, 2, 7, 11, 4];
 const STR_THICK = [3.5, 2.7, 1.9, 1.3, 0.9, 0.5];
 const NOTES   = ['A','Bb','B','C','C#','D','Eb','E','F','F#','G','Ab'];
@@ -113,7 +110,6 @@ const QUALITIES = [
   { s:'sus4', label:'sus4',  iv:[0,5,7]    },
 ];
 
-// ── Grip computation (exact port from exercises.html) ──────────────────────
 function findFrets(si, pc) {
   const out = [];
   for (let f = 0; f <= 12; f++) if ((STR_OPEN[si] + f) % 12 === pc) out.push(f);
@@ -182,7 +178,6 @@ function computeGripTones(shapeName, qualStr, rootPc) {
   return result;
 }
 
-// ── Fretboard SVG (display-only) ───────────────────────────────────────────
 function renderChordFretboard(gripTones, shape) {
   const W=660, H=280, ML=36, MR=8, MT=18, MB=34, NF=12;
   const FW=(W-ML-MR)/NF, SH=(H-MT-MB)/5;
@@ -217,13 +212,12 @@ function renderChordFretboard(gripTones, shape) {
   return s;
 }
 
-// ── Daily seed & chord generation ──────────────────────────────────────────
 function seededRand(n) { const x=Math.sin(n+0.5)*10000; return x-Math.floor(x); }
 function seededInt(n, max) { return Math.floor(seededRand(n)*max); }
 
 const todayDate = new Date();
 const dayNum    = Math.floor(todayDate.getTime() / 86400000);
-const isNameMode = true; // Name the Chord every day until Map the Chord is ready
+const isNameMode = true;
 const dateStr   = todayDate.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
 
 document.getElementById('dailySub').textContent = dateStr + '  ·  Name the Chord';
@@ -237,10 +231,8 @@ const dailyChords = ['echo','alpha','delta'].map((shape, i) => {
            gripTones: computeGripTones(shape, qual.s, NOTE_PC[key]) };
 });
 
-// ── Persistence ────────────────────────────────────────────────────────────
 const saveKey = 'dailyGame_' + dayNum;
 
-// ── Game state ─────────────────────────────────────────────────────────────
 let gs = { phase: 'playing', current: 0, results: [] };
 
 const saved = localStorage.getItem(saveKey);
@@ -249,7 +241,6 @@ if (saved) {
   gs = { phase: 'done', current: 3, results: data.results };
 }
 
-// ── Rendering ──────────────────────────────────────────────────────────────
 function render() {
   const area = document.getElementById('gameArea');
   if (gs.phase === 'done')     { area.innerHTML = renderScoreScreen(); return; }
@@ -331,7 +322,6 @@ function renderScoreScreen() {
   `;
 }
 
-// ── Actions ────────────────────────────────────────────────────────────────
 function submitGuess() {
   const rootEl = document.getElementById('guessRoot');
   const qualEl = document.getElementById('guessQual');
@@ -391,7 +381,6 @@ function showSharePanel(text) {
   ta.select();
 }
 
-// ── Init ───────────────────────────────────────────────────────────────────
 render();
 </script>
 </body>

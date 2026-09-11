@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;600;700&family=Turret+Road:wght@400;700&display=swap" rel="stylesheet">
 <style>
-html, body { margin: 0; padding: 0; background: #000; }
+html, body { margin: 0; padding: 0; background: #0f0f13; }
 * { box-sizing: border-box; }
 body { color: #f0ede8; font-family: 'Jura', monospace; line-height: 1.85; }
 .page { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
@@ -36,7 +36,7 @@ p.intro { color: #e0ddd8; margin-bottom: 40px; }
 </div>
 <script>
 function neckSVG(o) {
-  var strings   = o.strings;   // per string: fret number (0=open, -1=muted)
+  var strings   = o.strings;
   var nashville = o.nashville;
   var color     = o.color;
   var NUM_FRETS = 12;
@@ -51,14 +51,12 @@ function neckSVG(o) {
 
   var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" xmlns="http://www.w3.org/2000/svg">';
 
-  // Fret lines (nut + frets)
   for (var f = 0; f <= NUM_FRETS; f++) {
     var x = fretPos(f).toFixed(1);
     var isNut = f === 0;
     s += '<line x1="' + x + '" y1="' + nTop + '" x2="' + x + '" y2="' + nBot + '" stroke="' + (isNut ? '#d4cfc8' : '#666') + '" stroke-width="' + (isNut ? 10 : 3) + '"/>';
   }
 
-  // Fret position markers between strings
   [3, 5, 7, 9].forEach(function(f) {
     var mx = ((fretPos(f - 1) + fretPos(f)) / 2).toFixed(1);
     var my = (MT + 2.5 * SH).toFixed(1);
@@ -69,13 +67,11 @@ function neckSVG(o) {
     s += '<circle cx="' + x12.toFixed(1) + '" cy="' + (MT + i * SH).toFixed(1) + '" r="3.5" fill="#ccc"/>';
   });
 
-  // String lines
   for (var si = 0; si < 6; si++) {
     var y = sy(si).toFixed(1);
     s += '<line x1="' + ML + '" y1="' + y + '" x2="' + fretPos(NUM_FRETS).toFixed(1) + '" y2="' + y + '" stroke="#999" stroke-width="' + thicknesses[si] + '" stroke-linecap="round"/>';
   }
 
-  // Dots
   for (var si = 0; si < 6; si++) {
     var fret = strings[si];
     if (fret < 0) continue;
@@ -96,8 +92,8 @@ function neckSVG(o) {
 }
 
 var VOICINGS = [
-  {name: 'The Hendrix Chord', subname: '7\u266f9', key: 'D', color: '#9b5de5',
-   strings: [-1,5,4,5,6,-1], nashville: ['','1','3','7','\u266f9','']},
+  {name: 'The Hendrix Chord', subname: '7♯9', key: 'D', color: '#9b5de5',
+   strings: [-1,5,4,5,6,-1], nashville: ['','1','3','7','♯9','']},
   {name: 'The James Brown Chord', subname: '9', key: 'G', color: '#7c3a1f',
    strings: [-1,10,9,10,10,10], nashville: ['','1','3','7','9','5']},
   {name: 'The James Bond Chord', subname: 'mM7', key: 'E', color: '#b0b0c0',
@@ -105,9 +101,9 @@ var VOICINGS = [
 ];
 
 var POWER_CHORDS = [
-  {position: 'Echo', key: 'F\u266f', color: '#4a9eff', strings: [2,4,4,-1,-1,-1], nashville: ['1','5','1','','','']},
-  {position: 'Alpha', key: 'C\u266f', color: '#ff4a4a', strings: [-1,4,6,6,-1,-1], nashville: ['','1','5','1','','']},
-  {position: 'Delta', key: 'E\u266d', color: '#4aff7a', strings: [-1,-1,1,3,4,-1], nashville: ['','','1','5','1','']},
+  {position: 'Echo', key: 'F♯', color: '#4a9eff', strings: [2,4,4,-1,-1,-1], nashville: ['1','5','1','','','']},
+  {position: 'Alpha', key: 'C♯', color: '#ff4a4a', strings: [-1,4,6,6,-1,-1], nashville: ['','1','5','1','','']},
+  {position: 'Delta', key: 'E♭', color: '#4aff7a', strings: [-1,-1,1,3,4,-1], nashville: ['','','1','5','1','']},
 ];
 
 function render() {
