@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;600;700&family=Turret+Road:wght@400;700&display=swap" rel="stylesheet">
 <style>
-html, body { margin: 0; padding: 0; background: #000000 !important; }
+html, body { margin: 0; padding: 0; background: #0f0f13 !important; }
 * { box-sizing: border-box; }
 body {
   color: #f5a623;
@@ -18,14 +18,12 @@ body {
   text-shadow: 0 0 8px rgba(245,166,35,0.25), 0 0 20px rgba(245,166,35,0.08);
 }
 
-/* ── LAYOUT ── */
 .page {
 max-width: 720px;
 margin: 0 auto;
 padding: 40px 24px 60px;
 }
 
-/* ── HEADER / NAV ── */
 .back-link {
 display: inline-block;
 font-family: 'Jura', monospace;
@@ -46,7 +44,6 @@ border-color: rgba(245,166,35,0.5);
 box-shadow: 0 0 12px rgba(245,166,35,0.2);
 }
 
-/* ── HEADINGS ── */
 h1 {
 font-family: 'Jura', monospace;
 font-size: 1.6rem;
@@ -71,7 +68,6 @@ padding-bottom: 8px;
 border-bottom: 1px solid rgba(245,166,35,0.15);
 }
 
-/* ── BODY TEXT ── */
 p {
 font-size: 0.88rem;
 margin: 0 0 1.2em 0;
@@ -84,7 +80,6 @@ margin-bottom: 36px;
 font-style: normal;
 }
 
-/* ── EMPHASIS ── */
 strong, .num {
 color: #39ff14;
 text-shadow: 0 0 8px rgba(57,255,20,0.45), 0 0 20px rgba(57,255,20,0.15);
@@ -97,7 +92,6 @@ color: #ffc85c;
 color: rgba(245,166,35,0.7);
 }
 
-/* ── TABLES ── */
 .num-table {
 width: 100%;
 border-collapse: collapse;
@@ -129,7 +123,6 @@ font-weight: 700;
 text-shadow: 0 0 8px rgba(57,255,20,0.4), 0 0 20px rgba(57,255,20,0.12);
 }
 
-/* ── INTERACTIVE TOOL ── */
 .tool-box {
 background: rgba(245,166,35,0.03);
 border: 1px solid rgba(245,166,35,0.15);
@@ -204,7 +197,6 @@ display: block;
 font-size: 0.82rem;
 }
 
-/* ── CHORD RESULT ── */
 .chord-grid {
 display: grid;
 grid-template-columns: repeat(7, 1fr);
@@ -237,7 +229,6 @@ display: block;
 margin-top: 2px;
 }
 
-/* ── PROGRESSION EXAMPLES ── */
 .prog-row {
 display: flex;
 gap: 12px;
@@ -259,7 +250,6 @@ color: rgba(245,166,35,0.35);
 font-style: normal;
 }
 
-/* ── RESPONSIVE ── */
 @media (max-width: 600px) {
 .page { padding: 24px 16px 40px; }
 h1 { font-size: 1.2rem; }
@@ -277,7 +267,7 @@ h1 { font-size: 1.2rem; }
 <a href="index.html" class="back-link">← Back to Map</a>
 
 <h1>The Number System</h1>
-<p>To get the most out of Echo Alpha Delta, you should be familiar with the Number System. It's a language for notes, chords, melodies and scales, which is universal across different keys. Being able to identify the number/function of each note allows us to bend and stretch the Echo Alpha Delta shapes to include any tonality.</p>
+<p>To get the most out of Echo Alpha Delta, you should be familiar with the Number System. It’s a language for notes, chords, melodies and scales, which is universal across different keys. Being able to identify the number/function of each note allows us to bend and stretch the Echo Alpha Delta shapes to include any tonality.</p>
 
 <p>Every key in music shares the same internal structure. The Number System replaces note names with numbers, revealing the pattern that all keys have in common. Once you think in numbers, you can instantly transpose anything to any key. With every song you learn, you start recognizing shapes that repeat everywhere.</p>
 
@@ -335,9 +325,9 @@ h1 { font-size: 1.2rem; }
 </tr>
 </table>
 
-<p>The highlighted numbers (<strong>1 2 3 4 5 6 Maj7</strong>) are the seven notes of the major scale. The other five are labelled with flats or sharps relative to those scale degrees. Some call these other five "accidentals" but they can really just be seen as different flavours. All 12 notes have their own sound and function.</p>
+<p>The highlighted numbers (<strong>1 2 3 4 5 6 Maj7</strong>) are the seven notes of the major scale. The other five are labelled with flats or sharps relative to those scale degrees. Some call these other five “accidentals” but they can really just be seen as different flavours. All 12 notes have their own sound and function.</p>
 
-<p>The Number System shows its usefulness when you start describing tones and melodies as numbers or number sequences and then you're able to instantly translate them into any key.</p>
+<p>The Number System shows its usefulness when you start describing tones and melodies as numbers or number sequences and then you’re able to instantly translate them into any key.</p>
 
 <p>Chords are usually built with 1, 3 and 5. We can move the chord tones to make a minor chord (1 b3 5), suspended (1 4 5) or more. We can extend the chords upward by stacking on 7ths, 9ths (aka 2nds) 11ths (aka 4ths), 13ths (aka 6ths). They are named high like that in chord structures to represent how they are extending upward rather than simply clustering around the root.</p>
 
@@ -427,11 +417,9 @@ h1 { font-size: 1.2rem; }
 </div>
 
 <script>
-// ── DATA ──
 const NOTES_SHARP = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 const NOTES_FLAT  = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
 
-// Keys and their preferred accidental style
 const KEYS = [
   {name:'C',  idx:0,  use:'sharp'},
   {name:'Db', idx:1,  use:'flat'},
@@ -448,24 +436,23 @@ const KEYS = [
 ];
 
 const NASHVILLE = ['1','b2','2','b3','3','4','#4/b5','5','b6','6','b7','Maj7'];
-const MAJOR_SCALE_INTERVALS = [0, 2, 4, 5, 7, 9, 11]; // W W H W W W H
+const MAJOR_SCALE_INTERVALS = [0, 2, 4, 5, 7, 9, 11];
 const ROMAN = ['I','ii','iii','IV','V','vi','vii°'];
 const QUALITIES = ['Major','minor','minor','Major','Major','minor','dim'];
 
 const PROGRESSIONS = [
-  {name: 'Pop Standard',       nums: [0, 4, 5, 3]},        // I V vi IV
-  {name: 'Blues / Rock',       nums: [0, 3, 4, 0]},        // I IV V I
-  {name: 'Jazz ii-V-I',       nums: [1, 4, 0]},            // ii V I
-  {name: 'Mixolydian Rock',   nums: [0, -1, 3, 0]},        // I bVII IV I  (-1 = bVII)
-  {name: 'Emotional Anthem',  nums: [5, 3, 0, 4]},         // vi IV I V
+  {name: 'Pop Standard',       nums: [0, 4, 5, 3]},
+  {name: 'Blues / Rock',       nums: [0, 3, 4, 0]},
+  {name: 'Jazz ii-V-I',       nums: [1, 4, 0]},
+  {name: 'Mixolydian Rock',   nums: [0, -1, 3, 0]},
+  {name: 'Emotional Anthem',  nums: [5, 3, 0, 4]},
 ];
 
-// Special roman numerals for non-diatonic chords
 const PROG_ROMAN = {
   '-1': 'bVII'
 };
 
-let currentKey = 0; // index into KEYS
+let currentKey = 0;
 
 function noteName(semitones, useFlat) {
   const idx = ((semitones % 12) + 12) % 12;
@@ -481,14 +468,12 @@ function getScaleNote(keyIdx, interval) {
 function getChromaticNote(keyIdx, semitone) {
   const idx = (KEYS[keyIdx].idx + semitone) % 12;
   const useFlat = KEYS[keyIdx].use === 'flat';
-  // For #4/b5, show both
   if (semitone === 6) {
     const sharp = NOTES_SHARP[idx];
     const flat = NOTES_FLAT[idx];
     if (sharp === flat) return sharp;
     return sharp + '/' + flat;
   }
-  // Flat-named intervals (b2, b3, b6, b7) always use flat spelling
   if ([1, 3, 8, 10].includes(semitone)) return NOTES_FLAT[idx];
   return useFlat ? NOTES_FLAT[idx] : NOTES_SHARP[idx];
 }
@@ -504,9 +489,7 @@ function getChordName(keyIdx, degree) {
 }
 
 function getProgressionChord(keyIdx, num) {
-  // Handle special cases like bVII
   if (num === -1) {
-    // bVII = major chord on flat 7th (10 semitones) — always flat-spelled
     const idx = (KEYS[keyIdx].idx + 10) % 12;
     return NOTES_FLAT[idx];
   }
@@ -521,13 +504,11 @@ function getProgressionRoman(num) {
 function render() {
   const key = KEYS[currentKey];
 
-  // Key buttons
   const sel = document.getElementById('keySelector');
   sel.innerHTML = KEYS.map((k, i) =>
     `<button class="key-btn ${i === currentKey ? 'active' : ''}" onclick="selectKey(${i})">${k.name}</button>`
   ).join('');
 
-  // Chromatic note grid
   const noteGrid = document.getElementById('noteGrid');
   noteGrid.innerHTML = '';
   for (let i = 0; i < 12; i++) {
@@ -539,7 +520,6 @@ function render() {
       </div>`;
   }
 
-  // Diatonic chord grid
   const chordGrid = document.getElementById('chordGrid');
   chordGrid.innerHTML = '';
   for (let i = 0; i < 7; i++) {
@@ -551,7 +531,6 @@ function render() {
       </div>`;
   }
 
-  // Progression examples
   document.getElementById('progKeyLabel').textContent = key.name;
   const progGrid = document.getElementById('progGrid');
   progGrid.innerHTML = PROGRESSIONS.map(prog => {
@@ -573,7 +552,6 @@ render();
 </script>
 
 <script>
-// ── Inline Three Shapes diagram ──
 (function() {
   const ECHO_COLOR  = '#4a9eff';
   const ALPHA_COLOR = '#ff4a4a';
@@ -628,34 +606,27 @@ render();
   }
 
   let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">`;
-  svg += `<rect width="${W}" height="${H}" fill="#000"/>`;
+  svg += `<rect width="${W}" height="${H}" fill="#0f0f13"/>`;
 
-  // Labels
   const ly = LABEL_TOP - 10;
   svg += `<text x="${(sx(2)+sx(4))/2}" y="${ly}" text-anchor="middle" font-family="'Jura',monospace" font-size="18" font-weight="700" letter-spacing="0.3em" fill="${ECHO_COLOR}">ECHO</text>`;
   svg += `<text x="${(sx(9)+sx(11))/2}" y="${ly}" text-anchor="middle" font-family="'Jura',monospace" font-size="18" font-weight="700" letter-spacing="0.3em" fill="${ALPHA_COLOR}">ALPHA</text>`;
   svg += `<text x="${(sx(5)+sx(7))/2 + (fretPos(6)-fretPos(5))*0.3}" y="${LABEL_TOP+FB_H+28}" text-anchor="middle" font-family="'Jura',monospace" font-size="18" font-weight="700" letter-spacing="0.3em" fill="${DELTA_COLOR}">DELTA</text>`;
 
-  // Nut
   svg += `<line x1="${LEFT}" y1="${LABEL_TOP-6}" x2="${LEFT}" y2="${sy(0)+6}" stroke="#d4cfc8" stroke-width="10"/>`;
-  // Frets
   for (let f = 1; f <= FRETS; f++) {
     svg += `<line x1="${fretPos(f)}" y1="${LABEL_TOP-6}" x2="${fretPos(f)}" y2="${sy(0)+6}" stroke="#3a3a3a" stroke-width="2"/>`;
   }
-  // Markers
   [3,5,7,9].forEach(f => svg += `<circle cx="${sx(f)}" cy="${LABEL_TOP+FB_H/2}" r="4" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/>`);
   const midY = LABEL_TOP+FB_H/2, ds = SH*0.8;
   svg += `<circle cx="${sx(12)}" cy="${midY-ds/2}" r="4" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/>`;
   svg += `<circle cx="${sx(12)}" cy="${midY+ds/2}" r="4" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/>`;
-  // Strings
   [4.5,3.5,2.6,1.8,1.2,0.8].forEach((t,s) => svg += `<line x1="${LEFT}" y1="${sy(s)}" x2="${fretPos(FRETS)}" y2="${sy(s)}" stroke="#555" stroke-width="${t}" stroke-linecap="round"/>`);
 
-  // Glows
   ALL_DOTS.forEach((dot, i) => {
     const {cx, cy, r} = dotPos(dot, i);
     svg += `<circle cx="${cx}" cy="${cy}" r="${r*1.6}" fill="${dot.glow}0.12)"/>`;
   });
-  // Dots + numbers
   ALL_DOTS.forEach((dot, i) => {
     const {cx, cy, r} = dotPos(dot, i);
     svg += `<circle cx="${cx}" cy="${cy}" r="${r+2.5}" fill="#080808"/>`;
