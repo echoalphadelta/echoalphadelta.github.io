@@ -33,6 +33,42 @@ h1 { font-family: 'Jura', sans-serif; font-size: 1.5rem; font-weight: 700; lette
 }
 .start-btn:hover { box-shadow: 0 0 52px rgba(245,166,35,0.65); transform: scale(1.03); }
 
+.teacher-btn {
+  display: block; width: 100%;
+  font-family: 'Jura', sans-serif; font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: #000; background: #39ff14; border: none; border-radius: 0;
+  padding: 0.75rem 2rem; cursor: pointer; margin-top: 14px;
+  transition: box-shadow 0.3s;
+}
+.teacher-btn:hover { box-shadow: 0 0 32px rgba(57,255,20,0.45); }
+
+/* Teacher inquiry screen */
+.teacher-screen { display: none; text-align: left; }
+.teacher-screen.active { display: block; }
+.teacher-title { font-family: 'Jura', sans-serif; font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase; color: rgba(57,255,20,0.5); margin-bottom: 4px; }
+.teacher-prompt { font-size: 0.8rem; color: rgba(240,237,232,0.55); margin-bottom: 24px; line-height: 1.5; letter-spacing: 0.03em; }
+.teacher-field {
+  display: block; width: 100%;
+  background: #0a0a0a; color: #f0ede8;
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 0;
+  padding: 11px 14px; font-family: 'Jura', sans-serif; font-size: 0.82rem;
+  letter-spacing: 0.04em; margin-bottom: 10px;
+}
+.teacher-field:focus { outline: none; border-color: rgba(57,255,20,0.45); }
+.teacher-field::placeholder { color: rgba(240,237,232,0.25); }
+textarea.teacher-field { height: 110px; resize: vertical; }
+.teacher-submit {
+  display: block; width: 100%; font-family: 'Jura', sans-serif; font-size: 0.8rem;
+  font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  background: #39ff14; color: #000; border: none; border-radius: 0;
+  padding: 14px; cursor: pointer; margin-top: 4px;
+  transition: box-shadow 0.2s;
+}
+.teacher-submit:hover { box-shadow: 0 0 28px rgba(57,255,20,0.4); }
+.teacher-confirm { font-size: 0.72rem; color: rgba(57,255,20,0.75); letter-spacing: 0.05em; margin-top: 14px; line-height: 1.6; }
+.teacher-thanks { font-size: 0.82rem; color: rgba(57,255,20,0.9); text-shadow: 0 0 12px rgba(57,255,20,0.3); letter-spacing: 0.06em; line-height: 1.7; padding: 24px 0; }
+
 /* Quiz screens */
 .quiz-screen { display: none; text-align: left; }
 .quiz-screen.active { display: block; }
@@ -157,6 +193,23 @@ h1 { font-family: 'Jura', sans-serif; font-size: 1.5rem; font-weight: 700; lette
       </div>
     </div>
     <button class="start-btn" onclick="startCert()">Start Certification</button>
+    <button class="teacher-btn" onclick="showScreen('teacher')">Get Certified For Teachers</button>
+  </div>
+
+  <!-- Teacher Inquiry Screen -->
+  <div class="teacher-screen" id="teacher">
+    <p class="teacher-title">Get Certified For Teachers</p>
+    <p class="teacher-prompt">Leave your email and any notes and someone from Echo Alpha Delta will be in touch shortly.</p>
+    <div id="teacherForm">
+      <input type="email" id="teacherEmail" class="teacher-field" placeholder="Your email">
+      <textarea id="teacherNotes" class="teacher-field" placeholder="Notes (optional)"></textarea>
+      <button class="teacher-submit" onclick="submitTeacher()">Send</button>
+      <p class="teacher-confirm" id="teacherConfirm"></p>
+    </div>
+    <div id="teacherThanks" style="display:none;">
+      <p class="teacher-thanks">Thank you!<br>Someone from Echo Alpha Delta will be in touch shortly.</p>
+      <a href="index.html" class="home-link">&#8592; Back to Map</a>
+    </div>
   </div>
 
   <!-- Quiz 1: Key of A, B string fret 5 → E, 5, Echo -->
@@ -322,7 +375,7 @@ function submitQuiz(n) {
   }
 }
 
-var SCREENS = ['intro', 'quiz1', 'quiz2', 'complete'];
+var SCREENS = ['intro', 'quiz1', 'quiz2', 'complete', 'teacher'];
 
 function showScreen(id) {
   SCREENS.forEach(function(s) {
@@ -331,7 +384,7 @@ function showScreen(id) {
     if (s === 'complete') {
       el.classList.remove('visible');
       el.style.display = 'none';
-    } else if (el.classList.contains('quiz-screen')) {
+    } else if (el.classList.contains('quiz-screen') || el.classList.contains('teacher-screen')) {
       el.classList.remove('active');
     } else {
       el.style.display = 'none';
@@ -342,7 +395,7 @@ function showScreen(id) {
   if (id === 'complete') {
     target.classList.add('visible');
     target.style.display = 'flex';
-  } else if (target.classList.contains('quiz-screen')) {
+  } else if (target.classList.contains('quiz-screen') || target.classList.contains('teacher-screen')) {
     target.classList.add('active');
   } else {
     target.style.display = 'block';
@@ -358,6 +411,34 @@ function startCert() {
 
 function goToExercises() {
   location.href = 'exercises.html';
+}
+
+function submitTeacher() {
+  var email = document.getElementById('teacherEmail').value.trim();
+  var notes = document.getElementById('teacherNotes').value.trim();
+  var conf  = document.getElementById('teacherConfirm');
+  if (!email || !email.includes('@')) {
+    conf.style.color = 'rgba(231,76,60,0.8)';
+    conf.textContent = 'Please enter a valid email.';
+    return;
+  }
+  conf.textContent = '';
+  fetch('https://formspree.io/f/echoalphadeltaproject@gmail.com', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ email: email, notes: notes, source: 'teacher-certification' })
+  }).then(function(r) {
+    if (r.ok) {
+      document.getElementById('teacherForm').style.display = 'none';
+      document.getElementById('teacherThanks').style.display = 'block';
+    } else {
+      conf.style.color = 'rgba(231,76,60,0.8)';
+      conf.textContent = 'Something went wrong. Try again.';
+    }
+  }).catch(function() {
+    conf.style.color = 'rgba(231,76,60,0.8)';
+    conf.textContent = 'Something went wrong. Try again.';
+  });
 }
 
 if (location.hash === '#complete') {
