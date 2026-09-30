@@ -321,8 +321,8 @@ to   { stroke-dashoffset: -687; }
 50% { box-shadow: 0 0 24px rgba(180,122,255,0.8), 0 0 70px rgba(180,122,255,0.35), 0 0 120px rgba(180,122,255,0.15); }
 }
 @keyframes breathePurpleTriangle {
-0%, 100% { filter: drop-shadow(0 0 12px rgba(180,122,255,0.4)) drop-shadow(0 0 40px rgba(180,122,255,0.15)) drop-shadow(0 0 80px rgba(180,122,255,0.08)); }
-50% { filter: drop-shadow(0 0 24px rgba(180,122,255,0.8)) drop-shadow(0 0 70px rgba(180,122,255,0.35)) drop-shadow(0 0 120px rgba(180,122,255,0.15)); }
+0%, 100% { filter: drop-shadow(0 0 6px rgba(180,122,255,0.6)) drop-shadow(0 0 20px rgba(180,122,255,0.3)) drop-shadow(0 0 50px rgba(180,122,255,0.15)); }
+50% { filter: drop-shadow(0 0 12px rgba(180,122,255,0.95)) drop-shadow(0 0 40px rgba(180,122,255,0.55)) drop-shadow(0 0 90px rgba(180,122,255,0.25)); }
 }
 
 .trainer-link {
@@ -395,6 +395,8 @@ transition: color 0.2s, border-color 0.2s;
 .exercise-glow-wrap {
   display: inline-flex;
   background: transparent !important;
+}
+.nav-pill-gold svg {
   animation: breathePurpleTriangle 3s ease-in-out infinite;
 }
 .nav-pill-gold {
@@ -413,7 +415,7 @@ transition: color 0.2s, border-color 0.2s;
   background: none;
   border: none;
   border-radius: 0;
-  padding: 8px;
+  padding: 0 8px 20px;
   cursor: pointer;
   text-decoration: none;
   box-shadow: none;
