@@ -19,7 +19,7 @@ body { color: #f0ede8; font-family: 'Jura', sans-serif; font-weight: 400; }
 /* ── SPIEL SECTION ── */
 .spiel-section {
 background: #000000;
-padding: 12px 20px 16px;
+padding: 0;
 }
 .spiel-btn {
   font-family: 'Jura', sans-serif;
@@ -569,10 +569,6 @@ footer p { font-family: 'Jura', sans-serif; font-size: 0.58rem; letter-spacing: 
 </section>
 
 <section class="spiel-section">
-  <div style="display:flex;justify-content:space-between;align-items:center;max-width:900px;margin:0 auto;">
-    <button class="spiel-btn" id="spielBtn" onclick="toggleSpiel()">About the Map</button>
-    <a href="exercises.html" class="nav-text-link nav-text-purple">Exercise</a>
-  </div>
   <div class="spiel-panel" id="spielPanel">
     <div class="spiel-text">
       <p>Echo Alpha Delta is a map of the guitar fretboard. It is built from three fundamental open chord shapes that guitarists know as E, A and D. We begin by giving these three shapes new names; then we may move them around the neck to use with any note. With three elemental patterns, we can unlock the guitar.</p>
@@ -619,6 +615,10 @@ footer p { font-family: 'Jura', sans-serif; font-size: 0.58rem; letter-spacing: 
   <span class="gold-dot-sample"></span>complete open chord
 </div>
 <div style="text-align:center;margin-top:16px;padding-bottom:24px;"><button class="map-btn" id="mapBtn" onclick="toggleMap()">Merge</button></div>
+<div style="margin:0 auto;max-width:900px;padding:16px 20px 4px;display:flex;justify-content:space-between;align-items:center;">
+  <button class="spiel-btn" id="spielBtn" onclick="toggleSpiel()">About the Map</button>
+  <a href="exercises.html" class="nav-text-link nav-text-purple">Exercise</a>
+</div>
 <div style="margin:0 auto;max-width:900px;padding:16px 0 16px;display:flex;flex-direction:column;align-items:center;gap:14px;">
   <a href="trainer.html" class="nav-text-link nav-text-trainer">Fretboard Trainer</a>
   <a href="numbers.html" class="nav-text-link nav-text-number">The Number System</a>
