@@ -321,8 +321,8 @@ to   { stroke-dashoffset: -687; }
 50% { box-shadow: 0 0 24px rgba(180,122,255,0.8), 0 0 70px rgba(180,122,255,0.35), 0 0 120px rgba(180,122,255,0.15); }
 }
 @keyframes breathePurpleTriangle {
-0%, 100% { filter: drop-shadow(0 0 4px rgba(180,122,255,0.4)) drop-shadow(0 0 14px rgba(180,122,255,0.15)); }
-50% { filter: drop-shadow(0 0 8px rgba(180,122,255,0.8)) drop-shadow(0 0 24px rgba(180,122,255,0.35)); }
+0%, 100% { filter: drop-shadow(0 0 12px rgba(180,122,255,0.4)) drop-shadow(0 0 40px rgba(180,122,255,0.15)) drop-shadow(0 0 80px rgba(180,122,255,0.08)); }
+50% { filter: drop-shadow(0 0 24px rgba(180,122,255,0.8)) drop-shadow(0 0 70px rgba(180,122,255,0.35)) drop-shadow(0 0 120px rgba(180,122,255,0.15)); }
 }
 
 .trainer-link {
@@ -394,22 +394,22 @@ transition: color 0.2s, border-color 0.2s;
 
 .nav-pill-gold {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   text-align: center;
   font-family: 'Jura', sans-serif;
   font-size: 0.72rem;
   line-height: 1.4;
-  width: 130px;
-  height: 115px;
+  width: 150px;
+  height: 130px;
   letter-spacing: 0.08em;
   color: #b47aff;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 130 115'%3E%3Cpolygon points='65,3 3,112 127,112' fill='none' stroke='%23b47aff' stroke-opacity='0.35' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat center / contain;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 130'%3E%3Cpolygon points='75,4 4,126 146,126' fill='none' stroke='%23b47aff' stroke-opacity='0.8' stroke-width='5' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
   border: none;
   border-radius: 0;
-  padding: 42px 14px 10px;
+  padding: 68px 14px 8px;
   cursor: pointer;
-  animation: breathePurpleTriangle 3s ease-in-out infinite;
+  animation: breathePurpleTriangle 4s ease-in-out infinite;
   transition: color 0.2s;
   text-decoration: none;
   box-shadow: none;
@@ -591,8 +591,10 @@ footer p { font-family: 'Jura', sans-serif; font-size: 0.58rem; letter-spacing: 
     <a href="scales.html" class="nav-pill-pink">Scales</a>
     <a href="iconic-voicings.html" class="nav-pill-silver">Iconic Voicings</a>
     <a href="tuner.html" class="nav-pill-ice">Tuner</a>
-    <a href="exercises.html" class="nav-pill-gold">Exercise</a>
   </div>
+</div>
+<div style="margin:0 auto;max-width:900px;padding:20px 0 16px;display:flex;justify-content:center;">
+  <a href="exercises.html" class="nav-pill-gold">Exercise</a>
 </div>
 <div style="margin:0 auto;max-width:900px;padding:24px 0 32px;display:flex;justify-content:center;">
   <a href="daily.html" class="daily-circle-link">
