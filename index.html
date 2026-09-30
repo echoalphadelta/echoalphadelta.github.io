@@ -393,17 +393,24 @@ transition: color 0.2s, border-color 0.2s;
 
 .nav-text-link {
   font-family: 'Jura', sans-serif;
-  font-size: 0.85rem;
-  letter-spacing: 0.14em;
+  font-weight: 600;
+  font-size: 0.88rem;
+  letter-spacing: 0.12em;
   text-decoration: none;
   text-transform: uppercase;
   cursor: pointer;
   transition: opacity 0.2s;
 }
 .nav-text-link:hover { opacity: 0.65; }
-.nav-text-gold  { color: #f5a623; text-shadow: 0 0 12px rgba(245,166,35,0.55); }
-.nav-text-green { color: #39ff14; text-shadow: 0 0 12px rgba(57,255,20,0.55); }
-.nav-text-purple{ color: #b47aff; text-shadow: 0 0 12px rgba(180,122,255,0.55); }
+.nav-text-gold    { color: #f5a623; text-shadow: 0 0 12px rgba(245,166,35,0.55); }
+.nav-text-green   { color: #39ff14; text-shadow: 0 0 12px rgba(57,255,20,0.55); }
+.nav-text-purple  { color: #b47aff; text-shadow: 0 0 12px rgba(180,122,255,0.55); }
+.nav-text-trainer { color: #b39ddb; text-shadow: 0 0 12px rgba(179,157,219,0.55); }
+.nav-text-number  { color: #a8d8ea; text-shadow: 0 0 12px rgba(168,216,234,0.55); }
+.nav-text-caged   { color: #d4f06a; text-shadow: 0 0 12px rgba(212,240,106,0.55); }
+.nav-text-pink    { color: #f9a8c9; text-shadow: 0 0 12px rgba(249,168,201,0.55); }
+.nav-text-silver  { color: #c0c0c0; text-shadow: 0 0 12px rgba(192,192,192,0.55); }
+.nav-text-ice     { color: #c8eef8; text-shadow: 0 0 12px rgba(200,238,248,0.55); }
 .exercise-glow-wrap {
   display: inline-flex;
   background: transparent !important;
@@ -606,17 +613,13 @@ footer p { font-family: 'Jura', sans-serif; font-size: 0.58rem; letter-spacing: 
   <span class="gold-dot-sample"></span>complete open chord
 </div>
 <div style="text-align:center;margin-top:16px;padding-bottom:24px;"><button class="map-btn" id="mapBtn" onclick="toggleMap()">Merge</button></div>
-<div style="margin:0 auto;max-width:900px;padding:40px 0 32px;display:flex;justify-content:center;align-items:flex-start;gap:16px;">
-  <div style="display:flex;flex-direction:column;align-items:center;gap:12px;background:transparent;">
-    <a href="trainer.html" class="trainer-link">Fretboard Trainer</a>
-    <a href="numbers.html" class="trainer-link" style="color:#a8d8ea;border-color:rgba(168,216,234,0.35);">The Number System</a>
-    <a href="caged.html" class="trainer-link" style="color:#d4f06a;border-color:rgba(212,240,106,0.35);box-shadow:none;">Three Shapes Vs. CAGED</a>
-  </div>
-  <div style="display:flex;flex-direction:column;align-items:center;gap:12px;background:transparent;">
-    <a href="scales.html" class="nav-pill-pink">Scales</a>
-    <a href="iconic-voicings.html" class="nav-pill-silver">Iconic Voicings</a>
-    <a href="tuner.html" class="nav-pill-ice">Tuner</a>
-  </div>
+<div style="margin:0 auto;max-width:900px;padding:40px 0 32px;display:flex;flex-direction:column;align-items:center;gap:14px;">
+  <a href="trainer.html" class="nav-text-link nav-text-trainer">Fretboard Trainer</a>
+  <a href="numbers.html" class="nav-text-link nav-text-number">The Number System</a>
+  <a href="caged.html" class="nav-text-link nav-text-caged">Three Shapes Vs. CAGED</a>
+  <a href="scales.html" class="nav-text-link nav-text-pink">Scales</a>
+  <a href="iconic-voicings.html" class="nav-text-link nav-text-silver">Iconic Voicings</a>
+  <a href="tuner.html" class="nav-text-link nav-text-ice">Tuner</a>
 </div>
 <div style="margin:0 auto;max-width:900px;padding:28px 0 48px;display:flex;justify-content:center;gap:52px;flex-wrap:wrap;">
   <a href="exercises.html" class="nav-text-link nav-text-purple">Exercise</a>
