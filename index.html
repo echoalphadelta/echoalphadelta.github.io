@@ -20,28 +20,23 @@ body { color: #f0ede8; font-family: 'Jura', sans-serif; font-weight: 400; }
 .spiel-section {
 background: #000000;
 text-align: center;
-padding: 28px 20px 44px;
+padding: 12px 20px 16px;
 }
 .spiel-btn {
-display: inline-flex;
-align-items: center;
-justify-content: center;
-text-align: center;
-font-family: 'Jura', sans-serif;
-font-size: 0.72rem;
-line-height: 1.4;
-width: 120px;
-height: 120px;
-letter-spacing: 0.08em;
-color: #f5a623;
-background: transparent;
-border: 1px solid rgba(245,166,35,0.35);
-border-radius: 50%;
-padding: 10px;
-cursor: pointer;
-animation: breatheGold 3s ease-in-out infinite;
-transition: color 0.2s, border-color 0.2s;
+  font-family: 'Jura', sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f5a623;
+  text-shadow: 0 0 12px rgba(245,166,35,0.55);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity 0.2s;
 }
+.spiel-btn:hover, .spiel-btn.open { opacity: 0.65; }
 .spiel-btn:hover {
 color: #ffc85c;
 border-color: rgba(245,166,35,0.7);
@@ -613,7 +608,7 @@ footer p { font-family: 'Jura', sans-serif; font-size: 0.58rem; letter-spacing: 
   <span class="gold-dot-sample"></span>complete open chord
 </div>
 <div style="text-align:center;margin-top:16px;padding-bottom:24px;"><button class="map-btn" id="mapBtn" onclick="toggleMap()">Merge</button></div>
-<div style="margin:0 auto;max-width:900px;padding:40px 0 32px;display:flex;flex-direction:column;align-items:center;gap:14px;">
+<div style="margin:0 auto;max-width:900px;padding:16px 0 16px;display:flex;flex-direction:column;align-items:center;gap:14px;">
   <a href="trainer.html" class="nav-text-link nav-text-trainer">Fretboard Trainer</a>
   <a href="numbers.html" class="nav-text-link nav-text-number">The Number System</a>
   <a href="caged.html" class="nav-text-link nav-text-caged">Three Shapes Vs. CAGED</a>
@@ -621,7 +616,7 @@ footer p { font-family: 'Jura', sans-serif; font-size: 0.58rem; letter-spacing: 
   <a href="iconic-voicings.html" class="nav-text-link nav-text-silver">Iconic Voicings</a>
   <a href="tuner.html" class="nav-text-link nav-text-ice">Tuner</a>
 </div>
-<div style="margin:0 auto;max-width:900px;padding:28px 0 48px;display:flex;justify-content:center;gap:52px;flex-wrap:wrap;">
+<div style="margin:0 auto;max-width:900px;padding:16px 0 28px;display:flex;justify-content:center;gap:52px;flex-wrap:wrap;">
   <a href="exercises.html" class="nav-text-link nav-text-purple">Exercise</a>
   <a href="daily.html" class="nav-text-link nav-text-green">Daily Game</a>
   <a href="certification.html" class="nav-text-link nav-text-gold">Get Certified</a>
