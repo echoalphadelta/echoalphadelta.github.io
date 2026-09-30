@@ -391,6 +391,19 @@ transition: color 0.2s, border-color 0.2s;
 }
 .nav-pill-silver:hover { color: #e0e0e0; border-color: rgba(192,192,192,0.7); }
 
+.nav-text-link {
+  font-family: 'Jura', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.nav-text-link:hover { opacity: 0.65; }
+.nav-text-gold  { color: #f5a623; text-shadow: 0 0 12px rgba(245,166,35,0.55); }
+.nav-text-green { color: #39ff14; text-shadow: 0 0 12px rgba(57,255,20,0.55); }
+.nav-text-purple{ color: #b47aff; text-shadow: 0 0 12px rgba(180,122,255,0.55); }
 .exercise-glow-wrap {
   display: inline-flex;
   background: transparent !important;
@@ -605,19 +618,14 @@ footer p { font-family: 'Jura', sans-serif; font-size: 0.58rem; letter-spacing: 
     <a href="tuner.html" class="nav-pill-ice">Tuner</a>
   </div>
 </div>
-<div style="margin:0 auto;max-width:900px;padding:20px 0 16px;display:flex;justify-content:center;">
-  <div class="exercise-glow-wrap"><a href="exercises.html" class="nav-pill-gold"><svg viewBox="0 0 190 165" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;" aria-hidden="true"><defs><filter id="sgi" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="6"/></filter><filter id="sgo" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="20"/></filter></defs><polygon class="star-glow-o" points="95.0,12.0 111.5,59.3 161.6,60.4 121.6,90.7 136.1,138.6 95.0,110.0 53.9,138.6 68.4,90.7 28.4,60.4 78.5,59.3" fill="none" stroke="#b47aff" stroke-width="3" stroke-linejoin="round" filter="url(#sgo)"/><polygon class="star-glow-i" points="95.0,12.0 111.5,59.3 161.6,60.4 121.6,90.7 136.1,138.6 95.0,110.0 53.9,138.6 68.4,90.7 28.4,60.4 78.5,59.3" fill="none" stroke="#b47aff" stroke-width="3" stroke-linejoin="round" filter="url(#sgi)"/><polygon points="95.0,12.0 111.5,59.3 161.6,60.4 121.6,90.7 136.1,138.6 95.0,110.0 53.9,138.6 68.4,90.7 28.4,60.4 78.5,59.3" fill="none" stroke="#b47aff" stroke-opacity="0.7" stroke-width="2" stroke-linejoin="round"/></svg><span style="position:absolute;top:50px;left:0;right:0;text-align:center;pointer-events:none;">Exercise</span></a></div>
+<div style="margin:0 auto;max-width:900px;padding:28px 0 48px;display:flex;justify-content:center;gap:52px;flex-wrap:wrap;">
+  <a href="exercises.html" class="nav-text-link nav-text-purple">Exercise</a>
+  <a href="daily.html" class="nav-text-link nav-text-green">Daily Game</a>
+  <a href="certification.html" class="nav-text-link nav-text-gold">Get Certified</a>
 </div>
-<div style="margin:0 auto;max-width:900px;padding:24px 0 32px;display:flex;justify-content:center;">
-  <a href="daily.html" class="daily-circle-link">
-    <span class="daily-circle-label">Daily<br>Game</span>
-  </a>
 </div>
-<div style="margin:0 auto;max-width:900px;padding:24px 0 56px;display:flex;justify-content:center;">
-  <a href="certification.html" class="cert-circle">
-    <span class="cert-circle-label">Get<br>Certified</span>
-  </a>
-</div>
+
+
 
 <script>
 // ── Constants ────────────────────────────────────────────────────────
