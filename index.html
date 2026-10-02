@@ -702,10 +702,10 @@ footer p { font-family: 'Jura', sans-serif; font-size: 0.58rem; letter-spacing: 
   </a>
 </div>
 <script>
-(function(){
-  var src = document.getElementById('bookCoverImg') && document.getElementById('bookCoverImg').src;
-  if(src) document.querySelectorAll('.book-thumb-img').forEach(function(img){ img.src = src; });
-})();
+document.addEventListener('DOMContentLoaded', function(){
+  var cover = document.getElementById('bookCoverImg');
+  if(cover) document.querySelectorAll('.book-thumb-img').forEach(function(img){ img.src = cover.src; });
+});
 </script>
 </div>
 </div>
