@@ -498,17 +498,36 @@ transition: color 0.2s, border-color 0.2s;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   text-decoration: none;
   cursor: pointer;
   transition: opacity 0.2s;
 }
 .book-thumb-btn:hover { opacity: 0.75; }
 .book-thumb-img {
-  width: 90px;
+  width: 150px;
   border-radius: 3px;
   display: block;
-  box-shadow: 0 0 14px rgba(255,180,50,0.3), 0 0 40px rgba(255,180,50,0.1);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+.book-thumb-label {
+  font-family: 'Jura', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 2px;
+}
+.book-thumb-text {
+  font-family: 'Jura', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-align: center;
+  line-height: 1.5;
 }
 .book-circle {
   display: flex; align-items: center; justify-content: center; text-align: center;
@@ -691,14 +710,16 @@ footer p { font-family: 'Jura', sans-serif; font-size: 0.58rem; letter-spacing: 
 <div style="margin:0 auto;max-width:900px;padding:32px 0 28px;display:flex;flex-direction:column;align-items:center;gap:40px;">
   <a href="daily.html" class="nav-text-link nav-text-green" style="font-size:1.35rem;">Daily Game</a>
   <a href="certification.html" class="nav-text-link nav-text-gold" style="font-size:1.35rem;">Get Certified</a>
-<div style="margin:0 auto;max-width:900px;padding:20px 20px 12px;display:flex;justify-content:center;gap:28px;flex-wrap:wrap;">
+<div style="margin:0 auto;max-width:900px;padding:20px 20px 12px;display:flex;justify-content:center;gap:36px;flex-wrap:wrap;">
   <a href="#" class="book-thumb-btn">
+    <span class="book-thumb-label">The Book</span>
     <img class="book-thumb-img" alt="Order the Paperback">
-    <span class="book-circle-label">Order the<br>Paperback<br><em>Full-colour print edition</em></span>
+    <span class="book-thumb-text">Order the<br>Paperback</span>
   </a>
   <a href="#" class="book-thumb-btn">
+    <span class="book-thumb-label">The Book</span>
     <img class="book-thumb-img" alt="Download the PDF">
-    <span class="pdf-circle-label">Download<br>the PDF<br><em>Instant access, printable</em></span>
+    <span class="book-thumb-text">Download<br>the PDF</span>
   </a>
 </div>
 <script>
