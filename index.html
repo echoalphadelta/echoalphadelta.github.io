@@ -486,6 +486,52 @@ transition: color 0.2s, border-color 0.2s;
   0%, 100% { box-shadow: 0 0 18px rgba(57,255,20,0.25), 0 0 40px rgba(57,255,20,0.1), inset 0 0 18px rgba(57,255,20,0.06); }
   50% { box-shadow: 0 0 34px rgba(57,255,20,0.55), 0 0 72px rgba(57,255,20,0.2), inset 0 0 34px rgba(57,255,20,0.1); }
 }
+@keyframes breatheAmber {
+0%, 100% { box-shadow: 0 0 12px rgba(255,180,50,0.4), 0 0 40px rgba(255,180,50,0.15), 0 0 80px rgba(255,180,50,0.08); }
+50% { box-shadow: 0 0 24px rgba(255,180,50,0.85), 0 0 70px rgba(255,180,50,0.35), 0 0 120px rgba(255,180,50,0.15); }
+}
+@keyframes breatheBlue {
+0%, 100% { box-shadow: 0 0 12px rgba(74,158,255,0.4), 0 0 40px rgba(74,158,255,0.15), 0 0 80px rgba(74,158,255,0.08); }
+50% { box-shadow: 0 0 24px rgba(74,158,255,0.85), 0 0 70px rgba(74,158,255,0.35), 0 0 120px rgba(74,158,255,0.15); }
+}
+.book-circle {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  width: 190px; height: 190px; border-radius: 50%;
+  background: rgba(255,180,50,0.07);
+  border: 3px solid rgba(255,180,50,0.75);
+  text-decoration: none;
+  animation: breatheAmber 4s ease-in-out infinite;
+  transition: border-color 0.3s;
+}
+.book-circle-label {
+  font-family: 'Jura', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.55;
+  letter-spacing: 0.07em;
+  color: #ffb432;
+  text-shadow: 0 0 14px rgba(255,180,50,0.55);
+  padding: 0 14px;
+}
+.pdf-circle {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  width: 190px; height: 190px; border-radius: 50%;
+  background: rgba(74,158,255,0.07);
+  border: 3px solid rgba(74,158,255,0.75);
+  text-decoration: none;
+  animation: breatheBlue 4s ease-in-out infinite;
+  transition: border-color 0.3s;
+}
+.pdf-circle-label {
+  font-family: 'Jura', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.55;
+  letter-spacing: 0.07em;
+  color: #4a9eff;
+  text-shadow: 0 0 14px rgba(74,158,255,0.55);
+  padding: 0 14px;
+}
 .cert-circle {
   display: flex; align-items: center; justify-content: center; text-align: center;
   width: 190px; height: 190px; border-radius: 50%;
@@ -606,6 +652,14 @@ footer p { font-family: 'Jura', sans-serif; font-size: 0.58rem; letter-spacing: 
   <span class="gold-dot-sample"></span>complete open chord
 </div>
 <div style="text-align:center;margin-top:16px;padding-bottom:24px;"><button class="map-btn" id="mapBtn" onclick="toggleMap()">Merge</button></div>
+<div style="margin:0 auto;max-width:900px;padding:28px 20px 12px;display:flex;justify-content:center;gap:32px;flex-wrap:wrap;">
+  <a href="#" class="book-circle">
+    <span class="book-circle-label">Order the<br>Paperback<br>·<br>Full-colour<br>print edition</span>
+  </a>
+  <a href="#" class="pdf-circle">
+    <span class="pdf-circle-label">Download<br>the PDF<br>·<br>Instant access,<br>printable</span>
+  </a>
+</div>
 <div style="margin:0 auto;max-width:900px;padding:16px 20px 4px;display:flex;justify-content:space-between;align-items:center;">
   <button class="spiel-btn" id="spielBtn" onclick="toggleSpiel()">About the Map</button>
   <a href="exercises.html" class="nav-text-link nav-text-purple">Exercise</a>
