@@ -75,13 +75,31 @@ overflow: hidden;
 body.cert-mode .mode-toggle { display: none !important; }
 
 .mode-btn {
-font-family: 'Jura', sans-serif;
+font-family: 'Jura', monospace;
 font-size: 0.65rem;
-letter-spacing: 0.15em;
+font-weight: 700;
+letter-spacing: 0.12em;
 text-transform: uppercase;
-padding: 9px 18px;
-border: none;
-cursor: pointer;
+width: 110px; height: 54px;
+padding: 0;
+  background: radial-gradient(ellipse at 45% 40%, #0d110d 0%, #050807 100%);
+  border: 1px solid rgba(110,192,110,0.22);
+  box-shadow: 0 0 10px rgba(110,192,110,0.1), 0 0 2px rgba(110,192,110,0.18);
+  color: #6ec06e;
+  text-shadow: 0 0 7px rgba(110,192,110,0.8), 0 0 16px rgba(110,192,110,0.35);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
+}
+.mode-btn:hover {
+  border-color: rgba(110,192,110,0.48);
+  box-shadow: 0 0 16px rgba(110,192,110,0.22), 0 0 2px rgba(110,192,110,0.4);
+}
+.mode-btn.active, .mode-btn[style*="background:#888"] {
+  border-color: rgba(110,192,110,0.55);
+  box-shadow: 0 0 18px rgba(110,192,110,0.28), 0 0 2px rgba(110,192,110,0.45);
+  color: #8dda8d;
+  text-shadow: 0 0 8px rgba(110,192,110,0.9), 0 0 20px rgba(110,192,110,0.5);
 }
 
 /* ── FRETBOARD ── */
@@ -206,20 +224,26 @@ margin-top: 2px;
 
 /* ── BEGIN BUTTON ── */
 .start-btn {
-font-family: 'Jura', sans-serif;
+font-family: 'Jura', monospace;
 font-size: 0.75rem;
-letter-spacing: 0.25em;
+font-weight: 700;
+letter-spacing: 0.2em;
 text-transform: uppercase;
-padding: 12px 40px;
-background: #000000;
-border: 1px solid #333;
-color: #e0e0e0;
-cursor: pointer;
-border-radius: 3px;
-transition: all 0.15s;
+width: 160px; height: 62px;
+padding: 0;
+  background: radial-gradient(ellipse at 45% 40%, #0d110d 0%, #050807 100%);
+  border: 1px solid rgba(110,192,110,0.22);
+  box-shadow: 0 0 10px rgba(110,192,110,0.1), 0 0 2px rgba(110,192,110,0.18);
+  color: #6ec06e;
+  text-shadow: 0 0 7px rgba(110,192,110,0.8), 0 0 16px rgba(110,192,110,0.35);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
 }
-
-.start-btn:hover { border-color: #f5a623; color: #f5a623; }
+.start-btn:hover {
+  border-color: rgba(110,192,110,0.48);
+  box-shadow: 0 0 16px rgba(110,192,110,0.22), 0 0 2px rgba(110,192,110,0.4);
+}
 
 /* ── TONIC SELECTOR ── */
 .tonic-selector {
@@ -295,8 +319,8 @@ border-radius: 2px;
 <div class="region-top">
   <div class="screen-title">FRETBOARD TRAINER</div>
   <div class="mode-toggle">
-    <button id="toggleStandard" class="mode-btn" onclick="setMode('standard')" style="background:#888;color:#000;">Standard</button>
-    <button id="toggleHarmonic" class="mode-btn" onclick="setMode('harmonic')" style="background: #000000;color:#555;">Harmonic Mode</button>
+    <button id="toggleStandard" class="mode-btn" onclick="setMode('standard')" >Standard</button>
+    <button id="toggleHarmonic" class="mode-btn" onclick="setMode('harmonic')" >Harmonic Mode</button>
   </div>
   <div id="tonicDisplay" class="hidden" style="margin-top:0.6rem;">
     <span id="tonicLabel"></span>
