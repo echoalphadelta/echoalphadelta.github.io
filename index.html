@@ -258,20 +258,58 @@ flex-shrink: 0;
 }
 
 .page-wrap, .diagram-card { background: #000000 !important; }
-.tool-section select {
-background: #000000 !important; color: #e0e0e0 !important;
-border: 1px solid #333 !important; font-family: Jura, monospace !important;
-font-size: 0.75rem !important; letter-spacing: 0.1em !important;
-padding: 10px 16px !important; min-width: 100px !important;
-appearance: none !important; -webkit-appearance: none !important;
-cursor: pointer !important; border-radius: 4px !important;
-text-align: center !important; text-align-last: center !important;
-}
-.tool-section select:hover { border-color: #666 !important; }
+/* vintage circular machine buttons */
 .tool-section .controls {
-display: flex !important; justify-content: center !important;
-align-items: center !important; gap: 8px !important;
-padding: 8px 0 !important; background: #000000 !important;
+  display: flex; justify-content: center; align-items: flex-start;
+  gap: 40px; padding: 24px 0 20px; background: #000000;
+}
+.ctrl-group {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.vint-btn {
+  position: relative; width: 88px; height: 88px; border-radius: 50%;
+  background: radial-gradient(ellipse at 40% 36%, #454545 0%, #252525 45%, #0e0e0e 100%);
+  box-shadow:
+    0 0 0 2px #111,
+    0 0 0 5px #4a4a4a,
+    0 0 0 7px #191919,
+    0 8px 28px rgba(0,0,0,0.95),
+    inset 0 2px 5px rgba(255,255,255,0.06),
+    inset 0 -4px 8px rgba(0,0,0,0.8);
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+}
+.vint-btn:hover {
+  box-shadow:
+    0 0 0 2px #111,
+    0 0 0 5px #666,
+    0 0 0 7px #191919,
+    0 8px 28px rgba(0,0,0,0.95),
+    inset 0 2px 5px rgba(255,255,255,0.06),
+    inset 0 -4px 8px rgba(0,0,0,0.8);
+}
+.vint-face {
+  position: absolute; inset: 9px; border-radius: 50%;
+  background: radial-gradient(ellipse at 42% 38%, #282828 0%, #111 55%, #080808 100%);
+  box-shadow: inset 0 3px 10px rgba(0,0,0,0.95), inset 0 -1px 3px rgba(255,255,255,0.03);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  pointer-events: none; gap: 1px;
+}
+.vint-val {
+  font-family: 'Jura', monospace; font-weight: 700;
+  font-size: 1rem; color: #c8eef8; letter-spacing: 0.04em; line-height: 1.2;
+  text-align: center;
+  text-shadow: 0 0 8px rgba(200,238,248,0.75), 0 0 18px rgba(200,238,248,0.3);
+}
+.vint-val.small { font-size: 0.72rem; }
+.vint-overlay {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: 0; cursor: pointer; z-index: 10;
+  border-radius: 50%; padding: 0; margin: 0; border: none;
+}
+.vint-label {
+  font-family: 'Jura', monospace; font-size: 0.52rem;
+  letter-spacing: 0.35em; text-transform: uppercase; color: #444;
 }
 .book-section { background: #000000; padding: 3rem 2rem; text-align: center; }
 .book-section h2 { font-family: 'Jura', sans-serif; font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase; color: #555; margin-bottom: 2rem; }
@@ -656,10 +694,20 @@ footer p { font-family: 'Jura', sans-serif; font-size: 0.58rem; letter-spacing: 
 
 <div class="controls">
   <div class="ctrl-group">
-    <select id="keySelect" onchange="renderPage()"></select>
+    <div class="vint-btn">
+      <div class="vint-face">
+        <span class="vint-val" id="keyDisplay">A</span>
+      </div>
+      <select id="keySelect" class="vint-overlay" onchange="renderPage();syncVint();"></select>
+    </div>
+    <span class="vint-label">Key</span>
   </div>
   <div class="ctrl-group">
-    <select id="qualitySelect" onchange="renderPage()">
+    <div class="vint-btn">
+      <div class="vint-face">
+        <span class="vint-val" id="qualDisplay">maj</span>
+      </div>
+      <select id="qualitySelect" class="vint-overlay" onchange="renderPage();syncVint();">
       <option value="major">major</option>
       <option value="minor">minor</option>
       <option value="7">7</option>
@@ -678,6 +726,8 @@ footer p { font-family: 'Jura', sans-serif; font-size: 0.58rem; letter-spacing: 
       <option value="min7b5">min7b5</option>
       <option value="aug">aug</option>
     </select>
+    </div>
+    <span class="vint-label">Quality</span>
   </div>
 </div>
 
@@ -1331,7 +1381,21 @@ function stopDrag() {
   document.removeEventListener('touchend', stopDrag);
 }
 
+function syncVint() {
+  var ks = document.getElementById('keySelect');
+  var qs = document.getElementById('qualitySelect');
+  var kd = document.getElementById('keyDisplay');
+  var qd = document.getElementById('qualDisplay');
+  if (ks && kd && ks.options[ks.selectedIndex])
+    kd.textContent = ks.options[ks.selectedIndex].text;
+  if (qs && qd) {
+    var q = qs.value;
+    qd.textContent = q === 'major' ? 'maj' : q === 'minor' ? 'min' : q;
+    qd.className = 'vint-val' + (q.length > 4 ? ' small' : '');
+  }
+}
 renderPage();
+syncVint();
 </script>
 
 </section>
