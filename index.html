@@ -258,50 +258,37 @@ flex-shrink: 0;
 }
 
 .page-wrap, .diagram-card { background: #000000 !important; }
-/* vintage circular machine buttons */
 .tool-section .controls {
   display: flex; justify-content: center; align-items: flex-start;
-  gap: 40px; padding: 24px 0 20px; background: #000000;
+  gap: 36px; padding: 20px 0 16px; background: #000000;
 }
 .ctrl-group {
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
 }
 .vint-btn {
-  position: relative; width: 88px; height: 88px; border-radius: 50%;
-  background: radial-gradient(ellipse at 40% 36%, #454545 0%, #252525 45%, #0e0e0e 100%);
-  box-shadow:
-    0 0 0 2px #111,
-    0 0 0 5px #4a4a4a,
-    0 0 0 7px #191919,
-    0 8px 28px rgba(0,0,0,0.95),
-    inset 0 2px 5px rgba(255,255,255,0.06),
-    inset 0 -4px 8px rgba(0,0,0,0.8);
+  position: relative; width: 76px; height: 76px; border-radius: 50%;
+  background: radial-gradient(ellipse at 45% 40%, #0d0d11 0%, #050507 100%);
+  border: 1px solid rgba(200,238,248,0.22);
+  box-shadow: 0 0 10px rgba(200,238,248,0.1), 0 0 2px rgba(200,238,248,0.18);
   cursor: pointer;
-  transition: box-shadow 0.15s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 .vint-btn:hover {
-  box-shadow:
-    0 0 0 2px #111,
-    0 0 0 5px #666,
-    0 0 0 7px #191919,
-    0 8px 28px rgba(0,0,0,0.95),
-    inset 0 2px 5px rgba(255,255,255,0.06),
-    inset 0 -4px 8px rgba(0,0,0,0.8);
+  border-color: rgba(200,238,248,0.48);
+  box-shadow: 0 0 16px rgba(200,238,248,0.22), 0 0 2px rgba(200,238,248,0.4);
 }
 .vint-face {
-  position: absolute; inset: 9px; border-radius: 50%;
-  background: radial-gradient(ellipse at 42% 38%, #282828 0%, #111 55%, #080808 100%);
-  box-shadow: inset 0 3px 10px rgba(0,0,0,0.95), inset 0 -1px 3px rgba(255,255,255,0.03);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  pointer-events: none; gap: 1px;
+  position: absolute; inset: 0; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
 }
 .vint-val {
   font-family: 'Jura', monospace; font-weight: 700;
-  font-size: 1rem; color: #c8eef8; letter-spacing: 0.04em; line-height: 1.2;
-  text-align: center;
-  text-shadow: 0 0 8px rgba(200,238,248,0.75), 0 0 18px rgba(200,238,248,0.3);
+  font-size: 0.95rem; color: #c8eef8; letter-spacing: 0.04em;
+  text-align: center; line-height: 1.25;
+  text-shadow: 0 0 7px rgba(200,238,248,0.8), 0 0 16px rgba(200,238,248,0.35);
 }
-.vint-val.small { font-size: 0.72rem; }
+.vint-val.small { font-size: 0.68rem; }
 .vint-overlay {
   position: absolute; inset: 0; width: 100%; height: 100%;
   opacity: 0; cursor: pointer; z-index: 10;
@@ -309,7 +296,7 @@ flex-shrink: 0;
 }
 .vint-label {
   font-family: 'Jura', monospace; font-size: 0.52rem;
-  letter-spacing: 0.35em; text-transform: uppercase; color: #444;
+  letter-spacing: 0.3em; text-transform: uppercase; color: #444;
 }
 .book-section { background: #000000; padding: 3rem 2rem; text-align: center; }
 .book-section h2 { font-family: 'Jura', sans-serif; font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase; color: #555; margin-bottom: 2rem; }
