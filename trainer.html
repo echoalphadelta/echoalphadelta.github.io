@@ -8,6 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;600;700&family=Turret+Road:wght@400;700&display=swap" rel="stylesheet">
 <style>
+* { -webkit-tap-highlight-color: transparent; }
+button:active, a:active { opacity: 1 !important; }
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html, body {
@@ -92,9 +95,9 @@ padding: 0;
 .mode-btn:hover {
 
 }
-.mode-btn.active, .mode-btn[style*="background:#888"] {
-  border-color: rgba(110,192,110,0.85);
-  box-shadow: 0 0 22px rgba(110,192,110,0.45), 0 0 7px rgba(110,192,110,0.65);
+.mode-btn.active {
+  border-color: rgba(110,192,110,0.72);
+  box-shadow: 0 0 18px rgba(110,192,110,0.3), 0 0 5px rgba(110,192,110,0.5);
   color: #8dda8d;
   text-shadow: 0 0 8px rgba(110,192,110,0.9), 0 0 20px rgba(110,192,110,0.5);
 }
@@ -330,7 +333,7 @@ border-radius: 2px;
 <div class="region-top">
   <div class="screen-title">FRETBOARD TRAINER</div>
   <div class="mode-toggle">
-    <button id="toggleStandard" class="mode-btn" onclick="setMode('standard')" >Standard</button>
+    <button id="toggleStandard" class="mode-btn active" onclick="setMode('standard')" >Standard</button>
     <button id="toggleHarmonic" class="mode-btn" onclick="setMode('harmonic')" >Harmonic Mode</button>
   </div>
   <div id="tonicDisplay" class="hidden" style="margin-top:0.6rem;">
@@ -701,10 +704,8 @@ function getRootDots() {
 
 function setMode(mode) {
   harmonicMode = mode === 'harmonic';
-  document.getElementById('toggleStandard').style.background = harmonicMode ? '#000' : '#888';
-  document.getElementById('toggleStandard').style.color = harmonicMode ? '#555' : '#000';
-  document.getElementById('toggleHarmonic').style.background = harmonicMode ? '#f5a623' : '#000';
-  document.getElementById('toggleHarmonic').style.color = harmonicMode ? '#000' : '#555';
+  document.getElementById('toggleStandard').classList.toggle('active', !harmonicMode);
+  document.getElementById('toggleHarmonic').classList.toggle('active', harmonicMode);
   document.getElementById('tonicSelector').style.display = harmonicMode ? 'flex' : 'none';
   if (harmonicMode) buildTonicGrid();
 
@@ -746,8 +747,8 @@ function buildTonicGrid() {
     btn.style.cssText = `font-family:'Jura',monospace;font-size:0.82rem;font-weight:700;
       letter-spacing:0.04em;padding:0;height:44px;
       background:radial-gradient(ellipse at 45% 40%,${active ? '#0d1f0d' : '#0d110d'} 0%,${active ? '#050f07' : '#050807'} 100%);
-      border:1px solid ${active ? 'rgba(110,192,110,0.85)' : 'rgba(110,192,110,0.55)'};
-      box-shadow:${active ? '0 0 22px rgba(110,192,110,0.45),0 0 7px rgba(110,192,110,0.65)' : '0 0 14px rgba(110,192,110,0.22),0 0 4px rgba(110,192,110,0.38)'};
+      border:1px solid rgba(110,192,110,0.55);
+      box-shadow:0 0 14px rgba(110,192,110,0.22),0 0 4px rgba(110,192,110,0.38);
       color:${active ? '#8dda8d' : '#6ec06e'};
       text-shadow:${active ? '0 0 8px rgba(110,192,110,0.9),0 0 20px rgba(110,192,110,0.5)' : '0 0 7px rgba(110,192,110,0.7),0 0 14px rgba(110,192,110,0.3)'};
       cursor:pointer;border-radius:50%;transition:none;`;
