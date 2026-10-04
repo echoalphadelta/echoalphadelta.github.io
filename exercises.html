@@ -20,22 +20,30 @@ body {
   padding: 40px 24px 60px;
 }
 .back-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: 'Jura', monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  color: #f5a623;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   text-decoration: none;
-  padding: 0.5rem 1.2rem;
-  border: 1px solid rgba(245,166,35,0.25);
-  border-radius: 9999px;
+  width: 150px; height: 54px;
+  padding: 0;
+  background: radial-gradient(ellipse at 45% 40%, #0d110d 0%, #050807 100%);
+  border: 1px solid rgba(110,192,110,0.22);
+  box-shadow: 0 0 10px rgba(110,192,110,0.1), 0 0 2px rgba(110,192,110,0.18);
+  color: #6ec06e;
+  text-shadow: 0 0 7px rgba(110,192,110,0.8), 0 0 16px rgba(110,192,110,0.35);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
   margin-bottom: 40px;
-  transition: all 0.3s ease;
 }
 .back-link:hover {
-  color: #ffc85c;
-  border-color: rgba(245,166,35,0.5);
-  box-shadow: 0 0 12px rgba(245,166,35,0.2);
+  border-color: rgba(110,192,110,0.48);
+  box-shadow: 0 0 16px rgba(110,192,110,0.22), 0 0 2px rgba(110,192,110,0.4);
 }
 h1 {
   font-family: 'Jura', monospace;
@@ -88,9 +96,10 @@ h1 {
 .trainer-btn {
   font-family: 'Jura', monospace;
   font-size: 0.68rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   padding: 11px 24px;
-  border-radius: 9999px;
+  border-radius: 4px;
   background: transparent;
   cursor: pointer;
   transition: all 0.2s;
