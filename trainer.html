@@ -736,11 +736,15 @@ function buildTonicGrid() {
     const btn = document.createElement('button');
     btn.textContent = name;
     btn.dataset.root = i;
-    btn.style.cssText = `font-family:'Jura', sans-serif;font-size:0.85rem;padding:8px 0;
-      background:${i === tonicRoot ? '#f5a623' : '#000'};
-      border:1px solid ${i === tonicRoot ? '#f5a623' : '#222'};
-      color:${i === tonicRoot ? '#000' : '#888'};
-      cursor:pointer;border-radius:2px;`;
+    const active = i === tonicRoot;
+    btn.style.cssText = `font-family:'Jura',monospace;font-size:0.82rem;font-weight:700;
+      letter-spacing:0.04em;padding:0;height:44px;
+      background:radial-gradient(ellipse at 45% 40%,${active ? '#0d1f0d' : '#0d110d'} 0%,${active ? '#050f07' : '#050807'} 100%);
+      border:1px solid ${active ? 'rgba(110,192,110,0.6)' : 'rgba(110,192,110,0.22)'};
+      box-shadow:${active ? '0 0 14px rgba(110,192,110,0.3),0 0 3px rgba(110,192,110,0.5)' : '0 0 8px rgba(110,192,110,0.08),0 0 2px rgba(110,192,110,0.15)'};
+      color:${active ? '#8dda8d' : '#6ec06e'};
+      text-shadow:${active ? '0 0 8px rgba(110,192,110,0.9),0 0 20px rgba(110,192,110,0.5)' : '0 0 7px rgba(110,192,110,0.7),0 0 14px rgba(110,192,110,0.3)'};
+      cursor:pointer;border-radius:50%;transition:border-color 0.15s,box-shadow 0.15s;`;
     btn.onclick = () => {
       tonicRoot = i;
       buildTonicGrid();
