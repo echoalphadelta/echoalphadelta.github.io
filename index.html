@@ -35,17 +35,7 @@ padding: 0;
   animation: tg-gold 3s ease-in-out infinite;
   transition: opacity 0.2s;
 }
-.spiel-btn:hover, .spiel-btn.open { opacity: 0.65; }
-.spiel-btn:hover {
-color: #ffc85c;
-border-color: rgba(245,166,35,0.7);
-}
-.spiel-btn.open {
-animation: none;
-color: #f5a623;
-border-color: rgba(245,166,35,0.25);
-box-shadow: 0 0 12px rgba(245,166,35,0.2);
-}
+.spiel-btn:hover { opacity: 0.75; }
 .spiel-panel {
 max-height: 0;
 overflow: hidden;
@@ -306,7 +296,9 @@ flex-shrink: 0;
   position: absolute; inset: 0; width: 100%; height: 100%;
   opacity: 0; cursor: pointer; z-index: 10;
   border-radius: 50%; padding: 0; margin: 0; border: none;
+  outline: none;
 }
+.vint-overlay:focus, .vint-overlay:focus-visible { outline: none; }
 .vint-label {
   font-family: 'Jura', monospace; font-size: 0.52rem;
   letter-spacing: 0.3em; text-transform: uppercase; color: #444;
