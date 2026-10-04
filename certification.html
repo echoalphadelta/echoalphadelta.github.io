@@ -12,7 +12,7 @@ html, body { margin: 0; padding: 0; background: #000000; }
 body { color: #f0ede8; font-family: 'Jura', sans-serif; line-height: 1.85; }
 .page { max-width: 600px; margin: 0 auto; padding: 40px 24px 80px; text-align: center; }
 .back-link { display: inline-block; font-family: 'Jura', sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #f5a623; text-decoration: none; padding: 0.5rem 1.2rem; border: 1px solid rgba(245,166,35,0.25); border-radius: 0; margin-bottom: 48px; transition: all 0.3s ease; }
-.back-link:hover { color: #ffc85c; border-color: rgba(245,166,35,0.5); }
+.back-link:hover { color: #ffc85c; border-color: rgba(245,166,35,0.75); }
 h1 { font-family: 'Jura', sans-serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #f5a623; text-shadow: 0 0 16px rgba(245,166,35,0.4), 0 0 40px rgba(245,166,35,0.15); margin: 0 0 8px 0; }
 .subtitle { font-size: 0.78rem; color: rgba(240,237,232,0.42); margin: 0 0 48px; letter-spacing: 0.04em; }
 
@@ -86,7 +86,7 @@ textarea.teacher-field { height: 110px; resize: vertical; }
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
   background-repeat: no-repeat; background-position: right 14px center;
 }
-.quiz-select:focus { outline: none; border-color: rgba(245,166,35,0.5); }
+.quiz-select:focus { outline: none; border-color: rgba(245,166,35,0.75); }
 .quiz-select option { background: #111; }
 .shape-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
 .shape-btn {
@@ -104,16 +104,16 @@ textarea.teacher-field { height: 110px; resize: vertical; }
   width: 160px; height: 56px; padding: 0;
   display: block; margin: 0 auto 12px;
   background: radial-gradient(ellipse at 45% 40%, #0d110d 0%, #050807 100%);
-  border: 1px solid rgba(110,192,110,0.5);
-  box-shadow: 0 0 12px rgba(110,192,110,0.2), 0 0 3px rgba(110,192,110,0.35);
+  border: 1px solid rgba(110,192,110,0.75);
+  box-shadow: 0 0 20px rgba(110,192,110,0.4), 0 0 5px rgba(110,192,110,0.6);
   color: #6ec06e;
   text-shadow: 0 0 7px rgba(110,192,110,0.8), 0 0 16px rgba(110,192,110,0.35);
   border-radius: 50%;
   cursor: pointer;
   transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
 }
-.quiz-submit:hover { border-color: rgba(110,192,110,0.75);
-  box-shadow: 0 0 20px rgba(110,192,110,0.35), 0 0 5px rgba(110,192,110,0.55); }
+.quiz-submit:hover { border-color: rgba(110,192,110,0.92);
+  box-shadow: 0 0 28px rgba(110,192,110,0.55), 0 0 7px rgba(110,192,110,0.75); }
 .quiz-feedback { font-family: 'Jura', sans-serif; font-size: 0.78rem; letter-spacing: 0.06em; padding: 12px 14px; text-align: center; min-height: 20px; }
 .quiz-feedback.hit { background: rgba(46,204,113,0.06); color: #7ed856; border: 1px solid rgba(46,204,113,0.2); }
 .quiz-feedback.miss { background: rgba(231,76,60,0.06); color: #e74c3c; border: 1px solid rgba(231,76,60,0.15); }
@@ -123,16 +123,16 @@ textarea.teacher-field { height: 110px; resize: vertical; }
   width: 160px; height: 56px; padding: 0;
   display: none; margin: 8px auto 0;
   background: radial-gradient(ellipse at 45% 40%, #0d110d 0%, #050807 100%);
-  border: 1px solid rgba(110,192,110,0.5);
-  box-shadow: 0 0 12px rgba(110,192,110,0.2), 0 0 3px rgba(110,192,110,0.35);
+  border: 1px solid rgba(110,192,110,0.75);
+  box-shadow: 0 0 20px rgba(110,192,110,0.4), 0 0 5px rgba(110,192,110,0.6);
   color: #6ec06e;
   text-shadow: 0 0 7px rgba(110,192,110,0.8), 0 0 16px rgba(110,192,110,0.35);
   border-radius: 50%;
   cursor: pointer;
   transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
 }
-.quiz-next:hover { border-color: rgba(110,192,110,0.75);
-  box-shadow: 0 0 20px rgba(110,192,110,0.35), 0 0 5px rgba(110,192,110,0.55); }
+.quiz-next:hover { border-color: rgba(110,192,110,0.92);
+  box-shadow: 0 0 28px rgba(110,192,110,0.55), 0 0 7px rgba(110,192,110,0.75); }
 
 /* Complete screen */
 .complete { display: none; flex-direction: column; align-items: center; gap: 24px; }
