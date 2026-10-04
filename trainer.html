@@ -93,8 +93,8 @@ padding: 0;
 
 }
 .mode-btn.active, .mode-btn[style*="background:#888"] {
-  border-color: rgba(110,192,110,0.72);
-  box-shadow: 0 0 18px rgba(110,192,110,0.3), 0 0 5px rgba(110,192,110,0.5);
+  border-color: rgba(110,192,110,0.85);
+  box-shadow: 0 0 22px rgba(110,192,110,0.45), 0 0 7px rgba(110,192,110,0.65);
   color: #8dda8d;
   text-shadow: 0 0 8px rgba(110,192,110,0.9), 0 0 20px rgba(110,192,110,0.5);
 }
@@ -746,8 +746,8 @@ function buildTonicGrid() {
     btn.style.cssText = `font-family:'Jura',monospace;font-size:0.82rem;font-weight:700;
       letter-spacing:0.04em;padding:0;height:44px;
       background:radial-gradient(ellipse at 45% 40%,${active ? '#0d1f0d' : '#0d110d'} 0%,${active ? '#050f07' : '#050807'} 100%);
-      border:1px solid rgba(110,192,110,0.55);
-      box-shadow:0 0 14px rgba(110,192,110,0.22),0 0 4px rgba(110,192,110,0.38);
+      border:1px solid ${active ? 'rgba(110,192,110,0.85)' : 'rgba(110,192,110,0.55)'};
+      box-shadow:${active ? '0 0 22px rgba(110,192,110,0.45),0 0 7px rgba(110,192,110,0.65)' : '0 0 14px rgba(110,192,110,0.22),0 0 4px rgba(110,192,110,0.38)'};
       color:${active ? '#8dda8d' : '#6ec06e'};
       text-shadow:${active ? '0 0 8px rgba(110,192,110,0.9),0 0 20px rgba(110,192,110,0.5)' : '0 0 7px rgba(110,192,110,0.7),0 0 14px rgba(110,192,110,0.3)'};
       cursor:pointer;border-radius:50%;transition:none;`;
