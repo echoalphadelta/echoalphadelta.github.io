@@ -134,29 +134,36 @@ max-width: 600px;
 }
 
 .note-btn {
-font-family: 'Jura', sans-serif;
+font-family: 'Jura', monospace;
 font-size: 0.72rem;
-padding: 12px 0;
-background: #000000;
-border: 1px solid #222;
-color: #888;
-cursor: pointer;
-border-radius: 0;
-transition: all 0.12s;
-letter-spacing: 0.03em;
+font-weight: 700;
+padding: 0;
+height: 56px;
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+letter-spacing: 0.04em;
 line-height: 1;
+background: radial-gradient(ellipse at 45% 40%, #0d110d 0%, #050807 100%);
+  border: 1px solid rgba(110,192,110,0.22);
+  box-shadow: 0 0 10px rgba(110,192,110,0.1), 0 0 2px rgba(110,192,110,0.18);
+  color: #6ec06e;
+  text-shadow: 0 0 7px rgba(110,192,110,0.8), 0 0 16px rgba(110,192,110,0.35);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
 }
 .note-btn-sub {
 display: block;
 font-size: 0.55rem;
-opacity: 0.45;
-margin-top: 4px;
+opacity: 0.55;
+margin-top: 3px;
 letter-spacing: 0.02em;
+text-shadow: none;
 }
 
-.note-btn:hover { border-color: #555; color: #e0e0e0; }
-.note-btn.correct { background: #0a2a0a !important; border-color: #7ed856 !important; color: #7ed856 !important; }
-.note-btn.wrong   { background: #2a0a0a !important; border-color: #ff3030 !important; color: #ff3030 !important; }
+.note-btn:hover { border-color: rgba(110,192,110,0.48);
+  box-shadow: 0 0 16px rgba(110,192,110,0.22), 0 0 2px rgba(110,192,110,0.4); }
+.note-btn.correct { background: #0a2a0a !important; border-color: #7ed856 !important; color: #7ed856 !important; text-shadow: 0 0 8px rgba(126,216,86,0.7) !important; box-shadow: 0 0 12px rgba(126,216,86,0.2) !important; }
+.note-btn.wrong   { background: #2a0a0a !important; border-color: #ff3030 !important; color: #ff3030 !important; text-shadow: 0 0 8px rgba(255,48,48,0.7) !important; box-shadow: 0 0 12px rgba(255,48,48,0.2) !important; }
 .note-btn:disabled { cursor: default; }
 
 /* Harmonic mode: 6-column grid */

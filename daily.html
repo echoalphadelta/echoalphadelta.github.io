@@ -11,32 +11,8 @@ html, body { margin: 0; padding: 0; background: #000000; }
 * { box-sizing: border-box; }
 body { color: #f0ede8; font-size: 115%; font-family: 'Jura', monospace; line-height: 1.85; }
 .page { max-width: 680px; margin: 0 auto; padding: 40px 24px 80px; }
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Jura', monospace;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  text-decoration: none;
-  width: 150px; height: 54px;
-  padding: 0;
-  background: radial-gradient(ellipse at 45% 40%, #0d110d 0%, #050807 100%);
-  border: 1px solid rgba(110,192,110,0.22);
-  box-shadow: 0 0 10px rgba(110,192,110,0.1), 0 0 2px rgba(110,192,110,0.18);
-  color: #6ec06e;
-  text-shadow: 0 0 7px rgba(110,192,110,0.8), 0 0 16px rgba(110,192,110,0.35);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
-  margin-bottom: 40px;
-}
-.back-link:hover {
-  border-color: rgba(110,192,110,0.48);
-  box-shadow: 0 0 16px rgba(110,192,110,0.22), 0 0 2px rgba(110,192,110,0.4);
-}
+.back-link { display: inline-block; font-family: 'Jura', monospace; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #f5a623; text-decoration: none; padding: 0.5rem 1.2rem; border: 1px solid rgba(245,166,35,0.25); border-radius: 0; margin-bottom: 40px; transition: all 0.3s; }
+.back-link:hover { color: #ffc85c; border-color: rgba(245,166,35,0.5); }
 h1 { font-family: 'Jura', monospace; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #39ff14; text-shadow: 0 0 16px rgba(57,255,20,0.4); margin: 0 0 6px 0; }
 .subtitle { font-size: 0.72rem; color: rgba(240,237,232,0.38); margin: 0 0 36px; letter-spacing: 0.06em; }
 
