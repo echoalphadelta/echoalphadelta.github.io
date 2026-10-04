@@ -168,6 +168,17 @@ text-shadow: none;
 
 /* Harmonic mode: 6-column grid */
 .note-buttons.harmonic-grid { grid-template-columns: repeat(6, 1fr); }
+.note-buttons.harmonic-grid .note-btn {
+  background: radial-gradient(ellipse at 45% 40%, #110e00 0%, #080600 100%);
+  border-color: rgba(245,166,35,0.5);
+  box-shadow: 0 0 12px rgba(245,166,35,0.2), 0 0 3px rgba(245,166,35,0.35);
+  color: #f5a623;
+  text-shadow: 0 0 7px rgba(245,166,35,0.8), 0 0 16px rgba(245,166,35,0.35);
+}
+.note-buttons.harmonic-grid .note-btn:hover {
+  border-color: rgba(245,166,35,0.75);
+  box-shadow: 0 0 20px rgba(245,166,35,0.35), 0 0 5px rgba(245,166,35,0.55);
+}
 
 /* ── TONIC DISPLAY ── */
 #tonicDisplay {
