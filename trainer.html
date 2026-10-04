@@ -81,21 +81,20 @@ text-transform: uppercase;
 width: 110px; height: 54px;
 padding: 0;
   background: radial-gradient(ellipse at 45% 40%, #0d110d 0%, #050807 100%);
-  border: 1px solid rgba(110,192,110,0.9);
-  box-shadow: 0 0 28px rgba(110,192,110,0.6), 0 0 8px rgba(110,192,110,0.8);
+  border: 1px solid rgba(110,192,110,0.55);
+  box-shadow: 0 0 14px rgba(110,192,110,0.22), 0 0 4px rgba(110,192,110,0.38);
   color: #6ec06e;
   text-shadow: 0 0 7px rgba(110,192,110,0.8), 0 0 16px rgba(110,192,110,0.35);
   border-radius: 50%;
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
+  transition: none;
 }
 .mode-btn:hover {
-  border-color: rgba(110,192,110,1);
-  box-shadow: 0 0 38px rgba(110,192,110,0.75), 0 0 12px rgba(110,192,110,0.95);
+
 }
 .mode-btn.active, .mode-btn[style*="background:#888"] {
-  border-color: rgba(110,192,110,1);
-  box-shadow: 0 0 34px rgba(110,192,110,0.75), 0 0 10px rgba(110,192,110,0.95);
+  border-color: rgba(110,192,110,0.72);
+  box-shadow: 0 0 18px rgba(110,192,110,0.3), 0 0 5px rgba(110,192,110,0.5);
   color: #8dda8d;
   text-shadow: 0 0 8px rgba(110,192,110,0.9), 0 0 20px rgba(110,192,110,0.5);
 }
@@ -143,13 +142,13 @@ display: flex; flex-direction: column; align-items: center; justify-content: cen
 letter-spacing: 0.04em;
 line-height: 1;
 background: radial-gradient(ellipse at 45% 40%, #0d110d 0%, #050807 100%);
-  border: 1px solid rgba(110,192,110,0.9);
-  box-shadow: 0 0 28px rgba(110,192,110,0.6), 0 0 8px rgba(110,192,110,0.8);
+  border: 1px solid rgba(110,192,110,0.55);
+  box-shadow: 0 0 14px rgba(110,192,110,0.22), 0 0 4px rgba(110,192,110,0.38);
   color: #6ec06e;
   text-shadow: 0 0 7px rgba(110,192,110,0.8), 0 0 16px rgba(110,192,110,0.35);
   border-radius: 50%;
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
+  transition: none;
 }
 .note-btn-sub {
 display: block;
@@ -160,8 +159,7 @@ letter-spacing: 0.02em;
 text-shadow: none;
 }
 
-.note-btn:hover { border-color: rgba(110,192,110,1);
-  box-shadow: 0 0 38px rgba(110,192,110,0.75), 0 0 12px rgba(110,192,110,0.95); }
+.note-btn:hover { }
 .note-btn.correct { background: #0a2a0a !important; border-color: #7ed856 !important; color: #7ed856 !important; text-shadow: 0 0 8px rgba(126,216,86,0.7) !important; box-shadow: 0 0 12px rgba(126,216,86,0.2) !important; }
 .note-btn.wrong   { background: #2a0a0a !important; border-color: #ff3030 !important; color: #ff3030 !important; text-shadow: 0 0 8px rgba(255,48,48,0.7) !important; box-shadow: 0 0 12px rgba(255,48,48,0.2) !important; }
 .note-btn:disabled { cursor: default; }
@@ -170,14 +168,12 @@ text-shadow: none;
 .note-buttons.harmonic-grid { grid-template-columns: repeat(6, 1fr); }
 .note-buttons.harmonic-grid .note-btn {
   background: radial-gradient(ellipse at 45% 40%, #110e00 0%, #080600 100%);
-  border-color: rgba(245,166,35,0.9);
-  box-shadow: 0 0 28px rgba(245,166,35,0.6), 0 0 8px rgba(245,166,35,0.8);
+  border-color: rgba(245,166,35,0.55);
+  box-shadow: 0 0 14px rgba(245,166,35,0.22), 0 0 4px rgba(245,166,35,0.38);
   color: #f5a623;
   text-shadow: 0 0 7px rgba(245,166,35,0.8), 0 0 16px rgba(245,166,35,0.35);
 }
 .note-buttons.harmonic-grid .note-btn:hover {
-  border-color: rgba(245,166,35,1);
-  box-shadow: 0 0 38px rgba(245,166,35,0.75), 0 0 12px rgba(245,166,35,0.95);
 }
 
 /* ── TONIC DISPLAY ── */
@@ -248,17 +244,16 @@ text-transform: uppercase;
 width: 160px; height: 62px;
 padding: 0;
   background: radial-gradient(ellipse at 45% 40%, #0d110d 0%, #050807 100%);
-  border: 1px solid rgba(110,192,110,0.9);
-  box-shadow: 0 0 28px rgba(110,192,110,0.6), 0 0 8px rgba(110,192,110,0.8);
+  border: 1px solid rgba(110,192,110,0.55);
+  box-shadow: 0 0 14px rgba(110,192,110,0.22), 0 0 4px rgba(110,192,110,0.38);
   color: #6ec06e;
   text-shadow: 0 0 7px rgba(110,192,110,0.8), 0 0 16px rgba(110,192,110,0.35);
   border-radius: 50%;
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
+  transition: none;
 }
 .start-btn:hover {
-  border-color: rgba(110,192,110,1);
-  box-shadow: 0 0 38px rgba(110,192,110,0.75), 0 0 12px rgba(110,192,110,0.95);
+
 }
 
 /* ── TONIC SELECTOR ── */
@@ -751,11 +746,11 @@ function buildTonicGrid() {
     btn.style.cssText = `font-family:'Jura',monospace;font-size:0.82rem;font-weight:700;
       letter-spacing:0.04em;padding:0;height:44px;
       background:radial-gradient(ellipse at 45% 40%,${active ? '#0d1f0d' : '#0d110d'} 0%,${active ? '#050f07' : '#050807'} 100%);
-      border:1px solid ${active ? 'rgba(110,192,110,1)' : 'rgba(110,192,110,0.9)'};
-      box-shadow:${active ? '0 0 34px rgba(110,192,110,0.75),0 0 10px rgba(110,192,110,0.95)' : '0 0 28px rgba(110,192,110,0.6),0 0 8px rgba(110,192,110,0.8)'};
+      border:1px solid rgba(110,192,110,0.55);
+      box-shadow:0 0 14px rgba(110,192,110,0.22),0 0 4px rgba(110,192,110,0.38);
       color:${active ? '#8dda8d' : '#6ec06e'};
       text-shadow:${active ? '0 0 8px rgba(110,192,110,0.9),0 0 20px rgba(110,192,110,0.5)' : '0 0 7px rgba(110,192,110,0.7),0 0 14px rgba(110,192,110,0.3)'};
-      cursor:pointer;border-radius:50%;transition:border-color 0.15s,box-shadow 0.15s;`;
+      cursor:pointer;border-radius:50%;transition:none;`;
     btn.onclick = () => {
       tonicRoot = i;
       buildTonicGrid();
